@@ -5,11 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchItems } from "../../store/slices/itemsSlice";
 import { FaSearch, FaWhatsapp, FaFilter, FaMapMarkerAlt, FaCalendarAlt, FaTag, FaUser, FaPhone, FaEnvelope, FaTimes, FaEye } from 'react-icons/fa';
 import { useSearchParams, useRouter } from "next/navigation";
+import Pagination from "../Pagination/Pagination";
 
 export default function Browse() {
   const dispatch = useDispatch();
   const router = useRouter();
   const items = useSelector((state) => state.items.list);
+  const pagination = useSelector((state) => state.items.pagination);
   const status = useSelector((state) => state.items.status);
 
   const searchParams = useSearchParams();
@@ -24,7 +26,7 @@ export default function Browse() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [user, setUser] = useState(null);
   const [checkingAuth, setCheckingAuth] = useState(true);
-
+  const [currentPage, setCurrentPage] = useState(1);
 
   const checkAuth = async () => {
     try {
@@ -47,8 +49,18 @@ export default function Browse() {
   }, []);
 
   useEffect(() => {
-    dispatch(fetchItems({ type: typeFilter, category: categoryFilter }));
-  }, [dispatch, typeFilter, categoryFilter]);
+    dispatch(fetchItems({ 
+      type: typeFilter, 
+      category: categoryFilter,
+      page: currentPage,
+      limit: 20
+    }));
+  }, [dispatch, typeFilter, categoryFilter, currentPage]);
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const filteredItems = items.filter(item => {
     if (item.type === "resolved") return false;
@@ -875,6 +887,15 @@ export default function Browse() {
               </div>
             </div>
           </div>
+        )}
+
+        {/* Pagination */}
+        {status === "succeeded" && sortedItems.length > 0 && (
+          <Pagination
+            pagination={pagination}
+            onPageChange={handlePageChange}
+            loading={status === "loading"}
+          />
         )}
       </div>
     </>
