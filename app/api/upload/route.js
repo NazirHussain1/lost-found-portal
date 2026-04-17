@@ -1,4 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
+import { withRateLimit, uploadRateLimit } from "@/app/lib/rateLimiter";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -6,7 +7,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export async function POST(req) {
+async function uploadHandler(req) {
   try {
     const data = await req.json();
     const { image } = data; 
@@ -26,3 +27,6 @@ export async function POST(req) {
     );
   }
 }
+
+// Export POST handler with upload rate limiting (10 requests per 15 minutes)
+export const POST = withRateLimit(uploadHandler, uploadRateLimit);

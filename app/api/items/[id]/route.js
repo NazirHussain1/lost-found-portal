@@ -5,8 +5,9 @@ import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { updateItemSchema, itemIdSchema } from "@/app/lib/validations/items";
 import { validateData, createErrorResponse, createSuccessResponse } from "@/app/lib/validations/helper";
+import { withRateLimit, generalRateLimit } from "@/app/lib/rateLimiter";
 
-export async function DELETE(req, context) {
+async function deleteHandler(req, context) {
   try {
     await connectDB();
 
@@ -69,7 +70,7 @@ export async function DELETE(req, context) {
   }
 }
 
-export async function PUT(req, context) {
+async function putHandler(req, context) {
   try {
     await connectDB();
 
@@ -153,3 +154,7 @@ export async function PUT(req, context) {
     ], 500);
   }
 }
+
+// Export handlers with rate limiting
+export const DELETE = withRateLimit(deleteHandler, generalRateLimit);
+export const PUT = withRateLimit(putHandler, generalRateLimit);

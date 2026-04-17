@@ -4,8 +4,9 @@ import Item from "@/app/models/items";
 import { cookies } from "next/headers";
 import { createItemSchema } from "@/app/lib/validations/items";
 import { validateData, createErrorResponse, createSuccessResponse } from "@/app/lib/validations/helper";
+import { withRateLimit, generalRateLimit } from "@/app/lib/rateLimiter";
 
-export async function GET(req) {
+async function getHandler(req) {
   await connectDB();
 
   const cookieStore = await cookies();
@@ -38,7 +39,7 @@ export async function GET(req) {
   });
 }
 
-export async function POST(req) {
+async function postHandler(req) {
   try {
     await connectDB();
 
@@ -99,3 +100,7 @@ export async function POST(req) {
     ], 500);
   }
 }
+
+// Export handlers with rate limiting
+export const GET = withRateLimit(getHandler, generalRateLimit);
+export const POST = withRateLimit(postHandler, generalRateLimit);

@@ -5,8 +5,9 @@ import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
 import { loginSchema } from "@/app/lib/validations/auth";
 import { validateData, createErrorResponse } from "@/app/lib/validations/helper";
+import { withRateLimit, authRateLimit } from "@/app/lib/rateLimiter";
 
-export async function POST(req) {
+async function loginHandler(req) {
   try {
     await connectDB();
 
@@ -26,6 +27,13 @@ export async function POST(req) {
       return createErrorResponse([
         { field: 'email', message: 'Invalid email or password' }
       ], 401);
+    }
+
+    // Check if email is verified
+    if (!user.isVerified) {
+      return createErrorResponse([
+        { field: 'email', message: 'Please verify your email before logging in. Check your inbox for the verification link.' }
+      ], 403);
     }
 
     // Verify password
@@ -69,3 +77,6 @@ export async function POST(req) {
     ], 500);
   }
 }
+
+// Export POST handler with rate limiting
+export const POST = withRateLimit(loginHandler, authRateLimit);

@@ -1,11 +1,14 @@
 import { connectDB } from "@/app/lib/mongodb";
 import User from "@/app/models/user";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
 import { signupSchema } from "@/app/lib/validations/auth";
 import { validateData, createErrorResponse, createSuccessResponse } from "@/app/lib/validations/helper";
+import { withRateLimit, authRateLimit } from "@/app/lib/rateLimiter";
+import { sendVerificationEmail } from "@/app/lib/email";
 
-export async function POST(req) {
+async function signupHandler(req) {
   try {
     await connectDB();
 
@@ -38,17 +41,45 @@ export async function POST(req) {
     // Hash password
     const hashed = await bcrypt.hash(password, 10);
 
-    // Create user
+    // Generate verification token (expires in 1 hour)
+    const verificationToken = jwt.sign(
+      { email, timestamp: Date.now() },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    // Create user with verification fields
     const user = await User.create({
       name,
       email,
       phone,
       password: hashed,
+      isVerified: false,
+      verificationToken,
+      verificationTokenExpiry: new Date(Date.now() + 60 * 60 * 1000), // 1 hour from now
     });
 
+    // Send verification email
+    try {
+      await sendVerificationEmail(email, name, verificationToken);
+    } catch (emailError) {
+      console.error('Failed to send verification email:', emailError);
+      // Delete user if email fails to send
+      await User.findByIdAndDelete(user._id);
+      return createErrorResponse([
+        { field: 'email', message: 'Failed to send verification email. Please try again.' }
+      ], 500);
+    }
+
     return createSuccessResponse(
-      { userId: user._id, email: user.email },
-      'User registered successfully',
+      {
+        userId: user._id,
+        email: user.email,
+        name: user.name,
+        isVerified: false,
+        message: 'Please check your email to verify your account'
+      },
+      'User registered successfully. Please verify your email to login.',
       201
     );
   } catch (error) {
@@ -58,3 +89,6 @@ export async function POST(req) {
     ], 500);
   }
 }
+
+// Export POST handler with rate limiting
+export const POST = withRateLimit(signupHandler, authRateLimit);

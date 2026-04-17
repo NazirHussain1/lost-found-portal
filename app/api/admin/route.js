@@ -2,8 +2,9 @@ import { connectDB } from "@/app/lib/mongodb";
 import Item from "@/app/models/items";
 import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
+import { withRateLimit, adminRateLimit } from "@/app/lib/rateLimiter";
 
-export async function GET(req) {
+async function getHandler(req) {
   await connectDB();
 
   const token = req.cookies.get("token")?.value;
@@ -22,3 +23,6 @@ export async function GET(req) {
 
   return NextResponse.json(items);
 }
+
+// Export GET handler with admin rate limiting (200 requests per 15 minutes)
+export const GET = withRateLimit(getHandler, adminRateLimit);
