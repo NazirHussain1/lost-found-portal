@@ -197,6 +197,9 @@ This project is open source and available under the [MIT License](LICENSE).
 
 **Nazir Hussain**
 - GitHub: [@NazirHussain1](https://github.com/NazirHussain1)
+- LinkedIn: [Nazir Hussain](https://www.linkedin.com/in/nazir-hussain-27b061360)
+- Email: nazirkhawaja251@gmail.com
+- WhatsApp: [+92 3321716508](https://wa.me/923321716508)
 
 ## 🙏 Acknowledgments
 

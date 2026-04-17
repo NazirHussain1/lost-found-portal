@@ -1,6 +1,6 @@
 "use client";
 
-import { FaGithub, FaTwitter, FaLinkedin, FaHome, FaPhone, FaEnvelope, FaMapMarkerAlt, FaBoxOpen, FaExclamationTriangle, FaHandHolding, FaShieldAlt, FaLock, FaCheckCircle, FaStar } from 'react-icons/fa';
+import { FaGithub, FaWhatsapp, FaLinkedin, FaHome, FaPhone, FaEnvelope, FaMapMarkerAlt, FaBoxOpen, FaExclamationTriangle, FaHandHolding, FaShieldAlt, FaLock, FaCheckCircle, FaStar } from 'react-icons/fa';
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
@@ -56,9 +56,9 @@ export default function Footer() {
                         </p>
                         <div className="d-flex gap-3">
                             {[
-                                { icon: <FaGithub size={18} />, href: "https://github.com", label: "GitHub" },
-                                { icon: <FaTwitter size={18} />, href: "https://twitter.com", label: "Twitter" },
-                                { icon: <FaLinkedin size={18} />, href: "https://linkedin.com", label: "LinkedIn" }
+                                { icon: <FaGithub size={18} />, href: "https://github.com/NazirHussain1", label: "GitHub" },
+                                { icon: <FaWhatsapp size={18} />, href: "https://wa.me/923321716508", label: "WhatsApp" },
+                                { icon: <FaLinkedin size={18} />, href: "https://www.linkedin.com/in/nazir-hussain-27b061360", label: "LinkedIn" }
                             ].map((social, index) => (
                                 <a
                                     key={index}
@@ -135,12 +135,12 @@ export default function Footer() {
                             </li>
                             <li className="mb-3 d-flex align-items-center gap-2">
                                 <FaPhone size={14} style={{ color: '#667eea' }} />
-                                <span className="text-light opacity-75 small">+92 3321734797</span>
+                                <span className="text-light opacity-75 small">+92 3321716508</span>
                             </li>
                             <li className="d-flex align-items-center gap-2">
 
                                 <FaEnvelope size={14} style={{ color: '#667eea' }} />
-                                <span className="text-light opacity-75 small">malikahsandhandla@gmail.com</span>
+                                <span className="text-light opacity-75 small">nazirkhawaja251@gmail.com</span>
                             </li>
                         </ul>
                     </div>
