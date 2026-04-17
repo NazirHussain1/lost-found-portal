@@ -2,35 +2,59 @@ import { connectDB } from "@/app/lib/mongodb";
 import User from "@/app/models/user";
 import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
+import { signupSchema } from "@/app/lib/validations/auth";
+import { validateData, createErrorResponse, createSuccessResponse } from "@/app/lib/validations/helper";
 
 export async function POST(req) {
-  await connectDB();
+  try {
+    await connectDB();
 
-  const { name, email, phone, password } = await req.json(); 
+    const body = await req.json();
 
- 
-  const userExists = await User.findOne({ email });
-  if (userExists) {
-    return NextResponse.json({ error: "User already exists" }, { status: 400 });
-  }
+    // Validate input data
+    const validation = validateData(signupSchema, body);
+    if (!validation.success) {
+      return createErrorResponse(validation.errors);
+    }
 
+    const { name, email, phone, password } = validation.data;
 
-  const phoneExists = await User.findOne({ phone });
-  if (phoneExists) {
-    return NextResponse.json(
-      { error: "Phone number already registered" },
-      { status: 400 }
+    // Check if user already exists
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+      return createErrorResponse([
+        { field: 'email', message: 'User with this email already exists' }
+      ]);
+    }
+
+    // Check if phone number already registered
+    const phoneExists = await User.findOne({ phone });
+    if (phoneExists) {
+      return createErrorResponse([
+        { field: 'phone', message: 'Phone number already registered' }
+      ]);
+    }
+
+    // Hash password
+    const hashed = await bcrypt.hash(password, 10);
+
+    // Create user
+    const user = await User.create({
+      name,
+      email,
+      phone,
+      password: hashed,
+    });
+
+    return createSuccessResponse(
+      { userId: user._id, email: user.email },
+      'User registered successfully',
+      201
     );
+  } catch (error) {
+    console.error('Signup error:', error);
+    return createErrorResponse([
+      { field: 'server', message: 'Internal server error' }
+    ], 500);
   }
-
-  const hashed = await bcrypt.hash(password, 10);
-
-  await User.create({
-    name,
-    email,
-    phone,        
-    password: hashed,
-  });
-
-  return NextResponse.json({ message: "User registered successfully" });
 }

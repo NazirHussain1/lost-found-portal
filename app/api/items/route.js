@@ -2,6 +2,8 @@ import jwt from "jsonwebtoken";
 import { connectDB } from "@/app/lib/mongodb";
 import Item from "@/app/models/items";
 import { cookies } from "next/headers";
+import { createItemSchema } from "@/app/lib/validations/items";
+import { validateData, createErrorResponse, createSuccessResponse } from "@/app/lib/validations/helper";
 
 export async function GET(req) {
   await connectDB();
@@ -13,14 +15,12 @@ export async function GET(req) {
 
   const type = searchParams.get("type");
   const category = searchParams.get("category");
-  const myItems = searchParams.get("myItems"); 
+  const myItems = searchParams.get("myItems");
 
   let filter = {};
 
-
   if (type) filter.type = type.toLowerCase();
   if (category) filter.category = category.toLowerCase();
-
 
   if (myItems === "true" && token) {
     try {
@@ -39,44 +39,63 @@ export async function GET(req) {
 }
 
 export async function POST(req) {
-  await connectDB();
-
   try {
+    await connectDB();
+
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
 
     if (!token) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      });
+      return createErrorResponse([
+        { field: 'auth', message: 'Unauthorized - Please login' }
+      ], 401);
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // Verify token
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (error) {
+      return createErrorResponse([
+        { field: 'auth', message: 'Invalid or expired token' }
+      ], 401);
+    }
+
     const userId = decoded.id;
+    const body = await req.json();
 
-    const data = await req.json();
+    // Validate input data
+    const validation = validateData(createItemSchema, body);
+    if (!validation.success) {
+      return createErrorResponse(validation.errors);
+    }
 
+    const { title, description, category, type, location, date, imageUrl } = validation.data;
+
+    // Create item
     const newItem = await Item.create({
-      title: data.title,
-      description: data.description,
-      category: data.category.toLowerCase(),
-      type: data.type.toLowerCase(),
-      location: data.location,
-      date: new Date(),
-      imageUrl: data.imageUrl || "",
+      title,
+      description,
+      category: category.toLowerCase(),
+      type: type.toLowerCase(),
+      location,
+      date,
+      imageUrl: imageUrl || "",
       user: userId,
     });
 
-    return new Response(JSON.stringify(newItem), {
-      status: 201,
-      headers: { "Content-Type": "application/json" },
-    });
+    // Populate user data
+    await newItem.populate("user", "name email phone");
+
+    return createSuccessResponse(
+      newItem,
+      'Item created successfully',
+      201
+    );
   } catch (error) {
     console.error("Error creating item:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return createErrorResponse([
+      { field: 'server', message: 'Internal server error' }
+    ], 500);
   }
 }

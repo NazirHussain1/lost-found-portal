@@ -89,10 +89,8 @@ export default function Browse() {
       return;
     }
 
-
     const formattedPhone = phone.replace(/\D/g, "");
-
-    const message = encodeURIComponent(`Hello, I Think ${selectedItem.title} belongs to me you posted on lost and found portal`);
+    const message = encodeURIComponent(`Hi, I found your item titled '${selectedItem.title}' on Lost & Found Portal. Is it still available?`);
     window.open(`https://wa.me/${formattedPhone}?text=${message}`, "_blank");
   };
 
@@ -847,6 +845,21 @@ export default function Browse() {
                           >
                             <FaWhatsapp /> Message
                           </button>
+                        </div>
+                      </div>
+                    )}
+                    {!selectedItem.user?.phone && user && user.id !== selectedItem.user._id && (
+                      <div className="col-md-12 mb-3">
+                        <div className="alert alert-info mb-0 d-flex align-items-center" style={{ 
+                          background: 'rgba(102, 126, 234, 0.1)', 
+                          border: '1px solid rgba(102, 126, 234, 0.2)',
+                          borderRadius: '12px',
+                          padding: '12px 16px'
+                        }}>
+                          <FaPhone className="me-2" style={{ color: 'var(--primary-color)' }} />
+                          <span style={{ color: 'var(--secondary-color)', fontSize: '0.9rem' }}>
+                            Contact not available - Please use email to reach out
+                          </span>
                         </div>
                       </div>
                     )}
