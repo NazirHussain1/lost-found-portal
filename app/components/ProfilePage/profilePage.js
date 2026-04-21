@@ -499,7 +499,7 @@ export default function ProfilePage() {
               {editMode ? (
                 <div className="d-flex flex-column flex-md-row gap-2 justify-content-center justify-content-md-end">
                   <button
-                    className="btn btn-light btn-sm btn-md-lg px-3 px-md-4 py-2 rounded-pill fw-bold mb-2 mb-md-0"
+                    className="btn-secondary-custom btn-sm btn-md-lg px-3 px-md-4 py-2 rounded-pill fw-bold mb-2 mb-md-0"
                     onClick={() => {
                       setEditMode(false);
                       setEditForm({ ...userData });
@@ -509,13 +509,13 @@ export default function ProfilePage() {
                     Cancel
                   </button>
                   <button
-                    className="btn-gradient btn-sm btn-md-lg px-3 px-md-4 py-2 rounded-pill"
+                    className="btn-primary-custom btn-sm btn-md-lg px-3 px-md-4 py-2 rounded-pill"
                     onClick={handleSaveProfile}
                     disabled={loading || uploadingImage}
                   >
                     {uploadingImage ? (
                       <>
-                        <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                        <span className="spinner-custom me-2" role="status"></span>
                         Uploading...
                       </>
                     ) : (
@@ -529,14 +529,14 @@ export default function ProfilePage() {
               ) : (
                 <div className="d-flex flex-column flex-md-row gap-2 justify-content-center justify-content-md-end">
                   <button
-                    className="btn btn-light btn-sm btn-md-lg px-3 px-md-4 py-2 rounded-pill fw-bold mb-2 mb-md-0"
+                    className="btn-secondary-custom btn-sm btn-md-lg px-3 px-md-4 py-2 rounded-pill fw-bold mb-2 mb-md-0"
                     onClick={() => setEditMode(true)}
                   >
                     <FaEdit className="me-2" />
                     Edit Profile
                   </button>
                   <button
-                    className="btn-outline-red btn-sm btn-md-lg px-3 px-md-4 py-2 rounded-pill"
+                    className="btn-danger-custom btn-sm btn-md-lg px-3 px-md-4 py-2 rounded-pill"
                     onClick={() => setShowLogoutConfirm(true)}
                   >
                     <FaSignOutAlt className="me-2" />
@@ -562,7 +562,7 @@ export default function ProfilePage() {
                     {editMode ? (
                       <input
                         type="text"
-                        className="profile-input mt-1"
+                        className="input-custom"
                         value={editForm.phone}
                         onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
                         placeholder="Enter phone number"
@@ -582,7 +582,7 @@ export default function ProfilePage() {
                     {editMode ? (
                       <input
                         type="text"
-                        className="profile-input mt-1"
+                        className="input-custom"
                         value={editForm.location}
                         onChange={(e) => setEditForm({ ...editForm, location: e.target.value })}
                         placeholder="Enter your location"
@@ -624,7 +624,7 @@ export default function ProfilePage() {
                 <h6 className="fw-bold mb-2" style={{ color: "#667eea" }}>About</h6>
                 {editMode ? (
                   <textarea
-                    className="profile-input"
+                    className="textarea-custom"
                     rows="3"
                     value={editForm.bio}
                     onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })}
@@ -642,28 +642,28 @@ export default function ProfilePage() {
               <h4 className="fw-bold mb-3 gradient-text">Quick Actions</h4>
               <div className="d-grid gap-2">
                 <button
-                  className="btn btn-outline-primary d-flex align-items-center justify-content-center py-2"
+                  className="btn-outline-custom d-flex align-items-center justify-content-center py-2"
                   onClick={() => router.push("/my-items")}
                 >
                   <FaBoxOpen className="me-2 flex-shrink-0" />
                   <span>View My Items</span>
                 </button>
                 <button
-                  className="btn btn-outline-primary d-flex align-items-center justify-content-center py-2"
+                  className="btn-outline-custom d-flex align-items-center justify-content-center py-2"
                   onClick={() => router.push("/lost")}
                 >
                   <FaEdit className="me-2 flex-shrink-0" />
                   <span>Report Lost Item</span>
                 </button>
                 <button
-                  className="btn btn-outline-primary d-flex align-items-center justify-content-center py-2"
+                  className="btn-outline-custom d-flex align-items-center justify-content-center py-2"
                   onClick={() => router.push("/found")}
                 >
                   <FaEdit className="me-2 flex-shrink-0" />
                   <span>Report Found Item</span>
                 </button>
                 <button
-                  className="btn btn-outline-primary d-flex align-items-center justify-content-center py-2"
+                  className="btn-outline-custom d-flex align-items-center justify-content-center py-2"
                   onClick={() => router.push("/browse")}
                 >
                   <FaGlobe className="me-2 flex-shrink-0" />
@@ -680,12 +680,7 @@ export default function ProfilePage() {
                 <h4 className="fw-bold mb-2 mb-md-0 gradient-text">Recent Activity</h4>
                 <div className="d-flex gap-2">
                   <button
-                    className="btn btn-sm"
-                    style={{ 
-                      background: "rgba(102, 126, 234, 0.1)", 
-                      color: "#667eea",
-                      fontSize: "0.85em"
-                    }}
+                    className="btn-outline-custom"
                     onClick={fetchUserProfile}
                   >
                     Refresh
@@ -773,7 +768,7 @@ export default function ProfilePage() {
                     Your activity will appear here when you report items
                   </p>
                   <button
-                    className="btn btn-outline-primary mt-3"
+                    className="btn-outline-custom mt-3"
                     onClick={() => router.push("/lost")}
                   >
                     Report Your First Item
@@ -831,14 +826,14 @@ export default function ProfilePage() {
             <div className="p-4 border-top d-flex gap-3">
               <button
                 type="button"
-                className="btn btn-secondary flex-grow-1"
+                className="btn-secondary-custom flex-grow-1"
                 onClick={() => setShowLogoutConfirm(false)}
               >
                 Cancel
               </button>
               <button
                 type="button"
-                className="btn btn-danger flex-grow-1"
+                className="btn-danger-custom flex-grow-1"
                 onClick={handleLogout}
               >
                 <FaSignOutAlt className="me-2" />

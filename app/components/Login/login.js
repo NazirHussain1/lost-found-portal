@@ -225,7 +225,7 @@ export default function ProfessionalLogin() {
                         id="email"
                         name="email"
                         type="email"
-                        className={`form-control login-input border-start-0 ${errors.email ? "is-invalid" : ""}`}
+                        className={`input-custom border-start-0 ${errors.email ? "input-error" : ""}`}
                         placeholder="name@example.com"
                         value={email}
                         onChange={(e) => {
@@ -257,7 +257,7 @@ export default function ProfessionalLogin() {
                         id="password"
                         name="password"
                         type={showPassword ? "text" : "password"}
-                        className="form-control login-input border-start-0 border-end-0"
+                        className="input-custom border-start-0 border-end-0"
                         placeholder="Enter your password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
@@ -291,12 +291,12 @@ export default function ProfessionalLogin() {
 
                   <button
                     type="submit"
-                    className="btn login-btn w-100 py-3 mb-2 fw-semibold"
+                    className="btn-primary-custom w-100 py-3 mb-2 fw-semibold"
                     disabled={isLoading}
                   >
                     {isLoading ? (
                       <>
-                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        <span className="spinner-custom me-2" role="status" aria-hidden="true"></span>
                         Signing in...
                       </>
                     ) : (

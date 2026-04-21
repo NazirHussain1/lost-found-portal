@@ -267,7 +267,7 @@ export default function ProfessionalRegister() {
                         id="name"
                         name="name"
                         type="text"
-                        className={`form-control login-input border-start-0 ${errors.name ? "is-invalid" : ""}`}
+                        className={`input-custom border-start-0 ${errors.name ? "input-error" : ""}`}
                         placeholder="John Doe"
                         value={name}
                         onChange={(e) => {
@@ -299,7 +299,7 @@ export default function ProfessionalRegister() {
                         id="email"
                         name="email"
                         type="email"
-                        className={`form-control login-input border-start-0 ${errors.email ? "is-invalid" : ""}`}
+                        className={`input-custom border-start-0 ${errors.email ? "input-error" : ""}`}
                         placeholder="name@example.com"
                         value={email}
                         onChange={(e) => {
@@ -337,7 +337,7 @@ export default function ProfessionalRegister() {
                         id="phone"
                         name="phone"
                         type="tel"
-                        className={`form-control login-input border-start-0 ${errors.phone ? "is-invalid" : ""
+                        className={`input-custom border-start-0 ${errors.phone ? "input-error" : ""
                           }`}
                         placeholder="e.g. 923001234567"
                         value={phone}
@@ -375,7 +375,7 @@ export default function ProfessionalRegister() {
                         id="password"
                         name="password"
                         type={showPassword ? "text" : "password"}
-                        className={`form-control login-input border-start-0 border-end-0 ${errors.password ? "is-invalid" : ""}`}
+                        className={`input-custom border-start-0 border-end-0 ${errors.password ? "input-error" : ""}`}
                         placeholder="Enter your password"
                         value={password}
                         onChange={(e) => {
@@ -414,7 +414,7 @@ export default function ProfessionalRegister() {
                         id="confirmPassword"
                         name="confirmPassword"
                         type={showConfirmPassword ? "text" : "password"}
-                        className={`form-control login-input border-start-0 border-end-0 ${errors.confirmPassword ? "is-invalid" : ""}`}
+                        className={`input-custom border-start-0 border-end-0 ${errors.confirmPassword ? "input-error" : ""}`}
                         placeholder="Re-enter your password"
                         value={confirmPassword}
                         onChange={(e) => {
@@ -472,12 +472,12 @@ export default function ProfessionalRegister() {
 
                   <button
                     type="submit"
-                    className="btn login-btn w-100 py-3 mb-3 fw-semibold"
+                    className="btn-primary-custom w-100 py-3 mb-3 fw-semibold"
                     disabled={isLoading}
                   >
                     {isLoading ? (
                       <>
-                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        <span className="spinner-custom me-2" role="status" aria-hidden="true"></span>
                         Creating Account...
                       </>
                     ) : (

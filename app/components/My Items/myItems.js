@@ -621,9 +621,8 @@ export default function MyItemsPage() {
             </div>
             <div className="col-md-4 text-md-end">
               <button
-                className="btn btn-light btn-lg px-4 py-2 rounded-pill fw-bold"
+                className="btn-primary-custom btn-lg px-4 py-2 rounded-pill fw-bold"
                 onClick={() => router.push("/browse")}
-                style={{ color: "#667eea" }}
               >
                 Browse All Items
               </button>
@@ -695,11 +694,10 @@ export default function MyItemsPage() {
                 </span>
                 <input
                   type="text"
-                  className="form-control border-start-0"
+                  className="input-custom border-start-0"
                   placeholder="Search your items..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  style={{ borderColor: "rgba(102, 126, 234, 0.2)" }}
                 />
               </div>
             </div>
@@ -805,11 +803,8 @@ export default function MyItemsPage() {
               {error}
             </p>
             <button
-              className="btn px-4 py-2 rounded-pill fw-bold text-white"
+              className="btn-primary-custom px-4 py-2 rounded-pill fw-bold text-white"
               onClick={() => dispatch(fetchMyItems())}
-              style={{
-                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-              }}
             >
               Try Again
             </button>
@@ -829,21 +824,13 @@ export default function MyItemsPage() {
             </p>
             <div className="d-flex justify-content-center gap-3">
               <button
-                className="btn px-4 py-2 rounded-pill fw-bold text-white"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                }}
+                className="btn-primary-custom px-4 py-2 rounded-pill fw-bold text-white"
                 onClick={() => router.push("/lost")}
               >
                 Report Lost Item
               </button>
               <button
-                className="btn px-4 py-2 rounded-pill fw-bold text-white"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                }}
+                className="btn-primary-custom px-4 py-2 rounded-pill fw-bold text-white"
                 onClick={() => router.push("/found")}
               >
                 Report Found Item
@@ -1005,32 +992,19 @@ export default function MyItemsPage() {
           <div className="text-center mt-5 pt-4 border-top">
             <div className="d-flex flex-wrap justify-content-center gap-3">
               <button
-                className="btn px-4 py-2 rounded-pill fw-bold text-white"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                }}
+                className="btn-primary-custom px-4 py-2 rounded-pill fw-bold text-white"
                 onClick={() => router.push("/lost")}
               >
                 Report New Lost Item
               </button>
               <button
-                className="btn px-4 py-2 rounded-pill fw-bold text-white"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                }}
+                className="btn-primary-custom px-4 py-2 rounded-pill fw-bold text-white"
                 onClick={() => router.push("/found")}
               >
                 Report New Found Item
               </button>
               <button
-                className="btn px-4 py-2 rounded-pill fw-bold"
-                style={{
-                  border: "2px solid #667eea",
-                  color: "#667eea",
-                  background: "transparent",
-                }}
+                className="btn-outline-custom px-4 py-2 rounded-pill fw-bold"
                 onClick={() => router.push("/browse")}
               >
                 Browse Community Items
@@ -1065,7 +1039,7 @@ export default function MyItemsPage() {
 
             <div className="modal-footer-custom">
               <button
-                className="btn-outline-custom"
+                className="btn-secondary-custom"
                 onClick={closeDeleteModal}
                 disabled={deleting}
               >
@@ -1098,7 +1072,7 @@ export default function MyItemsPage() {
 
             <div className="modal-body-custom">
               <input
-                className="form-control-custom"
+                className="input-custom"
                 placeholder="Title"
                 value={editForm.title}
                 onChange={(e) =>
@@ -1107,7 +1081,7 @@ export default function MyItemsPage() {
               />
 
               <textarea
-                className="form-control-custom"
+                className="textarea-custom"
                 placeholder="Description"
                 rows="3"
                 value={editForm.description}
@@ -1117,7 +1091,7 @@ export default function MyItemsPage() {
               />
 
               <input
-                className="form-control-custom"
+                className="input-custom"
                 placeholder="Location"
                 value={editForm.location}
                 onChange={(e) =>
@@ -1126,7 +1100,7 @@ export default function MyItemsPage() {
               />
 
               <select
-                className="form-control-custom"
+                className="select-custom"
                 value={editForm.category}
                 onChange={(e) =>
                   setEditForm({ ...editForm, category: e.target.value })
@@ -1144,7 +1118,7 @@ export default function MyItemsPage() {
               </select>
 
               <select
-                className="form-control-custom"
+                className="select-custom"
                 value={editForm.type}
                 onChange={(e) =>
                   setEditForm({ ...editForm, type: e.target.value })
@@ -1212,7 +1186,7 @@ export default function MyItemsPage() {
 
             <div className="modal-footer-custom">
               <button
-                className="btn-outline-custom"
+                className="btn-secondary-custom"
                 onClick={closeEditModal}
                 disabled={updating}
               >

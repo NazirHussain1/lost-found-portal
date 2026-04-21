@@ -76,7 +76,7 @@ export default function Home() {
         }
         
         .hero-gradient {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: var(--gradient-primary);
           position: relative;
           overflow: hidden;
         }
@@ -93,96 +93,34 @@ export default function Home() {
             radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 50%);
         }
         
-        .stat-card {
-          background: rgba(255, 255, 255, 0.95);
-          border-radius: 16px;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-          backdrop-filter: blur(10px);
-          transition: all 0.3s ease;
-        }
-        
-        .stat-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-        }
-        
         .category-btn {
-          transition: all 0.3s ease;
-          border: 2px solid #e5e7eb;
+          transition: var(--transition-base);
+          border: 2px solid var(--color-gray-200);
           background: white;
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
+          border-radius: var(--radius-lg);
         }
         
         .category-btn:hover {
           transform: translateY(-5px);
-          box-shadow: 0 15px 30px rgba(102, 126, 234, 0.15);
-          border-color: #667eea;
+          box-shadow: var(--shadow-primary);
+          border-color: var(--color-primary-500);
         }
         
         .floating {
           animation: float 6s ease-in-out infinite;
-          
-        }
-        
-        .fade-in {
-          animation: fadeIn 0.6s ease-out forwards;
-        }
-        
-        .btn-hover-grow {
-          transition: all 0.3s ease;
-        }
-        
-        .btn-hover-grow:hover {
-          transform: scale(1.05);
         }
         
         .hero-title {
           text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
         }
         
-        .btn-website-gradient {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          border: none;
-          color: white;
-          transition: all 0.3s ease;
-        }
-        
-        .btn-website-gradient:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-        
-        .btn-outline-website {
-          border: 2px solid white;
-          color: white;
-          background: transparent;
-          transition: all 0.3s ease;
-        }
-        
-        .btn-outline-website:hover {
-          background: rgba(255, 255, 255, 0.1);
-        }
-        
-        .service-card {
-          background: linear-gradient(135deg, #f8f9ff 0%, #eef2ff 100%);
-          border-radius: 16px;
-          border: 2px solid rgba(102, 126, 234, 0.1);
-          transition: all 0.3s ease;
-        }
-        
-        .service-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 15px 30px rgba(102, 126, 234, 0.15);
-          border-color: rgba(102, 126, 234, 0.3);
-        }
-        
         .category-icon {
-          color: #667eea;
-          margin-bottom: 12px;
+          color: var(--color-primary-500);
+          margin-bottom: var(--spacing-3);
         }
       `}</style>
 
@@ -204,15 +142,14 @@ export default function Home() {
                   <div className="d-flex flex-wrap gap-3">
                     <Link
                       href="/lost"
-                      className="btn btn-light btn-lg px-4 py-3 fw-bold rounded-pill btn-hover-grow shadow"
-                      style={{ color: "#667eea" }}
+                      className="btn-primary-custom btn-lg px-4 py-3 fw-bold rounded-pill shadow"
                     >
                       <FaBullhorn className="me-2" />
                       Report Lost Item
                     </Link>
                     <Link
                       href="/found"
-                      className="btn btn-outline-website btn-lg px-4 py-3 fw-bold rounded-pill"
+                      className="btn-outline-custom btn-lg px-4 py-3 fw-bold rounded-pill"
                     >
                       Report Found Item
                     </Link>
@@ -223,7 +160,7 @@ export default function Home() {
               <div className="col-lg-6 fade-in" style={{ animationDelay: '0.2s' }}>
                 <div className="position-relative">
                   <div className="floating" style={{ animationDelay: '1s' }}>
-                    <div className="stat-card p-5 mx-auto" style={{ maxWidth: '500px' }}>
+                    <div className="card-custom p-5 mx-auto" style={{ maxWidth: '500px' }}>
                       <div className="text-center mb-4">
                         <div className="display-3 fw-bold mb-2" style={{ color: '#667eea' }}>{stats.total || 0}</div>
                         <h3 className="h5" style={{ color: '#667eea' }}>Active Reports</h3>
@@ -287,7 +224,7 @@ export default function Home() {
             </div>
 
             <div className="text-center mt-5">
-              <Link href="/browse" className="btn btn-website-gradient btn-lg px-5 py-3 rounded-pill fw-bold">
+              <Link href="/browse" className="btn-primary-custom btn-lg px-5 py-3 rounded-pill fw-bold">
                 <FaSearch className="me-2" />
                 Browse All Categories
               </Link>
@@ -361,15 +298,14 @@ export default function Home() {
               <div className="d-flex flex-wrap justify-content-center gap-3">
                 <Link
                       href="/lost"
-                      className="btn btn-light btn-lg px-4 py-3 fw-bold rounded-pill btn-hover-grow shadow"
-                      style={{ color: "#667eea" }}
+                      className="btn-primary-custom btn-lg px-4 py-3 fw-bold rounded-pill shadow"
                     >
                       <FaBullhorn className="me-2" />
                       Report Lost Item
                     </Link>
                 <Link
                   href="/browse"
-                  className="btn btn-outline-website btn-lg px-5 py-3 fw-bold rounded-pill"
+                  className="btn-outline-custom btn-lg px-5 py-3 fw-bold rounded-pill"
                 >
                   <FaSearch className="me-2" />
                   Browse Current Items

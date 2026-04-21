@@ -617,7 +617,7 @@ export default function Browse() {
               <h4 className="mb-3 fw-bold" style={{ color: 'var(--secondary-color)' }}>No items found</h4>
               <p className="text-muted mb-4">Try adjusting your search criteria or clear the filters</p>
               <button
-                className="btn btn-primary px-4 py-3 fw-bold rounded-pill"
+                className="btn-primary-custom px-4 py-3 fw-bold rounded-pill"
                 onClick={() => {
                   setSearchQuery("");
                   setTypeFilter("all");
@@ -639,7 +639,7 @@ export default function Browse() {
                   onMouseLeave={() => setHoveredItem(null)}
                 >
                   <div
-                    className="card card-hover-3d h-100 border-0 shadow-sm position-relative"
+                    className="card-custom card-hover-3d h-100 border-0 shadow-sm position-relative"
                     onClick={() => handleItemClick(item)}
                   >
                     <div className="image-container">
@@ -685,7 +685,7 @@ export default function Browse() {
                       </button>
                     </div>
 
-                    <div className="card-body d-flex flex-column p-4">
+                    <div className="card-body-custom d-flex flex-column p-4">
                       <h5 className="card-title fw-bold mb-2 line-clamp-1">{item.title}</h5>
                       <p className="card-text small flex-grow-1 mb-3 line-clamp-2">
                         {item.description}
@@ -852,7 +852,7 @@ export default function Browse() {
                             {selectedItem.user.phone}
                           </div>
                           <button
-                            className="btn btn-success btn-sm d-flex align-items-center gap-1"
+                            className="btn-success-custom btn-sm d-flex align-items-center gap-1"
                             onClick={() => handleWhatsAppClick(selectedItem.user.phone)}
                           >
                             <FaWhatsapp /> Message
@@ -880,8 +880,8 @@ export default function Browse() {
                 </div>
               </div>
 
-              <div className="modal-footer">
-                <button className="btn btn-secondary" onClick={handleCloseModal}>
+              <div className="modal-footer-custom">
+                <button className="btn-secondary-custom" onClick={handleCloseModal}>
                   Close
                 </button>
               </div>

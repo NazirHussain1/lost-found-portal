@@ -222,9 +222,8 @@ export default function AdminDashboard() {
           <h3 className="h4 fw-bold mb-2" style={{ color: "#667eea" }}>Error Loading Dashboard</h3>
           <p className="mb-4" style={{ color: "#764ba2" }}>{error || "An error occurred"}</p>
           <button
-            className="btn px-4 py-2 rounded-pill fw-bold text-white"
+            className="btn-primary-custom px-4 py-2 rounded-pill fw-bold text-white"
             onClick={() => dispatch(fetchAdminItems())}
-            style={{ background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)" }}
           >
             <FaSync className="me-2" />
             Try Again
@@ -258,9 +257,8 @@ export default function AdminDashboard() {
           </div>
           <div className="col-md-4 text-md-end">
             <button
-              className="btn btn-light btn-lg px-4 py-2 rounded-pill fw-bold d-inline-flex align-items-center"
+              className="btn-primary-custom btn-lg px-4 py-2 rounded-pill fw-bold d-inline-flex align-items-center"
               onClick={() => dispatch(fetchAdminItems())}
-              style={{ color: "#667eea" }}
             >
               <FaSync className="me-2" />
               Refresh
@@ -304,20 +302,18 @@ export default function AdminDashboard() {
               </span>
               <input
                 type="text"
-                className="form-control border-start-0"
+                className="input-custom border-start-0"
                 placeholder="Search items by title or description..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                style={{ borderColor: "rgba(102, 126, 234, 0.2)" }}
               />
             </div>
           </div>
           <div className="col-md-3">
             <select
-              className="form-select"
+              className="select-custom"
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              style={{ borderColor: "rgba(102, 126, 234, 0.2)" }}
             >
               <option value="all">All Types</option>
               <option value="lost">Lost Items</option>
@@ -327,10 +323,9 @@ export default function AdminDashboard() {
           </div>
           <div className="col-md-3">
             <select
-              className="form-select"
+              className="select-custom"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              style={{ borderColor: "rgba(102, 126, 234, 0.2)" }}
             >
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>
@@ -613,7 +608,7 @@ export default function AdminDashboard() {
             <div className="p-4 border-top">
               <button
                 type="button"
-                className="btn btn-secondary w-100"
+                className="btn-secondary-custom w-100"
                 onClick={closeItemModal}
               >
                 Close
@@ -676,7 +671,7 @@ export default function AdminDashboard() {
             <div className="p-4 border-top d-flex gap-3">
               <button
                 type="button"
-                className="btn btn-secondary flex-grow-1"
+                className="btn-secondary-custom flex-grow-1"
                 onClick={closeDeleteModal}
                 disabled={actionLoading === deleteConfirm._id}
               >
@@ -684,13 +679,13 @@ export default function AdminDashboard() {
               </button>
               <button
                 type="button"
-                className="btn btn-danger flex-grow-1"
+                className="btn-danger-custom flex-grow-1"
                 onClick={() => handleDelete(deleteConfirm._id)}
                 disabled={actionLoading === deleteConfirm._id}
               >
                 {actionLoading === deleteConfirm._id ? (
                   <>
-                    <span className="spinner-border spinner-border-sm me-2"></span>
+                    <span className="spinner-custom me-2"></span>
                     Deleting...
                   </>
                 ) : (
