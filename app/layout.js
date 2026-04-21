@@ -1,5 +1,6 @@
 import ClientProvider from "./components/ClientProvider";
 import { Toaster } from "react-hot-toast";
+import "./globals.css";
 
 export const metadata = {
   title: "Portal",
