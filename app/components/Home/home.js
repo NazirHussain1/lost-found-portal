@@ -13,8 +13,12 @@ export default function Home() {
   useEffect(() => {
     async function getData() {
       try {
-        const statsRes = await fetch("/api/items");
-        const allItems = await statsRes.json();
+        const statsRes = await fetch("/api/items?limit=100");
+        const data = await statsRes.json();
+        
+        // Handle paginated response structure
+        const allItems = data.items || [];
+        
         setStats({
           total: allItems.length,
           lost: allItems.filter(item => item.type === 'lost').length,
@@ -22,6 +26,7 @@ export default function Home() {
         });
       } catch (error) {
         console.error("Error fetching data:", error);
+        setStats({ total: 0, lost: 0, found: 0 });
       } finally {
         setLoading(false);
       }
