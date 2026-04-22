@@ -24,6 +24,7 @@ import {
   FaHistory
 } from "react-icons/fa";
 import { toast } from "react-hot-toast";
+import { CardSkeleton, StatCardSkeleton } from "../Skeleton";
 
 export default function AdminDashboard() {
   const dispatch = useDispatch();
@@ -198,17 +199,48 @@ export default function AdminDashboard() {
   if (status === "loading") {
     return (
       <div className="container py-5">
-        <div className="text-center py-5">
-          <div
-            className="spinner-border"
-            style={{ width: "3rem", height: "3rem", color: "#667eea" }}
-            role="status"
-          >
-            <span className="visually-hidden">Loading admin dashboard...</span>
+        {/* Header Skeleton */}
+        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl p-5 mb-5 shadow-lg">
+          <div className="flex items-center space-x-4">
+            <div className="w-16 h-16 bg-white/20 rounded-full animate-pulse"></div>
+            <div className="space-y-2">
+              <div className="h-8 w-48 bg-white/20 rounded animate-pulse"></div>
+              <div className="h-4 w-64 bg-white/20 rounded animate-pulse"></div>
+            </div>
           </div>
-          <p className="mt-3" style={{ color: "#764ba2" }}>
-            Loading admin dashboard...
-          </p>
+        </div>
+
+        {/* Stats Skeleton */}
+        <div className="row g-4 mb-5">
+          {Array.from({ length: 6 }, (_, index) => (
+            <div key={index} className="col-md-4 col-lg-2">
+              <StatCardSkeleton />
+            </div>
+          ))}
+        </div>
+
+        {/* Filters Skeleton */}
+        <div className="bg-white border rounded-3 p-4 mb-4 shadow-sm">
+          <div className="row g-3">
+            <div className="col-md-6">
+              <div className="h-10 bg-gray-200 rounded animate-pulse"></div>
+            </div>
+            <div className="col-md-3">
+              <div className="h-10 bg-gray-200 rounded animate-pulse"></div>
+            </div>
+            <div className="col-md-3">
+              <div className="h-10 bg-gray-200 rounded animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Items Grid Skeleton */}
+        <div className="row g-4">
+          {Array.from({ length: 6 }, (_, index) => (
+            <div key={index} className="col-md-6 col-lg-4">
+              <CardSkeleton />
+            </div>
+          ))}
         </div>
       </div>
     );

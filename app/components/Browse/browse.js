@@ -6,6 +6,7 @@ import { fetchItems } from "../../store/slices/itemsSlice";
 import { FaSearch, FaWhatsapp, FaFilter, FaMapMarkerAlt, FaCalendarAlt, FaTag, FaUser, FaPhone, FaEnvelope, FaTimes, FaEye } from 'react-icons/fa';
 import { useSearchParams, useRouter } from "next/navigation";
 import Pagination from "../Pagination/Pagination";
+import { CardSkeleton } from "../Skeleton";
 
 export default function Browse() {
   const dispatch = useDispatch();
@@ -603,11 +604,12 @@ export default function Browse() {
 
         <div className="fade-in">
           {status === "loading" && (
-            <div className="text-center py-5">
-              <div className="spinner-border text-primary" style={{ width: '4rem', height: '4rem' }} role="status">
-                <span className="visually-hidden">Loading...</span>
-              </div>
-              <p className="mt-3 text-muted fw-medium">Loading items from database...</p>
+            <div className="row g-4">
+              {Array.from({ length: 6 }, (_, index) => (
+                <div key={index} className="col-md-6 col-lg-4 col-xl-3">
+                  <CardSkeleton />
+                </div>
+              ))}
             </div>
           )}
 

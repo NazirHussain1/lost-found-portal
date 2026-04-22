@@ -19,6 +19,7 @@ import {
   FaHistory,
 } from "react-icons/fa";
 import { toast } from "react-hot-toast";
+import { CardSkeleton } from "../Skeleton";
 
 export default function MyItemsPage() {
   const dispatch = useDispatch();
@@ -781,17 +782,12 @@ export default function MyItemsPage() {
         </div>
 
         {loading ? (
-          <div className="text-center py-5">
-            <div
-              className="spinner-border"
-              style={{ width: "3rem", height: "3rem", color: "#667eea" }}
-              role="status"
-            >
-              <span className="visually-hidden">Loading your items...</span>
-            </div>
-            <p className="mt-3" style={{ color: "#764ba2" }}>
-              Loading your reported items...
-            </p>
+          <div className="row g-4">
+            {Array.from({ length: 4 }, (_, index) => (
+              <div key={index} className="col-md-6 col-lg-4">
+                <CardSkeleton />
+              </div>
+            ))}
           </div>
         ) : error ? (
           <div className="text-center py-5">
