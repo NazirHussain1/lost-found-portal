@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import {
   FaSearch,
@@ -11,30 +12,92 @@ import {
   FaUserPlus,
   FaCog,
   FaSignOutAlt,
-  FaHome
+  FaHome,
+  FaBars,
+  FaTimes
 } from 'react-icons/fa';
 
 export default function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [scrolled, setScrolled] = useState(false);
+  
+  const pathname = usePathname();
+  const mobileMenuRef = useRef(null);
+  const profileDropdownRef = useRef(null);
+  const hamburgerButtonRef = useRef(null);
+  const profileButtonRef = useRef(null);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-    if (isProfileOpen) setIsProfileOpen(false);
+  // Navigation links configuration
+  const navLinks = [
+    { href: "/", label: "Home", icon: FaHome },
+    { href: "/lost", label: "Lost", icon: FaSearch },
+    { href: "/found", label: "Found", icon: FaPlusCircle },
+    { href: "/browse", label: "Browse", icon: FaTh },
+  ];
+
+  // Check if current path is active
+  const isActiveLink = (href) => {
+    if (href === "/") return pathname === "/";
+    return pathname.startsWith(href);
   };
 
-  const toggleProfile = () => {
-    setIsProfileOpen(!isProfileOpen);
-    if (isMenuOpen) setIsMenuOpen(false);
+  // Toggle mobile menu
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(prev => {
+      const newState = !prev;
+      if (newState && isProfileDropdownOpen) {
+        setIsProfileDropdownOpen(false);
+      }
+      return newState;
+    });
   };
 
-  const closeAll = () => {
-    setIsMenuOpen(false);
-    setIsProfileOpen(false);
+  // Toggle profile dropdown
+  const toggleProfileDropdown = () => {
+    setIsProfileDropdownOpen(prev => {
+      const newState = !prev;
+      if (newState && isMobileMenuOpen) {
+        setIsMobileMenuOpen(false);
+      }
+      return newState;
+    });
   };
 
+  // Close all menus
+  const closeAllMenus = () => {
+    setIsMobileMenuOpen(false);
+    setIsProfileDropdownOpen(false);
+  };
+
+  // Handle link click
+  const handleLinkClick = () => {
+    closeAllMenus();
+  };
+
+  // Handle logout
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/logout", { method: "POST" });
+      setUser(null);
+      closeAllMenus();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
+  // Handle keyboard navigation
+  const handleKeyDown = (event, action) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      action();
+    } else if (event.key === "Escape") {
+      closeAllMenus();
+    }
+  };
+
+  // Fetch user data
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -50,365 +113,420 @@ export default function Navbar() {
       }
     };
     fetchUser();
+  }, []);
 
+  // Handle scroll effect
+  useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
+    
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleLogout = async () => {
-    await fetch("/api/logout", { method: "POST" });
-    setUser(null);
-    closeAll();
-  };
+  // Handle outside clicks
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Close mobile menu if clicked outside
+      if (
+        isMobileMenuOpen &&
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target) &&
+        !hamburgerButtonRef.current?.contains(event.target)
+      ) {
+        setIsMobileMenuOpen(false);
+      }
+
+      // Close profile dropdown if clicked outside
+      if (
+        isProfileDropdownOpen &&
+        profileDropdownRef.current &&
+        !profileDropdownRef.current.contains(event.target) &&
+        !profileButtonRef.current?.contains(event.target)
+      ) {
+        setIsProfileDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isMobileMenuOpen, isProfileDropdownOpen]);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileMenuOpen]);
 
   return (
     <>
-      <style jsx global>{`
-        @keyframes slideDown {
-          from { transform: translateY(-10px); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
+      {/* Navbar */}
+      <nav className={`
+        fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out
+        ${scrolled 
+          ? 'bg-gradient-to-r from-indigo-600 to-purple-600 backdrop-blur-md border-b border-white/10 shadow-lg' 
+          : 'bg-gradient-to-r from-indigo-600 to-purple-600'
         }
-        
-        @keyframes fadeIn {
-          from { opacity: 0; transform: scale(0.95); }
-          to { opacity: 1; transform: scale(1); }
-        }
-        
-        .nav-gradient {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          transition: all 0.3s ease;
-        }
-        
-        .nav-scrolled {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-          backdrop-filter: blur(10px);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-          box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        }
-        
-        .nav-link-hover {
-          position: relative;
-          transition: all 0.3s ease;
-        }
-        
-        .nav-link-hover::after {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          left: 50%;
-          width: 0;
-          height: 2px;
-          background: white;
-          transition: all 0.3s ease;
-          transform: translateX(-50%);
-        }
-        
-        .nav-link-hover:hover::after {
-          width: 80%;
-        }
-        
-        .profile-dropdown {
-          animation: fadeIn 0.2s ease-out;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-          border-radius: 16px;
-          overflow: hidden;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        
-        .profile-dropdown .dropdown-item {
-          transition: all 0.2s ease;
-          border-radius: 8px;
-          margin: 4px;
-        }
-        
-        .profile-dropdown .dropdown-item:hover {
-          background: rgba(255, 255, 255, 0.15);
-          transform: translateX(4px);
-        }
-        
-        .mobile-menu-dropdown {
-          animation: slideDown 0.2s ease-out;
-        }
-        
-        .logo-glow {
-          filter: drop-shadow(0 2px 8px rgba(255, 255, 255, 0.3));
-        }
-        
-        .nav-margin {
-          margin-bottom: 5rem;
-        }
-        
-        .nav-content {
-          margin-top: 4.5rem;
-        }
-        
-        .btn-profile-hover:hover {
-          background: rgba(255, 255, 255, 0.15) !important;
-        }
-      `}</style>
-
-      <nav className={`navbar navbar-expand-lg fixed-top py-2 ${scrolled ? 'nav-scrolled' : 'nav-gradient'} shadow-lg nav-margin`} style={{ zIndex: 1030 }}>
-        <div className="container position-relative">
-          <Link className="navbar-brand d-flex align-items-center" href="/" onClick={closeAll}>
-            <div className="position-relative">
+      `}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            
+            {/* Logo */}
+            <Link 
+              href="/" 
+              onClick={handleLinkClick}
+              className="flex items-center space-x-2 group"
+            >
               <img
                 src="/images/lost and found logo.png"
                 alt="Lost & Found Logo"
-                width="65"
-                height="45"
-                className="me-2 logo-glow"
+                className="w-10 h-7 sm:w-12 sm:h-8 transition-transform duration-200 group-hover:scale-105 drop-shadow-md"
               />
+            </Link>
+
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center space-x-1">
+              {navLinks.map((link) => {
+                const Icon = link.icon;
+                const isActive = isActiveLink(link.href);
+                
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={handleLinkClick}
+                    className={`
+                      flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium
+                      transition-all duration-200 ease-in-out relative group
+                      ${isActive 
+                        ? 'text-white bg-white/20 shadow-sm' 
+                        : 'text-white/90 hover:text-white hover:bg-white/10'
+                      }
+                    `}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span>{link.label}</span>
+                    
+                    {/* Active indicator */}
+                    {isActive && (
+                      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-white rounded-full" />
+                    )}
+                    
+                    {/* Hover indicator */}
+                    {!isActive && (
+                      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-white rounded-full transition-all duration-200 group-hover:w-6" />
+                    )}
+                  </Link>
+                );
+              })}
             </div>
-          </Link>
 
-          <div className="d-none d-lg-flex align-items-center ms-auto gap-3">
-            <ul className="navbar-nav me-3">
-              <li className="nav-item">
-                <Link className="nav-link px-3 d-flex align-items-center nav-link-hover text-white" href="/" onClick={closeAll}>
-                  <FaHome className="me-2" />
-                  <span>Home</span>
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link px-3 d-flex align-items-center nav-link-hover text-white" href="/lost" onClick={closeAll}>
-                  <FaSearch className="me-2" />
-                  <span>Lost</span>
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link px-3 d-flex align-items-center nav-link-hover text-white" href="/found" onClick={closeAll}>
-                  <FaPlusCircle className="me-2" />
-                  <span>Found</span>
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link px-3 d-flex align-items-center nav-link-hover text-white" href="/browse" onClick={closeAll}>
-                  <FaTh className="me-2" />
-                  <span>Browse</span>
-                </Link>
-              </li>
-            </ul>
+            {/* Desktop Profile & Mobile Controls */}
+            <div className="flex items-center space-x-2">
+              
+              {/* Desktop Profile Dropdown */}
+              <div className="hidden lg:block relative">
+                <button
+                  ref={profileButtonRef}
+                  onClick={toggleProfileDropdown}
+                  onKeyDown={(e) => handleKeyDown(e, toggleProfileDropdown)}
+                  aria-expanded={isProfileDropdownOpen}
+                  aria-controls="profile-dropdown"
+                  aria-label="User menu"
+                  className={`
+                    flex items-center space-x-2 p-2 rounded-lg transition-all duration-200
+                    ${isProfileDropdownOpen 
+                      ? 'bg-white/20 text-white' 
+                      : 'text-white/90 hover:text-white hover:bg-white/10'
+                    }
+                  `}
+                >
+                  <FaUserCircle className="w-6 h-6" />
+                </button>
 
-            <div className="position-relative">
+                {/* Desktop Profile Dropdown Menu */}
+                {isProfileDropdownOpen && (
+                  <div
+                    ref={profileDropdownRef}
+                    id="profile-dropdown"
+                    className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+                  >
+                    {user ? (
+                      <>
+                        {/* User Info */}
+                        <div className="px-4 py-3 border-b border-gray-100">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
+                              <FaUserCircle className="w-6 h-6 text-white" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-semibold text-gray-900 truncate">
+                                {user.name || "User"}
+                              </p>
+                              <p className="text-xs text-gray-500 truncate">
+                                {user.email}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Menu Items */}
+                        <div className="py-1">
+                          <Link
+                            href="/userProfile"
+                            onClick={handleLinkClick}
+                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+                          >
+                            <FaUserCircle className="w-4 h-4 mr-3 text-gray-400" />
+                            <div>
+                              <div className="font-medium">My Profile</div>
+                              <div className="text-xs text-gray-500">View your profile</div>
+                            </div>
+                          </Link>
+                          
+                          <Link
+                            href="/myItems"
+                            onClick={handleLinkClick}
+                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+                          >
+                            <FaTh className="w-4 h-4 mr-3 text-gray-400" />
+                            <div>
+                              <div className="font-medium">My Items</div>
+                              <div className="text-xs text-gray-500">Manage your reports</div>
+                            </div>
+                          </Link>
+
+                          <hr className="my-1 border-gray-100" />
+                          
+                          <button
+                            onClick={handleLogout}
+                            className="w-full flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-150"
+                          >
+                            <FaSignOutAlt className="w-4 h-4 mr-3" />
+                            <div>
+                              <div className="font-medium">Logout</div>
+                              <div className="text-xs text-red-500">Sign out of account</div>
+                            </div>
+                          </button>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="px-4 py-6">
+                        <div className="text-center mb-4">
+                          <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <FaUserCircle className="w-7 h-7 text-white" />
+                          </div>
+                          <h3 className="text-sm font-semibold text-gray-900 mb-1">Welcome!</h3>
+                          <p className="text-xs text-gray-500">Sign in to access all features</p>
+                        </div>
+                        <div className="space-y-2">
+                          <Link
+                            href="/loginPage"
+                            onClick={handleLinkClick}
+                            className="w-full flex items-center justify-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors duration-150"
+                          >
+                            <FaSignInAlt className="w-4 h-4 mr-2" />
+                            Login
+                          </Link>
+                          <Link
+                            href="/signup"
+                            onClick={handleLinkClick}
+                            className="w-full flex items-center justify-center px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors duration-150"
+                          >
+                            <FaUserPlus className="w-4 h-4 mr-2" />
+                            Register
+                          </Link>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Mobile Profile Button */}
               <button
-                className="btn  border-2 d-flex align-items-center gap-2 rounded-pill px-3 py-2 btn-profile-hover"
-                onClick={toggleProfile}
-                aria-expanded={isProfileOpen}
-                style={{ 
-                  background: isProfileOpen ? 'rgba(255, 255, 255, 0.15)' : 'transparent'
-                }}
+                onClick={toggleProfileDropdown}
+                onKeyDown={(e) => handleKeyDown(e, toggleProfileDropdown)}
+                aria-expanded={isProfileDropdownOpen}
+                aria-controls="mobile-profile-menu"
+                aria-label="User menu"
+                className={`
+                  lg:hidden p-2 rounded-lg transition-all duration-200
+                  ${isProfileDropdownOpen 
+                    ? 'bg-white/20 text-white' 
+                    : 'text-white/90 hover:text-white hover:bg-white/10'
+                  }
+                `}
               >
-              <FaUserCircle size={20} style={{color:"white"}} />
-               
+                <FaUserCircle className="w-5 h-5" />
               </button>
 
-              {isProfileOpen && (
-                <div className="profile-dropdown position-absolute end-0 mt-2 text-white" style={{ minWidth: '270px', zIndex: 1040 }}>
-                  {user ? (
-                    <>
-                      <div className="p-4 border-bottom border-white border-opacity-10">
-                        <div className="d-flex align-items-center">
-                          <div className="bg-white text-primary rounded-circle p-2 me-3">
-                            <FaUserCircle size={24} />
-                          </div>
-                          <div>
-                            <strong className="d-block">{user.name || "User"}</strong>
-                            <small className="opacity-90">{user.email}</small>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="py-2 px-2">
-                        <Link href="/userProfile" className="dropdown-item d-flex align-items-center px-3 py-2 text-white" onClick={closeAll}>
-                          <FaUserCircle className="me-3" />
-                          <div>
-                            <div className="fw-medium">My Profile</div>
-                            <small className="opacity-75">View your profile</small>
-                          </div>
-                        </Link>
-                        <Link href="/myItems" className="dropdown-item d-flex align-items-center px-3 py-2 text-white" onClick={closeAll}>
-                          <FaTh className="me-3" />
-                          <div>
-                            <div className="fw-medium">My Items</div>
-                            <small className="opacity-75">Manage your reports</small>
-                          </div>
-                        </Link>
-                       
-                        <div className="dropdown-divider my-1 border-white border-opacity-10"></div>
-                        <button
-                          className="dropdown-item d-flex align-items-center text-white px-3 py-2 w-100 border-0 bg-transparent"
-                          onClick={handleLogout}
-                        >
-                          <FaSignOutAlt className="me-3" />
-                          <div>
-                            <div className="fw-medium">Logout</div>
-                            <small className="opacity-75">Sign out of account</small>
-                          </div>
-                        </button>
-                      </div>
-                    </>
-                  ) : (
-                    <div className="py-3 px-4">
-                      <div className="text-center mb-3">
-                        <div className="bg-white text-primary rounded-circle d-inline-flex p-3 mb-2">
-                          <FaUserCircle size={24} />
-                        </div>
-                        <h6 className="fw-bold mb-1">Welcome!</h6>
-                        <p className="opacity-75 small mb-3">Sign in to access all features</p>
-                      </div>
-                      <div className="d-grid gap-2">
-                        <Link href="/loginPage" className="btn btn-light btn-sm rounded-pill text-primary fw-medium" onClick={closeAll}>
-                          <FaSignInAlt className="me-2" />
-                          Login
-                        </Link>
-                        <Link href="/signup" className="btn btn-outline-light btn-sm rounded-pill" onClick={closeAll}>
-                          <FaUserPlus className="me-2" />
-                          Register
-                        </Link>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
+              {/* Mobile Menu Button */}
+              <button
+                ref={hamburgerButtonRef}
+                onClick={toggleMobileMenu}
+                onKeyDown={(e) => handleKeyDown(e, toggleMobileMenu)}
+                aria-expanded={isMobileMenuOpen}
+                aria-controls="mobile-menu"
+                aria-label="Toggle navigation menu"
+                className={`
+                  lg:hidden p-2 rounded-lg transition-all duration-200
+                  ${isMobileMenuOpen 
+                    ? 'bg-white/20 text-white' 
+                    : 'text-white/90 hover:text-white hover:bg-white/10'
+                  }
+                `}
+              >
+                {isMobileMenuOpen ? (
+                  <FaTimes className="w-5 h-5" />
+                ) : (
+                  <FaBars className="w-5 h-5" />
+                )}
+              </button>
             </div>
           </div>
+        </div>
 
-          <div className="d-flex d-lg-none align-items-center ms-auto gap-2">
-            <button
-              className="btn  rounded-circle p-2 btn-profile-hover"
-              onClick={toggleProfile}
-              aria-expanded={isProfileOpen}
-              style={{ 
-                background: isProfileOpen ? 'rgba(255, 255, 255, 0.15)' : 'transparent'
-              }}
-            >
-              <FaUserCircle size={18} style={{color:"white"}} />
-            </button>
-
-           <button
-  className="navbar-toggler navbar-dark rounded-2 px-2"
-  type="button"
-  onClick={toggleMenu}
->
-  <span className="navbar-toggler-icon"></span>
-</button>
-
+        {/* Mobile Navigation Menu */}
+        {isMobileMenuOpen && (
+          <div
+            ref={mobileMenuRef}
+            id="mobile-menu"
+            className="lg:hidden bg-white border-t border-gray-200 shadow-lg animate-in slide-in-from-top duration-200"
+          >
+            <div className="px-4 py-3 space-y-1">
+              {navLinks.map((link) => {
+                const Icon = link.icon;
+                const isActive = isActiveLink(link.href);
+                
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={handleLinkClick}
+                    className={`
+                      flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors duration-150
+                      ${isActive 
+                        ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' 
+                        : 'text-gray-700 hover:bg-gray-50'
+                      }
+                    `}
+                  >
+                    <Icon className={`w-5 h-5 ${isActive ? 'text-indigo-600' : 'text-gray-400'}`} />
+                    <span>{link.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
+        )}
 
-         
-          {isProfileOpen && (
-            <div className="d-lg-none position-absolute top-100 start-0 w-100 bg-white shadow-lg rounded-bottom-3 mobile-menu-dropdown" style={{ zIndex: 1040 }}>
-              <div className="d-flex flex-column">
-                <div className="p-4 border-bottom" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
-                  <div className="d-flex align-items-center text-white">
-                    <div className="bg-white text-primary rounded-circle p-2 me-3">
-                      <FaUserCircle size={24} />
+        {/* Mobile Profile Menu */}
+        {isProfileDropdownOpen && (
+          <div
+            id="mobile-profile-menu"
+            className="lg:hidden bg-white border-t border-gray-200 shadow-lg animate-in slide-in-from-top duration-200"
+          >
+            {user ? (
+              <>
+                {/* User Info */}
+                <div className="px-4 py-4 bg-gradient-to-r from-indigo-600 to-purple-600">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                      <FaUserCircle className="w-7 h-7 text-white" />
                     </div>
-                    <div>
-                      <strong className="d-block">{user ? (user.name || "User") : "Account"}</strong>
-                      {user && <small className="opacity-90">{user.email}</small>}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-white truncate">
+                        {user.name || "User"}
+                      </p>
+                      <p className="text-xs text-white/80 truncate">
+                        {user.email}
+                      </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex-grow-1 overflow-auto py-3">
-                  {user ? (
-                    <>
-                      <Link href="/userProfile" className="dropdown-item d-flex align-items-center px-3 py-3 border-bottom" onClick={closeAll}>
-                        <FaUserCircle className="me-3 text-primary" size={20} />
-                        <div>
-                          <div className="fw-medium">My Profile</div>
-                          <small className="text-muted">Personal information</small>
-                        </div>
-                      </Link>
-                      <Link href="/myItems" className="dropdown-item d-flex align-items-center px-3 py-3 border-bottom" onClick={closeAll}>
-                        <FaTh className="me-3 text-primary" size={20} />
-                        <div>
-                          <div className="fw-medium">My Items</div>
-                          <small className="text-muted">Manage your reports</small>
-                        </div>
-                      </Link>
-                      <Link href="/settings" className="dropdown-item d-flex align-items-center px-3 py-3 border-bottom" onClick={closeAll}>
-                        <FaCog className="me-3 text-primary" size={20} />
-                        <div>
-                          <div className="fw-medium">Settings</div>
-                          <small className="text-muted">Account preferences</small>
-                        </div>
-                      </Link>
-                      <div className="p-3">
-                        <button
-                          className="btn btn-danger w-100 rounded-pill d-flex align-items-center justify-content-center py-2"
-                          onClick={handleLogout}
-                        >
-                          <FaSignOutAlt className="me-2" />
-                          Logout
-                        </button>
-                      </div>
-                    </>
-                  ) : (
-                    <div className="p-4">
-                      <div className="text-center mb-4">
-                        <div className="bg-primary text-white rounded-circle d-inline-flex p-3 mb-3">
-                          <FaUserCircle size={28} />
-                        </div>
-                        <h6 className="fw-bold mb-1">Welcome!</h6>
-                        <p className="text-muted small">Sign in to access all features</p>
-                      </div>
-                      <div className="d-grid gap-2">
-                        <Link href="/loginPage" className="btn btn-primary btn-lg rounded-pill" onClick={closeAll}>
-                          <FaSignInAlt className="me-2" />
-                          Login
-                        </Link>
-                        <Link href="/signup" className="btn btn-outline-primary btn-lg rounded-pill" onClick={closeAll}>
-                          <FaUserPlus className="me-2" />
-                          Register
-                        </Link>
-                      </div>
+                {/* Menu Items */}
+                <div className="px-4 py-3 space-y-1">
+                  <Link
+                    href="/userProfile"
+                    onClick={handleLinkClick}
+                    className="flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+                  >
+                    <FaUserCircle className="w-5 h-5 text-gray-400" />
+                    <div>
+                      <div>My Profile</div>
+                      <div className="text-xs text-gray-500">Personal information</div>
                     </div>
-                  )}
+                  </Link>
+                  
+                  <Link
+                    href="/myItems"
+                    onClick={handleLinkClick}
+                    className="flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+                  >
+                    <FaTh className="w-5 h-5 text-gray-400" />
+                    <div>
+                      <div>My Items</div>
+                      <div className="text-xs text-gray-500">Manage your reports</div>
+                    </div>
+                  </Link>
+
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors duration-150"
+                  >
+                    <FaSignOutAlt className="w-5 h-5" />
+                    <div className="text-left">
+                      <div>Logout</div>
+                      <div className="text-xs text-red-500">Sign out of account</div>
+                    </div>
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="px-4 py-6">
+                <div className="text-center mb-4">
+                  <div className="w-16 h-16 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <FaUserCircle className="w-9 h-9 text-white" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-1">Welcome!</h3>
+                  <p className="text-sm text-gray-500">Sign in to access all features</p>
+                </div>
+                <div className="space-y-3">
+                  <Link
+                    href="/loginPage"
+                    onClick={handleLinkClick}
+                    className="w-full flex items-center justify-center px-4 py-3 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors duration-150"
+                  >
+                    <FaSignInAlt className="w-4 h-4 mr-2" />
+                    Login
+                  </Link>
+                  <Link
+                    href="/signup"
+                    onClick={handleLinkClick}
+                    className="w-full flex items-center justify-center px-4 py-3 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors duration-150"
+                  >
+                    <FaUserPlus className="w-4 h-4 mr-2" />
+                    Register
+                  </Link>
                 </div>
               </div>
-            </div>
-          )}
-
-          
-          {isMenuOpen && (
-            <div className="d-lg-none position-absolute top-100 start-0 w-100 bg-white shadow-lg rounded-bottom-3 border-top mobile-menu-dropdown" style={{ zIndex: 1040 }}>
-              <ul className="navbar-nav flex-column m-0 p-3">
-                <li className="nav-item">
-                  <Link className="nav-link d-flex align-items-center py-3 text-dark" href="/" onClick={closeAll}>
-                    <FaHome className="me-3 text-primary" size={18} />
-                    <span>Home</span>
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link d-flex align-items-center py-3 text-dark" href="/lost" onClick={closeAll}>
-                    <FaSearch className="me-3 text-danger" size={18} />
-                    <span>Report Lost Item</span>
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link d-flex align-items-center py-3 text-dark" href="/found" onClick={closeAll}>
-                    <FaPlusCircle className="me-3 text-success" size={18} />
-                    <span>Report Found Item</span>
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link d-flex align-items-center py-3 text-dark" href="/browse" onClick={closeAll}>
-                    <FaTh className="me-3 text-primary" size={18} />
-                    <span>Browse Items</span>
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </nav>
 
-      <div className="nav-content"></div>
+      {/* Spacer to prevent content overlap */}
+      <div className="h-16" />
     </>
   );
 }
