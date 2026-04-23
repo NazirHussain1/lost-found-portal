@@ -422,17 +422,17 @@ export default function LostItemForm() {
 
       <div className="container py-4 fade-in">
         <div className="row justify-content-center">
-          <div className="col-lg-8">
+          <div className="col-12 col-lg-8">
           
             {user && (
               <div className="card shadow-sm border-0 mb-4 stat-card">
-                <div className="card-body p-4">
+                <div className="card-body p-3 p-sm-4">
                   <div className="d-flex align-items-center">
                     <div className="rounded-circle p-2 me-3" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
                       <FaUser size={20} className="text-white" />
                     </div>
                     <div>
-                      <h6 className="mb-1 fw-bold text-gradient">Reporting as: {user.name || "Student"}</h6>
+                      <h6 className="mb-1 fw-bold text-gradient">{user.name || "Student"}</h6>
                       <small className="text-muted">GAMICA Campus Member</small>
                     </div>
                   </div>
@@ -443,30 +443,32 @@ export default function LostItemForm() {
           
             <div className="card shadow-lg border-0 card-hover-3d overflow-hidden mb-4">
              
-              <div className="card-header lost-header text-white py-4 px-4">
+              <div className="card-header lost-header text-white py-3 py-sm-4 px-3 px-sm-4">
                 <div className="d-flex align-items-center">
                   <div className="rounded-circle p-2 me-3">
-                    <FaExclamationTriangle size={24} className="icon-gradient" />
+                    <FaExclamationTriangle size={20} className="text-white" />
                   </div>
                   <div>
-                    <h1 className="h3 fw-bold mb-1">Report Lost Item</h1>
-                    <p className="mb-0 opacity-90">Help our community assist you in finding lost belongings</p>
+                    <h1 className="h4 h-sm-3 fw-bold mb-1">Report Lost Item</h1>
+                    <p className="mb-0 opacity-90 small">Help our community assist you in finding lost belongings</p>
                   </div>
                 </div>
               </div>
               
-              <div className="card-body p-4 form-gradient">
+              <div className="card-body p-3 p-sm-4 form-gradient">
                 {message.text && (
-                  <div className={`alert alert-${message.type === "success" ? "success" : "danger"} alert-dismissible fade show d-flex align-items-center p-3 mb-4 rounded-lg`} role="alert">
-                    {message.type === "success" ? (
-                      <FaCheckCircle className="me-3" size={18} />
-                    ) : (
-                      <FaExclamationTriangle className="me-3" size={18} />
-                    )}
+                  <div className={`alert alert-${message.type === "success" ? "success" : "danger"} alert-dismissible fade show d-flex align-items-start p-3 mb-4 rounded-lg`} role="alert">
+                    <div className="flex-shrink-0 me-2 me-sm-3">
+                      {message.type === "success" ? (
+                        <FaCheckCircle size={18} />
+                      ) : (
+                        <FaExclamationTriangle size={18} />
+                      )}
+                    </div>
                     <div className="flex-grow-1 fw-medium">{message.text}</div>
                     <button 
                       type="button" 
-                      className="btn-close" 
+                      className="btn-close ms-2" 
                       onClick={() => setMessage({ type: "", text: "" })}
                       aria-label="Close"
                     ></button>
@@ -475,7 +477,7 @@ export default function LostItemForm() {
 
                 <form onSubmit={handleSubmit}>
                 
-                  <div className="mb-4">
+                  <div className="mb-3 mb-sm-4">
                     <label htmlFor="title" className="form-label d-flex align-items-center mb-2">
                       <FaTag className="me-2" style={{ color: '#667eea' }} size={16} />
                       Item Title <span className="text-danger ms-1">*</span>
@@ -507,7 +509,7 @@ export default function LostItemForm() {
                   </div>
 
                 
-                  <div className="mb-4">
+                  <div className="mb-3 mb-sm-4">
                     <label htmlFor="description" className="form-label d-flex align-items-center mb-2">
                       <FaInfoCircle className="me-2" style={{ color: '#667eea' }} size={16} />
                       Description <span className="text-danger ms-1">*</span>
@@ -534,7 +536,7 @@ export default function LostItemForm() {
                         {errors.description}
                       </div>
                     )}
-                    <div className="form-text small d-flex justify-content-between mt-1">
+                    <div className="form-text small d-flex flex-column flex-sm-row justify-content-between mt-1">
                       <span className="text-muted">{form.description.length}/500 characters</span>
                       <span className={form.description.length > 450 ? 'text-warning' : 'text-muted'}>
                         {form.description.length > 450 ? `${500 - form.description.length} remaining` : ''}
@@ -542,9 +544,9 @@ export default function LostItemForm() {
                     </div>
                   </div>
 
-                  <div className="row g-3 mb-4">
+                  <div className="row g-3 mb-3 mb-sm-4">
                 
-                    <div className="col-md-6">
+                    <div className="col-12 col-sm-6">
                       <label htmlFor="category" className="form-label d-flex align-items-center mb-2">
                         <FaTag className="me-2" style={{ color: '#667eea' }} size={16} />
                         Category <span className="text-danger ms-1">*</span>
@@ -581,7 +583,7 @@ export default function LostItemForm() {
                     </div>
 
                    
-                    <div className="col-md-6">
+                    <div className="col-12 col-sm-6">
                       <label htmlFor="location" className="form-label d-flex align-items-center mb-2">
                         <FaMapMarkerAlt className="me-2" style={{ color: '#667eea' }} size={16} />
                         Location <span className="text-danger ms-1">*</span>
@@ -611,7 +613,7 @@ export default function LostItemForm() {
                   </div>
 
                 
-                  <div className="mb-4">
+                  <div className="mb-3 mb-sm-4">
                     <label className="form-label d-flex align-items-center mb-2">
                       <FaCamera className="me-2" style={{ color: '#667eea' }} size={16} />
                       Item Photo (Optional)
@@ -619,12 +621,12 @@ export default function LostItemForm() {
                     
                     {imagePreview ? (
                       <div className="image-preview-container mb-3">
-                        <div className="image-preview position-relative" style={{ maxWidth: '300px' }}>
+                        <div className="image-preview position-relative d-inline-block">
                           <img 
                             src={imagePreview} 
                             alt="Preview" 
                             className="img-fluid rounded-lg shadow-sm"
-                            style={{ maxHeight: '200px', objectFit: 'cover' }}
+                            style={{ maxHeight: '200px', maxWidth: '100%', objectFit: 'cover' }}
                           />
                           <button
                             type="button"
@@ -638,11 +640,11 @@ export default function LostItemForm() {
                       </div>
                     ) : (
                       <div 
-                        className="image-upload-area text-center p-4 mb-3 rounded-lg"
+                        className="image-upload-area text-center p-3 p-sm-4 mb-3 rounded-lg"
                         onClick={() => fileInputRef.current?.click()}
                       >
-                        <FaUpload size={28} className="mb-3" style={{ color: '#667eea' }} />
-                        <p className="mb-2 fw-semibold" style={{ color: '#4a5568' }}>Click to upload a photo</p>
+                        <FaUpload size={24} className="mb-2 mb-sm-3" style={{ color: '#667eea' }} />
+                        <p className="mb-1 mb-sm-2 fw-semibold" style={{ color: '#4a5568' }}>Click to upload a photo</p>
                         <p className="text-muted small mb-0">PNG, JPG, GIF up to 5MB</p>
                       </div>
                     )}
@@ -658,21 +660,19 @@ export default function LostItemForm() {
                   </div>
 
                  
-                  <div className="d-flex gap-3 justify-content-end mt-4 pt-4 border-top">
+                  <div className="d-flex flex-column flex-sm-row gap-2 gap-sm-3 justify-content-end mt-3 mt-sm-4 pt-3 pt-sm-4 border-top">
                     <button
                       type="button"
-                      className="btn  btn-outline-gradient px-4 py-2 rounded-pill fw-medium"
+                      className="btn btn-outline-gradient px-4 py-2 rounded-pill fw-medium order-2 order-sm-1"
                       onClick={handleClearForm}
                       disabled={loading}
-                      
-                     
                     >
                       <FaTrash className="me-2" size={14} />
                       Clear Form
                     </button>
                     <button
                       type="submit"
-                      className="btn submit-btn px-5 py-2 rounded-pill fw-bold"
+                      className="btn submit-btn px-4 px-sm-5 py-2 rounded-pill fw-bold order-1 order-sm-2"
                       disabled={loading}
                     >
                       {loading ? (
@@ -694,11 +694,11 @@ export default function LostItemForm() {
 
           
             <div className="card shadow-sm border-0 stat-card">
-              <div className="card-body p-4">
-                <div className="row g-3">
+              <div className="card-body p-3 p-sm-4">
+                <div className="row g-2 g-sm-3">
                   <div className="col-4">
                     <div className="text-center p-2">
-                      <div className="h4 fw-bold mb-2">
+                      <div className="h5 h-sm-4 fw-bold mb-1 mb-sm-2">
                         <FaSearch className="icon-gradient" />
                       </div>
                       <div className="small fw-semibold" style={{ color: '#4a5568' }}>Browse Items</div>
@@ -706,7 +706,7 @@ export default function LostItemForm() {
                   </div>
                   <div className="col-4">
                     <div className="text-center p-2">
-                      <div className="h4 fw-bold mb-2">
+                      <div className="h5 h-sm-4 fw-bold mb-1 mb-sm-2">
                         <FaCheckCircle className="icon-gradient" />
                       </div>
                       <div className="small fw-semibold" style={{ color: '#4a5568' }}>Successful Reports</div>
@@ -714,7 +714,7 @@ export default function LostItemForm() {
                   </div>
                   <div className="col-4">
                     <div className="text-center p-2">
-                      <div className="h4 fw-bold mb-2">
+                      <div className="h5 h-sm-4 fw-bold mb-1 mb-sm-2">
                         <FaExclamationTriangle className="icon-gradient" />
                       </div>
                       <div className="small fw-semibold" style={{ color: '#4a5568' }}>Active Search</div>

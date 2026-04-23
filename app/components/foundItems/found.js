@@ -415,7 +415,7 @@ export default function FoundItemForm() {
 
       <div className="container py-4 fade-in">
         <div className="row justify-content-center">
-          <div className="col-lg-8">
+          <div className="col-12 col-lg-8">
           
             {user && (
               <div className="card shadow-sm border-0 mb-4 stat-card">

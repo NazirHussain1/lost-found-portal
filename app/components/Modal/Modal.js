@@ -132,12 +132,12 @@ export default function Modal({
     if (size === "full") {
       return "w-full h-full rounded-none";
     }
-    return "w-full h-full max-h-[100vh] rounded-t-xl md:h-auto md:max-h-[90vh] md:rounded-xl";
+    return "w-full h-full max-h-[100vh] rounded-t-xl sm:h-auto sm:max-h-[90vh] sm:rounded-xl";
   };
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center md:items-center md:justify-center p-0 md:p-4"
+      className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:justify-center p-0 sm:p-4"
       style={{
         backgroundColor: "rgba(0, 0, 0, 0.5)",
         backdropFilter: "blur(4px)",
@@ -153,7 +153,7 @@ export default function Modal({
         className={`
           bg-white shadow-2xl overflow-hidden
           ${getMobileClasses()}
-          md:${getSizeClasses()}
+          sm:${getSizeClasses()}
           ${className}
         `}
         style={{
@@ -167,12 +167,12 @@ export default function Modal({
         {(title || showCloseButton) && (
           <div
             className={`
-              flex items-center justify-between p-4 md:p-6
+              flex items-center justify-between p-4 sm:p-6
               bg-gradient-to-r from-indigo-600 to-purple-600 text-white
               ${headerClassName}
             `}
           >
-            <h2 className="text-lg md:text-xl font-bold truncate pr-4">
+            <h2 className="text-lg sm:text-xl font-bold truncate pr-4">
               {title}
             </h2>
             {showCloseButton && (
@@ -194,7 +194,7 @@ export default function Modal({
         {/* Body */}
         <div
           className={`
-            flex-1 overflow-y-auto p-4 md:p-6
+            flex-1 overflow-y-auto p-4 sm:p-6
             ${bodyClassName}
           `}
         >
@@ -205,7 +205,7 @@ export default function Modal({
         {footer && (
           <div
             className={`
-              flex items-center justify-end gap-3 p-4 md:p-6
+              flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 p-4 sm:p-6
               border-t border-gray-200 bg-gray-50
               ${footerClassName}
             `}
@@ -275,14 +275,14 @@ export function ConfirmModal({
   const footer = (
     <>
       <button
-        className="btn-secondary-custom"
+        className="btn-secondary-custom w-full sm:w-auto"
         onClick={onClose}
         disabled={isLoading}
       >
         {cancelText}
       </button>
       <button
-        className={getConfirmButtonClass()}
+        className={`${getConfirmButtonClass()} w-full sm:w-auto`}
         onClick={onConfirm}
         disabled={isLoading}
       >
