@@ -43,6 +43,80 @@ export default function ProfilePage() {
   const [recentActivity, setRecentActivity] = useState([]);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [formErrors, setFormErrors] = useState({});
+
+  const validateField = (name, value) => {
+    const errors = {};
+    
+    switch (name) {
+      case 'name':
+        if (!value.trim()) {
+          errors.name = "Name is required";
+        } else if (value.trim().length < 2) {
+          errors.name = "Name must be at least 2 characters";
+        } else if (value.trim().length > 50) {
+          errors.name = "Name must not exceed 50 characters";
+        }
+        break;
+      case 'email':
+        if (!value.trim()) {
+          errors.email = "Email is required";
+        } else if (!/\S+@\S+\.\S+/.test(value)) {
+          errors.email = "Please enter a valid email address";
+        }
+        break;
+      case 'phone':
+        if (value && !/^[0-9+\-\s()]{10,15}$/.test(value.replace(/\s/g, ''))) {
+          errors.phone = "Please enter a valid phone number";
+        }
+        break;
+      case 'location':
+        if (value && value.length > 100) {
+          errors.location = "Location must not exceed 100 characters";
+        }
+        break;
+      case 'bio':
+        if (value && value.length > 500) {
+          errors.bio = "Bio must not exceed 500 characters";
+        }
+        break;
+    }
+    
+    return errors;
+  };
+
+  const handleInputChange = (field, value) => {
+    setEditForm(prev => ({ ...prev, [field]: value }));
+    
+    // Clear error when user starts typing
+    if (formErrors[field]) {
+      setFormErrors(prev => ({ ...prev, [field]: "" }));
+    }
+  };
+
+  const handleInputBlur = (field, value) => {
+    const fieldErrors = validateField(field, value);
+    
+    if (fieldErrors[field]) {
+      setFormErrors(prev => ({ ...prev, [field]: fieldErrors[field] }));
+    } else {
+      setFormErrors(prev => ({ ...prev, [field]: "" }));
+    }
+  };
+
+  const validateForm = () => {
+    const errors = {};
+    
+    Object.keys(editForm).forEach(field => {
+      const fieldErrors = validateField(field, editForm[field]);
+      if (fieldErrors[field]) {
+        errors[field] = fieldErrors[field];
+      }
+    });
+    
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   useEffect(() => {
     fetchUserProfile();
@@ -116,6 +190,11 @@ export default function ProfilePage() {
   }
 
   async function handleSaveProfile() {
+    if (!validateForm()) {
+      toast.error("Please fix the errors before saving");
+      return;
+    }
+
     try {
       setLoading(true);
       const res = await fetch("/api/profile", {
@@ -125,12 +204,14 @@ export default function ProfilePage() {
       });
 
       if (!res.ok) {
-        throw new Error("Failed to update profile");
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Failed to update profile");
       }
 
       const data = await res.json();
       setUserData(data);
       setEditMode(false);
+      setFormErrors({});
       
       toast.success("Profile updated successfully!", {
         style: { 
@@ -142,7 +223,7 @@ export default function ProfilePage() {
 
     } catch (error) {
       console.error("Error updating profile:", error);
-      toast.error("Failed to update profile");
+      toast.error(error.message || "Failed to update profile");
     } finally {
       setLoading(false);
     }
@@ -409,6 +490,25 @@ export default function ProfilePage() {
           background-image: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
           color: white;
         }
+        
+        .input-custom:focus, .textarea-custom:focus {
+          border-color: var(--color-primary-500) !important;
+          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+          outline: none;
+        }
+        
+        .input-error {
+          border-color: var(--color-error-500) !important;
+        }
+        
+        .input-error:focus {
+          border-color: var(--color-error-500) !important;
+          box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+        }
+        
+        .profile-input, .input-custom, .textarea-custom {
+          transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
       `}</style>
 
       <div className="container py-3 py-md-5">
@@ -459,17 +559,23 @@ export default function ProfilePage() {
                         type="text"
                         className="profile-input"
                         value={editForm.name}
-                        onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                        onChange={(e) => handleInputChange('name', e.target.value)}
+                        onBlur={(e) => handleInputBlur('name', e.target.value)}
                         style={{ 
                           fontSize: "1.5rem", 
                           background: "transparent", 
                           color: "white", 
-                          border: "2px solid rgba(255, 255, 255, 0.3)",
+                          border: `2px solid ${formErrors.name ? 'var(--color-error-500)' : 'rgba(255, 255, 255, 0.3)'}`,
                           textAlign: "center"
                         }}
                       />
                     ) : (
                       userData.name
+                    )}
+                    {editMode && formErrors.name && (
+                      <div className="text-center mt-1">
+                        <small style={{ color: '#ffcccb' }}>{formErrors.name}</small>
+                      </div>
                     )}
                   </h1>
                   <p className="lead opacity-90 mb-0 d-flex align-items-center justify-content-center justify-content-md-start">
@@ -479,17 +585,23 @@ export default function ProfilePage() {
                         type="email"
                         className="profile-input"
                         value={editForm.email}
-                        onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                        onChange={(e) => handleInputChange('email', e.target.value)}
+                        onBlur={(e) => handleInputBlur('email', e.target.value)}
                         style={{ 
                           background: "transparent", 
                           color: "white", 
-                          border: "2px solid rgba(255, 255, 255, 0.3)",
+                          border: `2px solid ${formErrors.email ? 'var(--color-error-500)' : 'rgba(255, 255, 255, 0.3)'}`,
                           fontSize: "0.9rem",
                           textAlign: "center"
                         }}
                       />
                     ) : (
                       <span className="small">{userData.email}</span>
+                    )}
+                    {editMode && formErrors.email && (
+                      <div className="text-center mt-1">
+                        <small style={{ color: '#ffcccb' }}>{formErrors.email}</small>
+                      </div>
                     )}
                   </p>
                 </div>
@@ -560,13 +672,22 @@ export default function ProfilePage() {
                   <div className="w-100">
                     <small className="text-muted d-block">Phone</small>
                     {editMode ? (
-                      <input
-                        type="text"
-                        className="input-custom"
-                        value={editForm.phone}
-                        onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
-                        placeholder="Enter phone number"
-                      />
+                      <div>
+                        <input
+                          type="text"
+                          className="input-custom"
+                          value={editForm.phone}
+                          onChange={(e) => handleInputChange('phone', e.target.value)}
+                          onBlur={(e) => handleInputBlur('phone', e.target.value)}
+                          placeholder="Enter phone number"
+                          style={{
+                            borderColor: formErrors.phone ? 'var(--color-error-500)' : 'var(--color-gray-300)'
+                          }}
+                        />
+                        {formErrors.phone && (
+                          <div className="text-danger small mt-1">{formErrors.phone}</div>
+                        )}
+                      </div>
                     ) : (
                       <span className="d-block mt-1" style={{ color: "#764ba2", wordBreak: "break-word" }}>
                         {userData.phone}
@@ -580,13 +701,22 @@ export default function ProfilePage() {
                   <div className="w-100">
                     <small className="text-muted d-block">Location</small>
                     {editMode ? (
-                      <input
-                        type="text"
-                        className="input-custom"
-                        value={editForm.location}
-                        onChange={(e) => setEditForm({ ...editForm, location: e.target.value })}
-                        placeholder="Enter your location"
-                      />
+                      <div>
+                        <input
+                          type="text"
+                          className="input-custom"
+                          value={editForm.location}
+                          onChange={(e) => handleInputChange('location', e.target.value)}
+                          onBlur={(e) => handleInputBlur('location', e.target.value)}
+                          placeholder="Enter your location"
+                          style={{
+                            borderColor: formErrors.location ? 'var(--color-error-500)' : 'var(--color-gray-300)'
+                          }}
+                        />
+                        {formErrors.location && (
+                          <div className="text-danger small mt-1">{formErrors.location}</div>
+                        )}
+                      </div>
                     ) : (
                       <span className="d-block mt-1" style={{ color: "#764ba2", wordBreak: "break-word" }}>
                         {userData.location}
@@ -623,13 +753,26 @@ export default function ProfilePage() {
               <div>
                 <h6 className="fw-bold mb-2" style={{ color: "#667eea" }}>About</h6>
                 {editMode ? (
-                  <textarea
-                    className="textarea-custom"
-                    rows="3"
-                    value={editForm.bio}
-                    onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })}
-                    placeholder="Tell us about yourself..."
-                  />
+                  <div>
+                    <textarea
+                      className="textarea-custom"
+                      rows="3"
+                      value={editForm.bio}
+                      onChange={(e) => handleInputChange('bio', e.target.value)}
+                      onBlur={(e) => handleInputBlur('bio', e.target.value)}
+                      placeholder="Tell us about yourself..."
+                      style={{
+                        borderColor: formErrors.bio ? 'var(--color-error-500)' : 'var(--color-gray-300)',
+                        resize: 'vertical'
+                      }}
+                    />
+                    <div className="d-flex justify-content-between mt-1">
+                      <span className="small text-muted">{editForm.bio.length}/500 characters</span>
+                      {formErrors.bio && (
+                        <span className="small text-danger">{formErrors.bio}</span>
+                      )}
+                    </div>
+                  </div>
                 ) : (
                   <p style={{ color: "#764ba2" }} className="mb-0 small">
                     {userData.bio || "No bio added yet. Click 'Edit Profile' to add one."}

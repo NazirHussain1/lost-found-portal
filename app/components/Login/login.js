@@ -20,14 +20,57 @@ export default function ProfessionalLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
+  const validateField = (name, value) => {
+    const fieldErrors = {};
+
+    switch (name) {
+      case 'email':
+        if (!value) {
+          fieldErrors.email = "Email is required";
+        } else if (!/\S+@\S+\.\S+/.test(value)) {
+          fieldErrors.email = "Please enter a valid email address";
+        }
+        break;
+      case 'password':
+        if (!value) {
+          fieldErrors.password = "Password is required";
+        }
+        break;
+    }
+
+    return fieldErrors;
+  };
+
+  const handleInputChange = (name, value) => {
+    if (name === 'email') {
+      setEmail(value);
+    } else if (name === 'password') {
+      setPassword(value);
+    }
+
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: "" }));
+    }
+  };
+
+  const handleInputBlur = (name, value) => {
+    const fieldErrors = validateField(name, value);
+    
+    if (fieldErrors[name]) {
+      setErrors(prev => ({ ...prev, [name]: fieldErrors[name] }));
+    } else {
+      setErrors(prev => ({ ...prev, [name]: "" }));
+    }
+  };
+
   const validateForm = () => {
     const newErrors = {};
 
-    if (!email) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = "Please enter a valid email address";
-    }
+    const emailErrors = validateField('email', email);
+    const passwordErrors = validateField('password', password);
+
+    Object.assign(newErrors, emailErrors, passwordErrors);
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -198,6 +241,25 @@ export default function ProfessionalLogin() {
           background: rgba(102, 126, 234, 0.05) !important;
           border-color: #667eea !important;
         }
+        
+        .input-custom:focus {
+          border-color: var(--color-primary-500) !important;
+          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+          outline: none;
+        }
+        
+        .input-error {
+          border-color: var(--color-error-500) !important;
+        }
+        
+        .input-error:focus {
+          border-color: var(--color-error-500) !important;
+          box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+        }
+        
+        .form-control, .input-custom {
+          transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
       `}</style>
 
       <div className="login-gradient-bg d-flex align-items-center justify-content-center fade-in">
@@ -228,12 +290,13 @@ export default function ProfessionalLogin() {
                         className={`input-custom border-start-0 ${errors.email ? "input-error" : ""}`}
                         placeholder="name@example.com"
                         value={email}
-                        onChange={(e) => {
-                          setEmail(e.target.value);
-                          if (errors.email) setErrors({ ...errors, email: "" });
-                        }}
+                        onChange={(e) => handleInputChange('email', e.target.value)}
+                        onBlur={(e) => handleInputBlur('email', e.target.value)}
                         onKeyPress={handleKeyPress}
                         autoComplete="email"
+                        style={{
+                          borderColor: errors.email ? 'var(--color-error-500)' : 'var(--color-gray-300)'
+                        }}
                         required
                       />
                     </div>
@@ -257,12 +320,17 @@ export default function ProfessionalLogin() {
                         id="password"
                         name="password"
                         type={showPassword ? "text" : "password"}
-                        className="input-custom border-start-0 border-end-0"
+                        className={`input-custom border-start-0 border-end-0 ${errors.password ? "input-error" : ""}`}
                         placeholder="Enter your password"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={(e) => handleInputChange('password', e.target.value)}
+                        onBlur={(e) => handleInputBlur('password', e.target.value)}
                         onKeyPress={handleKeyPress}
                         autoComplete="current-password"
+                        style={{
+                          borderColor: errors.password ? 'var(--color-error-500)' : 'var(--color-gray-300)'
+                        }}
+                        required
                       />
                       <button
                         type="button"
@@ -272,6 +340,11 @@ export default function ProfessionalLogin() {
                         {showPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
                       </button>
                     </div>
+                    {errors.password && (
+                      <div className="invalid-feedback d-block mt-2" style={{ color: '#ef4444' }}>
+                        {errors.password}
+                      </div>
+                    )}
                   </div>
 
                   <div className="mb-2">

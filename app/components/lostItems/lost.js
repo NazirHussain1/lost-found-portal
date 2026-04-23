@@ -45,19 +45,91 @@ export default function LostItemForm() {
   const validateForm = () => {
     const newErrors = {};
     
-    if (!form.title.trim()) newErrors.title = "Title is required";
-    if (!form.description.trim()) newErrors.description = "Description is required";
-    if (!form.category) newErrors.category = "Category is required";
-    if (!form.location.trim()) newErrors.location = "Location is required";
+    if (!form.title.trim()) {
+      newErrors.title = "Title is required";
+    } else if (form.title.trim().length < 3) {
+      newErrors.title = "Title must be at least 3 characters";
+    } else if (form.title.trim().length > 100) {
+      newErrors.title = "Title must not exceed 100 characters";
+    }
+    
+    if (!form.description.trim()) {
+      newErrors.description = "Description is required";
+    } else if (form.description.trim().length < 10) {
+      newErrors.description = "Description must be at least 10 characters";
+    } else if (form.description.trim().length > 500) {
+      newErrors.description = "Description must not exceed 500 characters";
+    }
+    
+    if (!form.category) {
+      newErrors.category = "Category is required";
+    }
+    
+    if (!form.location.trim()) {
+      newErrors.location = "Location is required";
+    } else if (form.location.trim().length < 3) {
+      newErrors.location = "Location must be at least 3 characters";
+    }
     
     return newErrors;
+  };
+
+  const validateField = (name, value) => {
+    const fieldErrors = {};
+    
+    switch (name) {
+      case 'title':
+        if (!value.trim()) {
+          fieldErrors.title = "Title is required";
+        } else if (value.trim().length < 3) {
+          fieldErrors.title = "Title must be at least 3 characters";
+        } else if (value.trim().length > 100) {
+          fieldErrors.title = "Title must not exceed 100 characters";
+        }
+        break;
+      case 'description':
+        if (!value.trim()) {
+          fieldErrors.description = "Description is required";
+        } else if (value.trim().length < 10) {
+          fieldErrors.description = "Description must be at least 10 characters";
+        } else if (value.trim().length > 500) {
+          fieldErrors.description = "Description must not exceed 500 characters";
+        }
+        break;
+      case 'category':
+        if (!value) {
+          fieldErrors.category = "Category is required";
+        }
+        break;
+      case 'location':
+        if (!value.trim()) {
+          fieldErrors.location = "Location is required";
+        } else if (value.trim().length < 3) {
+          fieldErrors.location = "Location must be at least 3 characters";
+        }
+        break;
+    }
+    
+    return fieldErrors;
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
     
+    // Clear error when user starts typing
     if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: "" }));
+    }
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    const fieldErrors = validateField(name, value);
+    
+    if (fieldErrors[name]) {
+      setErrors(prev => ({ ...prev, [name]: fieldErrors[name] }));
+    } else {
       setErrors(prev => ({ ...prev, [name]: "" }));
     }
   };
@@ -306,6 +378,31 @@ export default function LostItemForm() {
           box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.15);
         }
         
+        .input-focus-effect:focus {
+          border-color: var(--color-primary-500) !important;
+          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+          outline: none;
+        }
+        
+        .input-error {
+          border-color: var(--color-error-500) !important;
+        }
+        
+        .input-error:focus {
+          border-color: var(--color-error-500) !important;
+          box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+        }
+        
+        .form-control, .form-select, .input-custom, .textarea-custom {
+          transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .form-control:focus, .form-select:focus, .input-custom:focus, .textarea-custom:focus {
+          border-color: var(--color-primary-500);
+          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+          outline: none;
+        }
+        
         .alert-success {
           background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%);
           border: 1px solid rgba(16, 185, 129, 0.2);
@@ -389,16 +486,24 @@ export default function LostItemForm() {
                       name="title"
                       value={form.title}
                       onChange={handleChange}
+                      onBlur={handleBlur}
                       placeholder="e.g., 'Black Leather Wallet', 'iPhone 14 Pro'"
                       className={`form-control ${errors.title ? "is-invalid" : ""} input-focus-effect`}
+                      style={{
+                        borderColor: errors.title ? 'var(--color-error-500)' : 'var(--color-gray-300)',
+                        transition: 'var(--transition-base)'
+                      }}
                       required
                     />
                     {errors.title && (
-                      <div className="invalid-feedback d-flex align-items-center">
+                      <div className="invalid-feedback d-flex align-items-center mt-1">
                         <FaExclamationTriangle className="me-1" size={12} />
                         {errors.title}
                       </div>
                     )}
+                    <div className="form-text small text-muted mt-1">
+                      {form.title.length}/100 characters
+                    </div>
                   </div>
 
                 
@@ -412,17 +517,29 @@ export default function LostItemForm() {
                       name="description"
                       value={form.description}
                       onChange={handleChange}
+                      onBlur={handleBlur}
                       placeholder="Describe distinctive features, color, brand, contents..."
                       rows="3"
                       className={`form-control ${errors.description ? "is-invalid" : ""} input-focus-effect`}
+                      style={{
+                        borderColor: errors.description ? 'var(--color-error-500)' : 'var(--color-gray-300)',
+                        transition: 'var(--transition-base)',
+                        resize: 'vertical'
+                      }}
                       required
                     />
                     {errors.description && (
-                      <div className="invalid-feedback d-flex align-items-center">
+                      <div className="invalid-feedback d-flex align-items-center mt-1">
                         <FaExclamationTriangle className="me-1" size={12} />
                         {errors.description}
                       </div>
                     )}
+                    <div className="form-text small d-flex justify-content-between mt-1">
+                      <span className="text-muted">{form.description.length}/500 characters</span>
+                      <span className={form.description.length > 450 ? 'text-warning' : 'text-muted'}>
+                        {form.description.length > 450 ? `${500 - form.description.length} remaining` : ''}
+                      </span>
+                    </div>
                   </div>
 
                   <div className="row g-3 mb-4">
@@ -437,7 +554,12 @@ export default function LostItemForm() {
                         name="category"
                         value={form.category}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                         className={`form-select ${errors.category ? "is-invalid" : ""} input-focus-effect`}
+                        style={{
+                          borderColor: errors.category ? 'var(--color-error-500)' : 'var(--color-gray-300)',
+                          transition: 'var(--transition-base)'
+                        }}
                         required
                       >
                         <option value="">Select category</option>
@@ -451,7 +573,7 @@ export default function LostItemForm() {
                         <option value="other">Other</option>
                       </select>
                       {errors.category && (
-                        <div className="invalid-feedback d-flex align-items-center">
+                        <div className="invalid-feedback d-flex align-items-center mt-1">
                           <FaExclamationTriangle className="me-1" size={12} />
                           {errors.category}
                         </div>
@@ -470,12 +592,17 @@ export default function LostItemForm() {
                         name="location"
                         value={form.location}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                         placeholder="e.g., 'Main Library - 2nd Floor'"
                         className={`form-control ${errors.location ? "is-invalid" : ""} input-focus-effect`}
+                        style={{
+                          borderColor: errors.location ? 'var(--color-error-500)' : 'var(--color-gray-300)',
+                          transition: 'var(--transition-base)'
+                        }}
                         required
                       />
                       {errors.location && (
-                        <div className="invalid-feedback d-flex align-items-center">
+                        <div className="invalid-feedback d-flex align-items-center mt-1">
                           <FaExclamationTriangle className="me-1" size={12} />
                           {errors.location}
                         </div>

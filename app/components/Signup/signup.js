@@ -24,26 +24,102 @@ export default function ProfessionalRegister() {
   const [errors, setErrors] = useState({});
   const [acceptedTerms, setAcceptedTerms] = useState(false);
 
+  const validateField = (name, value) => {
+    const fieldErrors = {};
+
+    switch (name) {
+      case 'name':
+        if (!value.trim()) {
+          fieldErrors.name = "Full name is required";
+        } else if (value.trim().length < 2) {
+          fieldErrors.name = "Name must be at least 2 characters";
+        } else if (value.trim().length > 50) {
+          fieldErrors.name = "Name must not exceed 50 characters";
+        }
+        break;
+      case 'email':
+        if (!value) {
+          fieldErrors.email = "Email is required";
+        } else if (!/\S+@\S+\.\S+/.test(value)) {
+          fieldErrors.email = "Please enter a valid email address";
+        }
+        break;
+      case 'phone':
+        if (!value) {
+          fieldErrors.phone = "Phone number is required";
+        } else if (!/^[0-9+\-\s()]{10,15}$/.test(value.replace(/\s/g, ''))) {
+          fieldErrors.phone = "Please enter a valid phone number (10-15 digits)";
+        }
+        break;
+      case 'password':
+        if (!value) {
+          fieldErrors.password = "Password is required";
+        } else if (value.length < 6) {
+          fieldErrors.password = "Password must be at least 6 characters";
+        } else if (value.length > 128) {
+          fieldErrors.password = "Password must not exceed 128 characters";
+        }
+        break;
+      case 'confirmPassword':
+        if (!value) {
+          fieldErrors.confirmPassword = "Please confirm your password";
+        } else if (value !== password) {
+          fieldErrors.confirmPassword = "Passwords do not match";
+        }
+        break;
+    }
+
+    return fieldErrors;
+  };
+
+  const handleInputChange = (name, value) => {
+    switch (name) {
+      case 'name':
+        setName(value);
+        break;
+      case 'email':
+        setEmail(value);
+        break;
+      case 'phone':
+        setPhone(value);
+        break;
+      case 'password':
+        setPassword(value);
+        break;
+      case 'confirmPassword':
+        setConfirmPassword(value);
+        break;
+    }
+
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: "" }));
+    }
+  };
+
+  const handleInputBlur = (name, value) => {
+    const fieldErrors = validateField(name, value);
+    
+    if (fieldErrors[name]) {
+      setErrors(prev => ({ ...prev, [name]: fieldErrors[name] }));
+    } else {
+      setErrors(prev => ({ ...prev, [name]: "" }));
+    }
+  };
+
   const validateForm = () => {
     const newErrors = {};
 
-    if (!name.trim()) {
-      newErrors.name = "Full name is required";
-    } else if (!email) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = "Please enter a valid email address";
-    } else if (!phone) {
-      newErrors.phone = "Phone number is required";
-    } else if (!/^[0-9]{10,15}$/.test(phone)) {
-      newErrors.phone = "Please enter a valid phone number";
-    } else if (!password) {
-      newErrors.password = "Password is required";
-    } else if (!confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your password";
-    } else if (password !== confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-    } else if (!acceptedTerms) {
+    // Validate all fields
+    const nameErrors = validateField('name', name);
+    const emailErrors = validateField('email', email);
+    const phoneErrors = validateField('phone', phone);
+    const passwordErrors = validateField('password', password);
+    const confirmPasswordErrors = validateField('confirmPassword', confirmPassword);
+
+    Object.assign(newErrors, nameErrors, emailErrors, phoneErrors, passwordErrors, confirmPasswordErrors);
+
+    if (!acceptedTerms) {
       newErrors.terms = "You must accept the terms and conditions";
     }
 
@@ -242,6 +318,21 @@ export default function ProfessionalRegister() {
           background: rgba(102, 126, 234, 0.05) !important;
           border-color: #667eea !important;
         }
+        
+        .input-custom:focus {
+          border-color: var(--color-primary-500) !important;
+          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+          outline: none;
+        }
+        
+        .input-error {
+          border-color: var(--color-error-500) !important;
+        }
+        
+        .input-error:focus {
+          border-color: var(--color-error-500) !important;
+          box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+        }
       `}</style>
 
       <div className="login-gradient-bg d-flex align-items-center justify-content-center fade-in">
@@ -270,12 +361,13 @@ export default function ProfessionalRegister() {
                         className={`input-custom border-start-0 ${errors.name ? "input-error" : ""}`}
                         placeholder="John Doe"
                         value={name}
-                        onChange={(e) => {
-                          setName(e.target.value);
-                          if (errors.name) setErrors({ ...errors, name: "" });
-                        }}
+                        onChange={(e) => handleInputChange('name', e.target.value)}
+                        onBlur={(e) => handleInputBlur('name', e.target.value)}
                         onKeyPress={handleKeyPress}
                         autoComplete="name"
+                        style={{
+                          borderColor: errors.name ? 'var(--color-error-500)' : 'var(--color-gray-300)'
+                        }}
                         required
                       />
                     </div>
@@ -284,6 +376,9 @@ export default function ProfessionalRegister() {
                         {errors.name}
                       </div>
                     )}
+                    <div className="form-text small text-muted mt-1">
+                      {name.length}/50 characters
+                    </div>
                   </div>
 
                   <div className="mb-3">
@@ -302,12 +397,13 @@ export default function ProfessionalRegister() {
                         className={`input-custom border-start-0 ${errors.email ? "input-error" : ""}`}
                         placeholder="name@example.com"
                         value={email}
-                        onChange={(e) => {
-                          setEmail(e.target.value);
-                          if (errors.email) setErrors({ ...errors, email: "" });
-                        }}
+                        onChange={(e) => handleInputChange('email', e.target.value)}
+                        onBlur={(e) => handleInputBlur('email', e.target.value)}
                         onKeyPress={handleKeyPress}
                         autoComplete="email"
+                        style={{
+                          borderColor: errors.email ? 'var(--color-error-500)' : 'var(--color-gray-300)'
+                        }}
                         required
                       />
                     </div>
@@ -341,12 +437,13 @@ export default function ProfessionalRegister() {
                           }`}
                         placeholder="e.g. 923001234567"
                         value={phone}
-                        onChange={(e) => {
-                          setPhone(e.target.value);
-                          if (errors.phone) setErrors({ ...errors, phone: "" });
-                        }}
+                        onChange={(e) => handleInputChange('phone', e.target.value)}
+                        onBlur={(e) => handleInputBlur('phone', e.target.value)}
                         onKeyPress={handleKeyPress}
                         autoComplete="tel"
+                        style={{
+                          borderColor: errors.phone ? 'var(--color-error-500)' : 'var(--color-gray-300)'
+                        }}
                         required
                       />
                     </div>
@@ -378,12 +475,13 @@ export default function ProfessionalRegister() {
                         className={`input-custom border-start-0 border-end-0 ${errors.password ? "input-error" : ""}`}
                         placeholder="Enter your password"
                         value={password}
-                        onChange={(e) => {
-                          setPassword(e.target.value);
-                          if (errors.password) setErrors({ ...errors, password: "" });
-                        }}
+                        onChange={(e) => handleInputChange('password', e.target.value)}
+                        onBlur={(e) => handleInputBlur('password', e.target.value)}
                         onKeyPress={handleKeyPress}
                         autoComplete="new-password"
+                        style={{
+                          borderColor: errors.password ? 'var(--color-error-500)' : 'var(--color-gray-300)'
+                        }}
                         required
                       />
                       <button
@@ -417,12 +515,13 @@ export default function ProfessionalRegister() {
                         className={`input-custom border-start-0 border-end-0 ${errors.confirmPassword ? "input-error" : ""}`}
                         placeholder="Re-enter your password"
                         value={confirmPassword}
-                        onChange={(e) => {
-                          setConfirmPassword(e.target.value);
-                          if (errors.confirmPassword) setErrors({ ...errors, confirmPassword: "" });
-                        }}
+                        onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                        onBlur={(e) => handleInputBlur('confirmPassword', e.target.value)}
                         onKeyPress={handleKeyPress}
                         autoComplete="new-password"
+                        style={{
+                          borderColor: errors.confirmPassword ? 'var(--color-error-500)' : 'var(--color-gray-300)'
+                        }}
                         required
                       />
                       <button
