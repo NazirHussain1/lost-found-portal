@@ -7,6 +7,7 @@ import { FaSearch, FaWhatsapp, FaFilter, FaMapMarkerAlt, FaCalendarAlt, FaTag, F
 import { useSearchParams, useRouter } from "next/navigation";
 import Pagination from "../Pagination/Pagination";
 import { CardSkeleton } from "../Skeleton";
+import Modal from "../Modal";
 
 export default function Browse() {
   const dispatch = useDispatch();
@@ -87,13 +88,11 @@ export default function Browse() {
   const handleItemClick = (item) => {
     setSelectedItem(item);
     setShowModal(true);
-    document.body.style.overflow = 'hidden';
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedItem(null);
-    document.body.style.overflow = 'auto';
   };
 
   const handleWhatsAppClick = (phone) => {
@@ -271,114 +270,6 @@ export default function Browse() {
           gap: 8px;
         }
         
-        .modal-backdrop {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(102, 126, 234, 0.5);
-          backdrop-filter: blur(4px);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 1050;
-          padding: 20px;
-        }
-        
-        .modal-content {
-          background: white;
-          border-radius: 25px;
-          overflow: hidden;
-          box-shadow: 0 30px 60px rgba(102, 126, 234, 0.3);
-          max-width: 800px;
-          width: 100%;
-          max-height: 90vh;
-          overflow-y: auto;
-          animation: modalSlideIn 0.3s ease-out;
-        }
-        
-        @keyframes modalSlideIn {
-          from {
-            opacity: 0;
-            transform: translateY(-50px) scale(0.9);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-          }
-        }
-        
-        .modal-header {
-          background: var(--primary-gradient);
-          color: white;
-          padding: 25px 30px;
-          position: relative;
-        }
-        
-        .modal-close-btn {
-          position: absolute;
-          top: 20px;
-          right: 20px;
-          background: rgba(255, 255, 255, 0.2);
-          border: none;
-          color: white;
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-        
-        .modal-close-btn:hover {
-          background: rgba(255, 255, 255, 0.3);
-          transform: rotate(90deg);
-        }
-        
-        .modal-title {
-          font-weight: 700;
-          font-size: 1.5rem;
-          margin: 0;
-        }
-        
-        .modal-body {
-          padding: 30px;
-        }
-        
-        .detail-label {
-          color: var(--primary-color);
-          font-weight: 600;
-          font-size: 0.9rem;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-          margin-bottom: 5px;
-        }
-        
-        .detail-value {
-          color: #2d3748;
-          font-weight: 500;
-          font-size: 1.1rem;
-          margin-bottom: 20px;
-        }
-        
-        .item-image-modal {
-          border-radius: 15px;
-          overflow: hidden;
-          box-shadow: 0 15px 35px rgba(102, 126, 234, 0.1);
-          margin-bottom: 25px;
-        }
-        
-        .contact-info {
-          background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-          border-radius: 15px;
-          padding: 20px;
-          margin-top: 20px;
-          border: 1px solid rgba(102, 126, 234, 0.1);
-        }
-        
         .fade-in {
           animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -427,42 +318,6 @@ export default function Browse() {
         @keyframes shimmer {
           0% { background-position: -200% 0; }
           100% { background-position: 200% 0; }
-        }
-        
-        .modal-footer {
-          padding: 20px 30px;
-          border-top: 1px solid rgba(102, 126, 234, 0.1);
-          display: flex;
-          justify-content: flex-end;
-          gap: 10px;
-        }
-        
-        .btn {
-          padding: 10px 20px;
-          border-radius: 25px;
-          border: none;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-        
-        .btn-secondary {
-          background: #6c757d;
-          color: white;
-        }
-        
-        .btn-secondary:hover {
-          background: #5a6268;
-        }
-        
-        .btn-primary {
-          background: var(--primary-gradient);
-          color: white;
-        }
-        
-        .btn-primary:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
         
         .text-primary {
@@ -877,162 +732,155 @@ export default function Browse() {
 
 
         {showModal && selectedItem && (
-          <div className="modal-backdrop" onClick={handleCloseModal}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <div className="modal-header">
-                <div style={{ position: 'absolute', top: '20px', left: '20px' }}>
-                  <span className="badge px-3 py-2" style={{
-                    background: 'var(--primary-gradient)',
-                    fontSize: '0.85rem'
-                  }}>
-                    {selectedItem.type.toUpperCase()}
-                  </span>
-                </div>
-                <h5 className="modal-title w-100 text-center">{selectedItem.title}</h5>
-                <button className="modal-close-btn" onClick={handleCloseModal}>
-                  <FaTimes size={20} />
-                </button>
+          <Modal
+            isOpen={showModal}
+            onClose={handleCloseModal}
+            title={selectedItem.title}
+            size="lg"
+            ariaLabel="Item details"
+          >
+            {/* Item Badge */}
+            <div className="mb-4">
+              <span 
+                className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold"
+                style={{
+                  background: selectedItem.type === "lost" 
+                    ? 'var(--gradient-primary)' 
+                    : selectedItem.type === "found" 
+                      ? 'var(--gradient-success)' 
+                      : 'var(--color-gray-500)',
+                  color: 'white'
+                }}
+              >
+                {selectedItem.type?.toUpperCase()}
+              </span>
+            </div>
+
+            {/* Item Image */}
+            {selectedItem.imageUrl && (
+              <div className="mb-6 rounded-xl overflow-hidden shadow-lg">
+                <img
+                  src={selectedItem.imageUrl}
+                  alt={selectedItem.title}
+                  className="w-full h-64 object-cover"
+                />
               </div>
+            )}
 
-              <div className="modal-body">
-                {selectedItem.imageUrl && (
-                  <div className="item-image-modal">
-                    <img
-                      src={selectedItem.imageUrl}
-                      alt={selectedItem.title}
-                      style={{ width: '100%', height: '300px', objectFit: 'cover' }}
-                    />
-                  </div>
-                )}
-
-                <div className="row">
-                  <div className="col-md-6">
-                    <div className="mb-4">
-                      <div className="detail-label">Description</div>
-                      <div className="detail-value">{selectedItem.description}</div>
-                    </div>
-
-                    <div className="mb-4">
-                      <div className="detail-label">Location</div>
-                      <div className="detail-value">
-                        <div className="d-flex align-items-center">
-                          <div className="icon-container me-2">
-                            <FaMapMarkerAlt />
-                          </div>
-                          {selectedItem.location}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="col-md-6">
-                    <div className="mb-4">
-                      <div className="detail-label">Date Reported</div>
-                      <div className="detail-value">
-                        <div className="d-flex align-items-center">
-                          <div className="icon-container me-2">
-                            <FaCalendarAlt />
-                          </div>
-                          {new Date(selectedItem.date).toLocaleDateString('en-US', {
-                            weekday: 'long',
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                          })}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="mb-4">
-                      <div className="detail-label">Category</div>
-                      <div className="detail-value text-capitalize">
-                        <div className="d-flex align-items-center">
-                          <div className="icon-container me-2">
-                            <FaTag />
-                          </div>
-                          {selectedItem.category}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-
-                <div className="contact-info">
-                  <h6 className="mb-3 fw-bold" style={{ color: 'var(--primary-color)' }}>
-                    <div className="d-flex align-items-center">
-                      <div className="icon-container me-2">
-                        <FaUser />
-                      </div>
-                      Contact Information
-                    </div>
+            {/* Item Details */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <div className="mb-4">
+                  <h6 className="text-sm font-semibold text-indigo-600 uppercase tracking-wide mb-1">
+                    Description
                   </h6>
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <div className="detail-label">Reported By</div>
-                      <div className="detail-value fw-bold" style={{ color: 'var(--secondary-color)' }}>
-                        {selectedItem.user?.name || "Anonymous"}
-                      </div>
-                    </div>
-                    {selectedItem.user?.email && (
-                      <div className="col-md-6 mb-3">
-                        <div className="detail-label">Email</div>
-                        <div className="detail-value">
-                          <div className="d-flex align-items-center">
-                            <div className="icon-container me-2">
-                              <FaEnvelope />
-                            </div>
-                            {selectedItem.user.email}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                    {selectedItem.user?.phone && user && user.id !== selectedItem.user._id && (
-                      <div className="col-md-6 mb-3">
-                        <div className="detail-label">Phone</div>
-                        <div className="detail-value d-flex align-items-center justify-content-between">
-                          <div className="d-flex align-items-center">
-                            <div className="icon-container me-2">
-                              <FaPhone />
-                            </div>
-                            {selectedItem.user.phone}
-                          </div>
-                          <button
-                            className="btn-success-custom btn-sm d-flex align-items-center gap-1"
-                            onClick={() => handleWhatsAppClick(selectedItem.user.phone)}
-                          >
-                            <FaWhatsapp /> Message
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                    {!selectedItem.user?.phone && user && user.id !== selectedItem.user._id && (
-                      <div className="col-md-12 mb-3">
-                        <div className="alert alert-info mb-0 d-flex align-items-center" style={{ 
-                          background: 'rgba(102, 126, 234, 0.1)', 
-                          border: '1px solid rgba(102, 126, 234, 0.2)',
-                          borderRadius: '12px',
-                          padding: '12px 16px'
-                        }}>
-                          <FaPhone className="me-2" style={{ color: 'var(--primary-color)' }} />
-                          <span style={{ color: 'var(--secondary-color)', fontSize: '0.9rem' }}>
-                            Contact not available - Please use email to reach out
-                          </span>
-                        </div>
-                      </div>
-                    )}
+                  <p className="text-gray-700">{selectedItem.description}</p>
+                </div>
 
+                <div className="mb-4">
+                  <h6 className="text-sm font-semibold text-indigo-600 uppercase tracking-wide mb-1">
+                    Location
+                  </h6>
+                  <div className="flex items-center text-gray-700">
+                    <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
+                      <FaMapMarkerAlt className="text-indigo-600" size={14} />
+                    </div>
+                    {selectedItem.location}
                   </div>
                 </div>
               </div>
 
-              <div className="modal-footer-custom">
-                <button className="btn-secondary-custom" onClick={handleCloseModal}>
-                  Close
-                </button>
+              <div>
+                <div className="mb-4">
+                  <h6 className="text-sm font-semibold text-indigo-600 uppercase tracking-wide mb-1">
+                    Date Reported
+                  </h6>
+                  <div className="flex items-center text-gray-700">
+                    <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
+                      <FaCalendarAlt className="text-indigo-600" size={14} />
+                    </div>
+                    {new Date(selectedItem.date).toLocaleDateString('en-US', {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </div>
+                </div>
+
+                <div className="mb-4">
+                  <h6 className="text-sm font-semibold text-indigo-600 uppercase tracking-wide mb-1">
+                    Category
+                  </h6>
+                  <div className="flex items-center text-gray-700">
+                    <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
+                      <FaTag className="text-indigo-600" size={14} />
+                    </div>
+                    <span className="capitalize">{selectedItem.category}</span>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+
+            {/* Contact Information */}
+            <div className="mt-6 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-100">
+              <h6 className="flex items-center text-indigo-700 font-semibold mb-4">
+                <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
+                  <FaUser className="text-indigo-600" size={14} />
+                </div>
+                Contact Information
+              </h6>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm font-medium text-indigo-600 mb-1">Reported By</p>
+                  <p className="font-semibold text-purple-700">
+                    {selectedItem.user?.name || "Anonymous"}
+                  </p>
+                </div>
+                
+                {selectedItem.user?.email && (
+                  <div>
+                    <p className="text-sm font-medium text-indigo-600 mb-1">Email</p>
+                    <div className="flex items-center text-gray-700">
+                      <FaEnvelope className="text-indigo-500 mr-2" size={14} />
+                      {selectedItem.user.email}
+                    </div>
+                  </div>
+                )}
+                
+                {selectedItem.user?.phone && user && user.id !== selectedItem.user._id && (
+                  <div className="md:col-span-2">
+                    <p className="text-sm font-medium text-indigo-600 mb-2">Phone</p>
+                    <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-indigo-200">
+                      <div className="flex items-center text-gray-700">
+                        <FaPhone className="text-indigo-500 mr-2" size={14} />
+                        {selectedItem.user.phone}
+                      </div>
+                      <button
+                        className="btn-success-custom btn-sm flex items-center gap-2"
+                        onClick={() => handleWhatsAppClick(selectedItem.user.phone)}
+                      >
+                        <FaWhatsapp size={16} />
+                        Message
+                      </button>
+                    </div>
+                  </div>
+                )}
+                
+                {!selectedItem.user?.phone && user && user.id !== selectedItem.user._id && (
+                  <div className="md:col-span-2">
+                    <div className="flex items-center p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                      <FaPhone className="text-blue-500 mr-3" size={16} />
+                      <span className="text-blue-700 text-sm">
+                        Contact not available - Please use email to reach out
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </Modal>
         )}
 
         {/* Pagination */}

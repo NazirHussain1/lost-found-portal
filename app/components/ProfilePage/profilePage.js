@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { ConfirmModal } from "../Modal";
 import {
   FaEdit,
   FaSave,
@@ -924,68 +925,16 @@ export default function ProfilePage() {
       </div>
 
       {/* Logout Confirmation Modal */}
-      {showLogoutConfirm && (
-        <div 
-          className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
-          style={{ 
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            zIndex: 1050,
-            padding: "20px"
-          }}
-          onClick={() => setShowLogoutConfirm(false)}
-        >
-          <div 
-            className="bg-white rounded-3 shadow-lg"
-            style={{ 
-              maxWidth: "400px",
-              width: "100%"
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div 
-              className="text-white rounded-top-3 p-4"
-              style={{ background: "linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)" }}
-            >
-              <div className="d-flex justify-content-between align-items-center">
-                <h5 className="modal-title fw-bold mb-0">Confirm Logout</h5>
-                <button
-                  type="button"
-                  className="btn btn-sm btn-light rounded-circle"
-                  onClick={() => setShowLogoutConfirm(false)}
-                  style={{ width: "32px", height: "32px" }}
-                >
-                  <FaTimes />
-                </button>
-              </div>
-            </div>
-            
-            <div className="p-4 text-center">
-              <FaSignOutAlt size={48} style={{ color: "#ef4444", opacity: 0.7 }} className="mb-3" />
-              <p style={{ color: "#764ba2" }}>
-                Are you sure you want to logout?
-              </p>
-            </div>
-            
-            <div className="p-4 border-top d-flex gap-3">
-              <button
-                type="button"
-                className="btn-secondary-custom flex-grow-1"
-                onClick={() => setShowLogoutConfirm(false)}
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                className="btn-danger-custom flex-grow-1"
-                onClick={handleLogout}
-              >
-                <FaSignOutAlt className="me-2" />
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmModal
+        isOpen={showLogoutConfirm}
+        onClose={() => setShowLogoutConfirm(false)}
+        onConfirm={handleLogout}
+        title="Confirm Logout"
+        message="Are you sure you want to logout?"
+        confirmText="Logout"
+        cancelText="Cancel"
+        confirmVariant="danger"
+      />
     </>
   );
 }

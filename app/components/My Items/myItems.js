@@ -20,6 +20,7 @@ import {
 } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 import { CardSkeleton } from "../Skeleton";
+import Modal, { ConfirmModal } from "../Modal";
 
 export default function MyItemsPage() {
   const dispatch = useDispatch();
@@ -178,7 +179,6 @@ export default function MyItemsPage() {
 
   function closeDeleteModal() {
     setConfirmDelete(null);
-    document.body.style.overflow = "auto";
   }
 
   async function handleMarkAsResolved(item) {
@@ -404,73 +404,6 @@ export default function MyItemsPage() {
 
         .item-card:hover .image-container img {
           transform: scale(1.1);
-        }
-
-        .modal-backdrop-custom {
-          position: fixed;
-          inset: 0;
-          background: rgba(0, 0, 0, 0.5);
-          backdrop-filter: blur(4px);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 9999;
-          padding: 20px;
-        }
-
-        .modal-content-custom {
-          background: white;
-          border-radius: 16px;
-          overflow: hidden;
-          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
-          max-width: 500px;
-          width: 100%;
-          max-height: 85vh;
-          display: flex;
-          flex-direction: column;
-        }
-
-        .modal-header-custom {
-          padding: 20px 24px;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          position: relative;
-        }
-
-        .modal-body-custom {
-          padding: 24px;
-          overflow-y: auto;
-          flex: 1;
-        }
-
-        .modal-footer-custom {
-          padding: 20px 24px;
-          border-top: 1px solid rgba(102, 126, 234, 0.1);
-          display: flex;
-          justify-content: flex-end;
-          gap: 12px;
-        }
-
-        .close-modal-btn {
-          position: absolute;
-          top: 16px;
-          right: 16px;
-          background: rgba(255, 255, 255, 0.2);
-          border: none;
-          color: white;
-          width: 32px;
-          height: 32px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-
-        .close-modal-btn:hover {
-          background: rgba(255, 255, 255, 0.3);
-          transform: rotate(90deg);
         }
 
         .form-control-custom {
@@ -1128,91 +1061,93 @@ export default function MyItemsPage() {
         )}
       </div>
 
-      {confirmDelete && (
-        <div className="modal-backdrop-custom" onClick={closeDeleteModal}>
-          <div
-            className="modal-content-custom"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="modal-header-custom">
-              <h5 className="fw-bold mb-0">Confirm Delete</h5>
-              <button className="close-modal-btn" onClick={closeDeleteModal}>
-                <FaTimes size={16} />
-              </button>
-            </div>
+      {/* Delete Confirmation Modal */}
+      <ConfirmModal
+        isOpen={!!confirmDelete}
+        onClose={closeDeleteModal}
+        onConfirm={handleDeleteConfirmed}
+        title="Confirm Delete"
+        message={`Are you sure you want to permanently delete "${confirmDelete?.title}"?`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmVariant="danger"
+        isLoading={deleting}
+      />
 
-            <div className="modal-body-custom">
-              <p style={{ color: "#764ba2", marginBottom: 0 }}>
-                Are you sure you want to permanently delete{" "}
-                <strong style={{ color: "#667eea" }}>
-                  {confirmDelete.title}
-                </strong>
-                ?
-              </p>
-            </div>
-
-            <div className="modal-footer-custom">
-              <button
-                className="btn-secondary-custom"
-                onClick={closeDeleteModal}
-                disabled={deleting}
-              >
-                Cancel
-              </button>
-              <button
-                className="btn-danger-custom"
-                onClick={handleDeleteConfirmed}
-                disabled={deleting}
-              >
-                {deleting ? "Deleting..." : "Delete"}
-              </button>
-            </div>
+      {/* Edit Item Modal */}
+      <Modal
+        isOpen={!!editingItem}
+        onClose={closeEditModal}
+        title="Update Item"
+        size="lg"
+        footer={
+          <>
+            <button
+              className="btn-secondary-custom"
+              onClick={closeEditModal}
+              disabled={updating}
+            >
+              Cancel
+            </button>
+            <button
+              className="btn-primary-custom"
+              onClick={handleUpdateSubmit}
+              disabled={updating}
+            >
+              {updating ? "Saving..." : "Save Changes"}
+            </button>
+          </>
+        }
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Title
+            </label>
+            <input
+              className="input-custom"
+              placeholder="Title"
+              value={editForm.title}
+              onChange={(e) =>
+                setEditForm({ ...editForm, title: e.target.value })
+              }
+            />
           </div>
-        </div>
-      )}
 
-      {editingItem && (
-        <div className="modal-backdrop-custom" onClick={closeEditModal}>
-          <div
-            className="modal-content-custom"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="modal-header-custom">
-              <h5 className="fw-bold mb-0">Update Item</h5>
-              <button className="close-modal-btn" onClick={closeEditModal}>
-                <FaTimes size={16} />
-              </button>
-            </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Description
+            </label>
+            <textarea
+              className="textarea-custom"
+              placeholder="Description"
+              rows="3"
+              value={editForm.description}
+              onChange={(e) =>
+                setEditForm({ ...editForm, description: e.target.value })
+              }
+            />
+          </div>
 
-            <div className="modal-body-custom">
-              <input
-                className="input-custom"
-                placeholder="Title"
-                value={editForm.title}
-                onChange={(e) =>
-                  setEditForm({ ...editForm, title: e.target.value })
-                }
-              />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Location
+            </label>
+            <input
+              className="input-custom"
+              placeholder="Location"
+              value={editForm.location}
+              onChange={(e) =>
+                setEditForm({ ...editForm, location: e.target.value })
+              }
+            />
+          </div>
 
-              <textarea
-                className="textarea-custom"
-                placeholder="Description"
-                rows="3"
-                value={editForm.description}
-                onChange={(e) =>
-                  setEditForm({ ...editForm, description: e.target.value })
-                }
-              />
-
-              <input
-                className="input-custom"
-                placeholder="Location"
-                value={editForm.location}
-                onChange={(e) =>
-                  setEditForm({ ...editForm, location: e.target.value })
-                }
-              />
-
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Category
+              </label>
               <select
                 className="select-custom"
                 value={editForm.category}
@@ -1230,7 +1165,12 @@ export default function MyItemsPage() {
                 <option value="bags">Bags & Wallets</option>
                 <option value="other">Other</option>
               </select>
+            </div>
 
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Type
+              </label>
               <select
                 className="select-custom"
                 value={editForm.type}
@@ -1243,80 +1183,63 @@ export default function MyItemsPage() {
                 <option value="found">Found</option>
                 <option value="resolved">Resolved</option>
               </select>
-
-              <div>
-                <label
-                  className="d-block mb-2 small fw-medium"
-                  style={{ color: "#667eea" }}
-                >
-                  Item Image
-                </label>
-
-                {imagePreview ? (
-                  <div className="image-preview">
-                    <img src={imagePreview} alt="preview" />
-                  </div>
-                ) : (
-                  <div
-                    className="image-upload-container"
-                    onClick={() =>
-                      document.getElementById("image-upload")?.click()
-                    }
-                  >
-                    <FaCamera
-                      size={32}
-                      style={{ color: "#667eea", marginBottom: 12 }}
-                    />
-                    <p className="mb-1" style={{ color: "#667eea" }}>
-                      Click to upload image
-                    </p>
-                    <p className="small text-muted mb-0">
-                      PNG, JPG, GIF up to 5MB
-                    </p>
-                  </div>
-                )}
-
-                <input
-                  id="image-upload"
-                  type="file"
-                  className="d-none"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                />
-
-                {imagePreview && (
-                  <button
-                    type="button"
-                    className="btn-outline-custom w-100"
-                    onClick={() =>
-                      document.getElementById("image-upload")?.click()
-                    }
-                  >
-                    Change Image
-                  </button>
-                )}
-              </div>
-            </div>
-
-            <div className="modal-footer-custom">
-              <button
-                className="btn-secondary-custom"
-                onClick={closeEditModal}
-                disabled={updating}
-              >
-                Cancel
-              </button>
-              <button
-                className="btn-primary-custom"
-                onClick={handleUpdateSubmit}
-                disabled={updating}
-              >
-                {updating ? "Saving..." : "Save Changes"}
-              </button>
             </div>
           </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Item Image
+            </label>
+
+            {imagePreview ? (
+              <div className="space-y-3">
+                <div className="image-preview">
+                  <img 
+                    src={imagePreview} 
+                    alt="preview" 
+                    className="w-full h-48 object-cover rounded-lg border border-gray-200"
+                  />
+                </div>
+                <button
+                  type="button"
+                  className="btn-outline-custom w-full"
+                  onClick={() =>
+                    document.getElementById("image-upload")?.click()
+                  }
+                >
+                  Change Image
+                </button>
+              </div>
+            ) : (
+              <div
+                className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-indigo-400 transition-colors"
+                onClick={() =>
+                  document.getElementById("image-upload")?.click()
+                }
+              >
+                <FaCamera
+                  size={32}
+                  className="text-indigo-500 mx-auto mb-3"
+                />
+                <p className="text-indigo-600 font-medium mb-1">
+                  Click to upload image
+                </p>
+                <p className="text-sm text-gray-500">
+                  PNG, JPG, GIF up to 5MB
+                </p>
+              </div>
+            )}
+
+            <input
+              id="image-upload"
+              type="file"
+              className="hidden"
+              accept="image/*"
+              onChange={handleImageUpload}
+            />
+          </div>
         </div>
-      )}
+      </Modal>
     </>
   );
 }
