@@ -512,7 +512,7 @@ export default function ProfilePage() {
         }
       `}</style>
 
-      <div className="container py-3 py-md-5">
+      <div className="container-fluid px-3 px-md-4 py-3 py-md-5">
         
         <div className="d-block d-md-none mb-3">
           <button
@@ -525,7 +525,7 @@ export default function ProfilePage() {
         </div>
 
       
-        <div className="profile-gradient-bg text-white rounded-4 p-4 p-md-5 mb-4 mb-md-5 shadow-lg">
+        <div className="profile-gradient-bg text-white rounded-4 p-3 p-md-5 mb-3 mb-md-5 shadow-lg">
           <div className="row align-items-center">
             <div className="col-12 col-md-8 mb-3 mb-md-0">
               <div className="d-flex flex-column flex-md-row align-items-center align-items-md-start text-center text-md-start">
@@ -553,17 +553,17 @@ export default function ProfilePage() {
                     />
                   )}
                 </div>
-                <div className="flex-grow-1">
+                <div className="flex-grow-1 w-100">
                   <h1 className="display-6 display-md-5 fw-bold mb-1">
                     {editMode ? (
                       <input
                         type="text"
-                        className="profile-input"
+                        className="profile-input w-100"
                         value={editForm.name}
                         onChange={(e) => handleInputChange('name', e.target.value)}
                         onBlur={(e) => handleInputBlur('name', e.target.value)}
                         style={{ 
-                          fontSize: "1.5rem", 
+                          fontSize: "1.25rem", 
                           background: "transparent", 
                           color: "white", 
                           border: `2px solid ${formErrors.name ? 'var(--color-error-500)' : 'rgba(255, 255, 255, 0.3)'}`,
@@ -579,12 +579,12 @@ export default function ProfilePage() {
                       </div>
                     )}
                   </h1>
-                  <p className="lead opacity-90 mb-0 d-flex align-items-center justify-content-center justify-content-md-start">
-                    <FaEnvelope className="me-2" size={14} />
+                  <p className="lead opacity-90 mb-0 d-flex flex-column flex-md-row align-items-center justify-content-center justify-content-md-start">
+                    <FaEnvelope className="me-2 mb-1 mb-md-0" size={14} />
                     {editMode ? (
                       <input
                         type="email"
-                        className="profile-input"
+                        className="profile-input w-100"
                         value={editForm.email}
                         onChange={(e) => handleInputChange('email', e.target.value)}
                         onBlur={(e) => handleInputBlur('email', e.target.value)}
@@ -612,7 +612,7 @@ export default function ProfilePage() {
               {editMode ? (
                 <div className="d-flex flex-column flex-md-row gap-2 justify-content-center justify-content-md-end">
                   <button
-                    className="btn-secondary-custom btn-sm btn-md-lg px-3 px-md-4 py-2 rounded-pill fw-bold mb-2 mb-md-0"
+                    className="btn-secondary-custom btn-sm px-3 py-2 rounded-pill fw-bold mb-2 mb-md-0"
                     onClick={() => {
                       setEditMode(false);
                       setEditForm({ ...userData });
@@ -622,7 +622,7 @@ export default function ProfilePage() {
                     Cancel
                   </button>
                   <button
-                    className="btn-primary-custom btn-sm btn-md-lg px-3 px-md-4 py-2 rounded-pill"
+                    className="btn-primary-custom btn-sm px-3 py-2 rounded-pill"
                     onClick={handleSaveProfile}
                     disabled={loading || uploadingImage}
                   >
@@ -642,14 +642,14 @@ export default function ProfilePage() {
               ) : (
                 <div className="d-flex flex-column flex-md-row gap-2 justify-content-center justify-content-md-end">
                   <button
-                    className="btn-secondary-custom btn-sm btn-md-lg px-3 px-md-4 py-2 rounded-pill fw-bold mb-2 mb-md-0"
+                    className="btn-secondary-custom btn-sm px-3 py-2 rounded-pill fw-bold mb-2 mb-md-0"
                     onClick={() => setEditMode(true)}
                   >
                     <FaEdit className="me-2" />
                     Edit Profile
                   </button>
                   <button
-                    className="btn-danger-custom btn-sm btn-md-lg px-3 px-md-4 py-2 rounded-pill"
+                    className="btn-danger-custom btn-sm px-3 py-2 rounded-pill"
                     onClick={() => setShowLogoutConfirm(true)}
                   >
                     <FaSignOutAlt className="me-2" />
@@ -663,7 +663,7 @@ export default function ProfilePage() {
 
         <div className="row g-3 g-md-4">
          
-          <div className="col-lg-4">
+          <div className="col-12 col-lg-4 order-2 order-lg-1">
             <div className="glass-effect p-3 p-md-4 mb-3 mb-md-4">
               <h4 className="fw-bold mb-3 gradient-text">Profile Information</h4>
               
@@ -818,7 +818,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Right Column - Recent Activity */}
-          <div className="col-lg-8">
+          <div className="col-12 col-lg-8 order-1 order-lg-2">
             <div className="glass-effect p-3 p-md-4 mb-3 mb-md-4">
               <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 mb-md-4">
                 <h4 className="fw-bold mb-2 mb-md-0 gradient-text">Recent Activity</h4>
@@ -833,7 +833,7 @@ export default function ProfilePage() {
               </div>
 
               {recentActivity.length > 0 ? (
-                <div className="space-y-2 space-y-md-3">
+                <div className="d-flex flex-column gap-2 gap-md-3">
                   {recentActivity.map((activity, index) => (
                     <div key={activity.id || index} className="activity-card p-2 p-md-3">
                       <div className="d-flex align-items-start">

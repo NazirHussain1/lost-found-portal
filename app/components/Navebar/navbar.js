@@ -413,7 +413,7 @@ export default function Navbar() {
                     href={link.href}
                     onClick={handleLinkClick}
                     className={`
-                      flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors duration-150
+                      flex items-center space-x-3 px-4 py-4 rounded-lg text-sm font-medium transition-colors duration-150
                       ${isActive 
                         ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' 
                         : 'text-gray-700 hover:bg-gray-50'
@@ -459,7 +459,7 @@ export default function Navbar() {
                   <Link
                     href="/userProfile"
                     onClick={handleLinkClick}
-                    className="flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+                    className="flex items-center space-x-3 px-4 py-4 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-150"
                   >
                     <FaUserCircle className="w-5 h-5 text-gray-400" />
                     <div>
@@ -471,7 +471,7 @@ export default function Navbar() {
                   <Link
                     href="/myItems"
                     onClick={handleLinkClick}
-                    className="flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-150"
+                    className="flex items-center space-x-3 px-4 py-4 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-150"
                   >
                     <FaTh className="w-5 h-5 text-gray-400" />
                     <div>
@@ -482,7 +482,7 @@ export default function Navbar() {
 
                   <button
                     onClick={handleLogout}
-                    className="w-full flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors duration-150"
+                    className="w-full flex items-center space-x-3 px-4 py-4 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors duration-150"
                   >
                     <FaSignOutAlt className="w-5 h-5" />
                     <div className="text-left">

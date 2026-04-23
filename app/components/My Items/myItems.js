@@ -307,7 +307,7 @@ export default function MyItemsPage() {
 
   if (checkingAuth) {
     return (
-      <div className="container py-5">
+      <div className="container-fluid px-3 px-md-4 py-3 py-md-5">
         <div className="text-center py-5">
           <div
             className="spinner-border"
@@ -533,27 +533,27 @@ export default function MyItemsPage() {
         }
       `}</style>
 
-      <div className="container py-5">
-        <div className="gradient-bg text-white rounded-4 p-5 mb-5 shadow-lg">
+      <div className="container-fluid px-3 px-md-4 py-3 py-md-5">
+        <div className="gradient-bg text-white rounded-4 p-3 p-md-5 mb-3 mb-md-5 shadow-lg">
           <div className="row align-items-center">
-            <div className="col-md-8">
-              <div className="d-flex align-items-center mb-3">
-                <div className="bg-white rounded-circle p-3 me-3">
-                  <FaUser size={24} style={{ color: "#667eea" }} />
+            <div className="col-12 col-md-8 mb-3 mb-md-0">
+              <div className="d-flex flex-column flex-sm-row align-items-center align-items-sm-start text-center text-sm-start">
+                <div className="bg-white rounded-circle p-2 p-md-3 me-0 me-sm-3 mb-2 mb-sm-0">
+                  <FaUser size={20} style={{ color: "#667eea" }} />
                 </div>
-                <div>
-                  <h1 className="display-5 fw-bold mb-1">
+                <div className="flex-grow-1">
+                  <h1 className="display-6 display-md-5 fw-bold mb-1">
                     Your Reported Items
                   </h1>
-                  <p className="lead opacity-90 mb-0">
+                  <p className="lead opacity-90 mb-0 small">
                     Manage your lost and found reports
                   </p>
                 </div>
               </div>
             </div>
-            <div className="col-md-4 text-md-end">
+            <div className="col-12 col-md-4 text-center text-md-end">
               <button
-                className="btn-primary-custom btn-lg px-4 py-2 rounded-pill fw-bold"
+                className="btn-primary-custom btn-lg px-3 px-md-4 py-2 rounded-pill fw-bold"
                 onClick={() => router.push("/browse")}
               >
                 Browse All Items
@@ -562,11 +562,11 @@ export default function MyItemsPage() {
           </div>
         </div>
 
-        <div className="row g-4 mb-5">
-          <div className="col-md-3">
-            <div className="stat-card text-center p-4">
+        <div className="row g-2 g-md-4 mb-3 mb-md-5">
+          <div className="col-6 col-md-3">
+            <div className="stat-card text-center p-2 p-md-4">
               <div
-                className="display-5 fw-bold mb-1"
+                className="h5 h-md-3 fw-bold mb-1"
                 style={{ color: "#667eea" }}
               >
                 {stats.total}
@@ -576,10 +576,10 @@ export default function MyItemsPage() {
               </div>
             </div>
           </div>
-          <div className="col-md-3">
-            <div className="stat-card text-center p-4">
+          <div className="col-6 col-md-3">
+            <div className="stat-card text-center p-2 p-md-4">
               <div
-                className="display-5 fw-bold mb-1"
+                className="h5 h-md-3 fw-bold mb-1"
                 style={{ color: "#667eea" }}
               >
                 {stats.lost}
@@ -589,10 +589,10 @@ export default function MyItemsPage() {
               </div>
             </div>
           </div>
-          <div className="col-md-3">
-            <div className="stat-card text-center p-4">
+          <div className="col-6 col-md-3">
+            <div className="stat-card text-center p-2 p-md-4">
               <div
-                className="display-5 fw-bold mb-1"
+                className="h5 h-md-3 fw-bold mb-1"
                 style={{ color: "#667eea" }}
               >
                 {stats.found}
@@ -602,10 +602,10 @@ export default function MyItemsPage() {
               </div>
             </div>
           </div>
-          <div className="col-md-3">
-            <div className="stat-card text-center p-4">
+          <div className="col-6 col-md-3">
+            <div className="stat-card text-center p-2 p-md-4">
               <div
-                className="display-5 fw-bold mb-1"
+                className="h5 h-md-3 fw-bold mb-1"
                 style={{ color: "#667eea" }}
               >
                 {stats.resolved}
@@ -617,9 +617,9 @@ export default function MyItemsPage() {
           </div>
         </div>
 
-        <div className="glass-effect p-4 mb-5">
+        <div className="glass-effect p-3 p-md-4 mb-3 mb-md-5">
           <div className="row align-items-center">
-            <div className="col-md-6 mb-3 mb-md-0">
+            <div className="col-12 col-md-6 mb-3 mb-md-0">
               <div className="input-group">
                 <span className="input-group-text bg-white border-end-0">
                   <FaSearch style={{ color: "#667eea" }} />
@@ -633,8 +633,8 @@ export default function MyItemsPage() {
                 />
               </div>
             </div>
-            <div className="col-md-6">
-              <div className="d-flex flex-wrap gap-2">
+            <div className="col-12 col-md-6">
+              <div className="d-flex flex-wrap gap-2 justify-content-start justify-content-md-end">
                 <button
                   className={`filter-btn btn px-3 py-2 rounded-pill fw-medium ${activeFilter === "all" ? "active" : ""
                     }`}
@@ -713,9 +713,9 @@ export default function MyItemsPage() {
         </div>
 
         {loading ? (
-          <div className="row g-4">
+          <div className="row g-3 g-md-4">
             {Array.from({ length: 4 }, (_, index) => (
-              <div key={index} className="col-md-6 col-lg-4">
+              <div key={index} className="col-12 col-md-6 col-lg-4">
                 <CardSkeleton />
               </div>
             ))}
@@ -765,9 +765,9 @@ export default function MyItemsPage() {
             </div>
           </div>
         ) : (
-          <div className="row g-4">
+          <div className="row g-3 g-md-4">
             {filteredItems.map((item) => (
-              <div key={item._id} className="col-md-6 col-lg-4">
+              <div key={item._id} className="col-12 col-md-6 col-lg-4">
                 <div 
                   className="card-custom h-100 position-relative"
                   style={{
@@ -1033,22 +1033,22 @@ export default function MyItemsPage() {
         )}
 
         {!loading && !error && filteredItems.length > 0 && (
-          <div className="text-center mt-5 pt-4 border-top">
-            <div className="d-flex flex-wrap justify-content-center gap-3">
+          <div className="text-center mt-3 mt-md-5 pt-3 pt-md-4 border-top">
+            <div className="d-flex flex-column flex-md-row flex-wrap justify-content-center gap-2 gap-md-3">
               <button
-                className="btn-primary-custom px-4 py-2 rounded-pill fw-bold text-white"
+                className="btn-primary-custom px-3 px-md-4 py-2 rounded-pill fw-bold text-white"
                 onClick={() => router.push("/lost")}
               >
                 Report New Lost Item
               </button>
               <button
-                className="btn-primary-custom px-4 py-2 rounded-pill fw-bold text-white"
+                className="btn-primary-custom px-3 px-md-4 py-2 rounded-pill fw-bold text-white"
                 onClick={() => router.push("/found")}
               >
                 Report New Found Item
               </button>
               <button
-                className="btn-outline-custom px-4 py-2 rounded-pill fw-bold"
+                className="btn-outline-custom px-3 px-md-4 py-2 rounded-pill fw-bold"
                 onClick={() => router.push("/browse")}
               >
                 Browse Community Items

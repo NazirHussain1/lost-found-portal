@@ -413,18 +413,18 @@ export default function FoundItemForm() {
         }
       `}</style>
 
-      <div className="container py-4 fade-in">
+      <div className="container-fluid px-3 px-md-4 py-3 py-md-4 fade-in">
         <div className="row justify-content-center">
-          <div className="col-12 col-lg-8">
+          <div className="col-12 col-xl-10 col-xxl-8">
           
             {user && (
-              <div className="card shadow-sm border-0 mb-4 stat-card">
-                <div className="card-body p-4">
-                  <div className="d-flex align-items-center">
-                    <div className="rounded-circle p-2 me-3" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+              <div className="card shadow-sm border-0 mb-3 mb-md-4 stat-card">
+                <div className="card-body p-3 p-md-4">
+                  <div className="d-flex flex-column flex-sm-row align-items-center align-items-sm-start text-center text-sm-start">
+                    <div className="rounded-circle p-2 me-0 me-sm-3 mb-2 mb-sm-0" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
                       <FaUser size={20} className="text-white" />
                     </div>
-                    <div>
+                    <div className="flex-grow-1">
                       <h6 className="mb-1 fw-bold text-gradient">Reporting as: {user.name || "Student"}</h6>
                       <small className="text-muted">GAMICA Campus Member</small>
                     </div>
@@ -434,21 +434,21 @@ export default function FoundItemForm() {
             )}
 
           
-            <div className="card shadow-lg border-0 card-hover-3d overflow-hidden mb-4">
+            <div className="card shadow-lg border-0 card-hover-3d overflow-hidden mb-3 mb-md-4">
              
-              <div className="card-header found-header text-white py-4 px-4">
-                <div className="d-flex align-items-center">
-                  <div className="rounded-circle p-2 me-3">
+              <div className="card-header found-header text-white py-3 py-md-4 px-3 px-md-4">
+                <div className="d-flex flex-column flex-sm-row align-items-center align-items-sm-start text-center text-sm-start">
+                  <div className="rounded-circle p-2 me-0 me-sm-3 mb-2 mb-sm-0">
                     <FaHandHolding size={24} className="icon-gradient" />
                   </div>
-                  <div>
-                    <h1 className="h3 fw-bold mb-1">Report Found Item</h1>
-                    <p className="mb-0 opacity-90">Help reunite lost items with their grateful owners</p>
+                  <div className="flex-grow-1">
+                    <h1 className="h3 h-md-2 fw-bold mb-1">Report Found Item</h1>
+                    <p className="mb-0 opacity-90 small">Help reunite lost items with their grateful owners</p>
                   </div>
                 </div>
               </div>
               
-              <div className="card-body p-4 form-gradient">
+              <div className="card-body p-3 p-md-4 form-gradient">
                 {message.text && (
                   <div className={`alert alert-${message.type === "success" ? "success" : "danger"} alert-dismissible fade show d-flex align-items-center p-3 mb-4 rounded-lg`} role="alert">
                     <FaCheckCircle className="me-3" size={18} />
@@ -531,9 +531,9 @@ export default function FoundItemForm() {
                     </div>
                   </div>
 
-                  <div className="row g-3 mb-4">
+                  <div className="row g-2 g-md-3 mb-3 mb-md-4">
                 
-                    <div className="col-md-6">
+                    <div className="col-12 col-md-6">
                       <label htmlFor="category" className="form-label d-flex align-items-center mb-2">
                         <FaTag className="me-2" style={{ color: '#667eea' }} size={16} />
                         Category <span className="text-danger ms-1">*</span>
@@ -570,7 +570,7 @@ export default function FoundItemForm() {
                     </div>
 
                    
-                    <div className="col-md-6">
+                    <div className="col-12 col-md-6">
                       <label htmlFor="location" className="form-label d-flex align-items-center mb-2">
                         <FaMapMarkerAlt className="me-2" style={{ color: '#667eea' }} size={16} />
                         Found Location <span className="text-danger ms-1">*</span>
@@ -647,10 +647,10 @@ export default function FoundItemForm() {
                   </div>
 
                  
-                  <div className="d-flex gap-3 justify-content-end mt-4 pt-4 border-top">
+                  <div className="d-flex flex-column flex-sm-row gap-2 gap-sm-3 justify-content-end mt-3 mt-md-4 pt-3 pt-md-4 border-top">
                     <button
                       type="button"
-                      className="btn btn-outline-gradient px-4 py-2 rounded-pill fw-medium"
+                      className="btn btn-outline-gradient px-3 px-md-4 py-2 rounded-pill fw-medium order-2 order-sm-1"
                       onClick={handleClearForm}
                       disabled={loading}
                     >
@@ -659,7 +659,7 @@ export default function FoundItemForm() {
                     </button>
                     <button
                       type="submit"
-                      className="btn submit-btn px-5 py-2 rounded-pill fw-bold"
+                      className="btn submit-btn px-4 px-md-5 py-2 rounded-pill fw-bold order-1 order-sm-2"
                       disabled={loading}
                     >
                       {loading ? (
@@ -681,11 +681,11 @@ export default function FoundItemForm() {
 
           
             <div className="card shadow-sm border-0 stat-card">
-              <div className="card-body p-4">
-                <div className="row g-3">
+              <div className="card-body p-3 p-md-4">
+                <div className="row g-2 g-md-3">
                   <div className="col-4">
                     <div className="text-center p-2">
-                      <div className="h4 fw-bold mb-2">
+                      <div className="h5 h-md-4 fw-bold mb-1 mb-md-2">
                         <FaHandHolding className="icon-gradient" />
                       </div>
                       <div className="small fw-semibold" style={{ color: '#4a5568' }}>Helping Others</div>
@@ -693,7 +693,7 @@ export default function FoundItemForm() {
                   </div>
                   <div className="col-4">
                     <div className="text-center p-2">
-                      <div className="h4 fw-bold mb-2">
+                      <div className="h5 h-md-4 fw-bold mb-1 mb-md-2">
                         <FaCheckCircle className="icon-gradient" />
                       </div>
                       <div className="small fw-semibold" style={{ color: '#4a5568' }}>Good Deeds</div>
@@ -701,7 +701,7 @@ export default function FoundItemForm() {
                   </div>
                   <div className="col-4">
                     <div className="text-center p-2">
-                      <div className="h4 fw-bold mb-2">
+                      <div className="h5 h-md-4 fw-bold mb-1 mb-md-2">
                         <FaGift className="icon-gradient" />
                       </div>
                       <div className="small fw-semibold" style={{ color: '#4a5568' }}>Positive Impact</div>
