@@ -837,74 +837,153 @@ export default function MyItemsPage() {
           <div className="row g-4">
             {filteredItems.map((item) => (
               <div key={item._id} className="col-md-6 col-lg-4">
-                <div className="item-card h-100 shadow-sm">
-                  <div className="image-container position-relative">
+                <div 
+                  className="card-custom h-100 position-relative"
+                  style={{
+                    transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                    borderRadius: 'var(--radius-xl)',
+                    overflow: 'hidden',
+                    border: '1px solid var(--color-gray-200)',
+                    background: 'white'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-8px)';
+                    e.currentTarget.style.boxShadow = 'var(--shadow-xl)';
+                    e.currentTarget.style.borderColor = 'var(--color-primary-300)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                    e.currentTarget.style.borderColor = 'var(--color-gray-200)';
+                  }}
+                >
+                  {/* Image Container with Fixed Aspect Ratio */}
+                  <div 
+                    className="position-relative overflow-hidden"
+                    style={{ 
+                      aspectRatio: '16/9',
+                      background: 'var(--color-gray-100)'
+                    }}
+                  >
                     <img
                       src={item.imageUrl || "/placeholder.jpg"}
-                      className="card-img-top w-100 h-100 object-cover"
                       alt={item.title}
+                      loading="lazy"
+                      className="w-100 h-100"
+                      style={{ 
+                        objectFit: 'cover',
+                        transition: 'transform 0.3s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.transform = 'scale(1.05)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.transform = 'scale(1)';
+                      }}
                     />
+
+                    {/* Type Badge */}
                     <div className="position-absolute top-0 start-0 m-3 d-flex flex-column gap-1">
                       <span
-                        className="type-badge text-white"
+                        className="badge-custom"
                         style={{
-                          background:
-                            item.type === "lost"
-                              ? "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
-                              : item.type === "found"
-                                ? "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
-                                : "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                          background: item.type === "lost"
+                            ? 'var(--gradient-primary)'
+                            : item.type === "found"
+                              ? 'var(--gradient-success)'
+                              : 'var(--color-gray-500)',
+                          color: 'white',
+                          fontSize: '0.75rem',
+                          fontWeight: '600',
+                          padding: '0.25rem 0.75rem',
+                          borderRadius: 'var(--radius-full)',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.5px',
+                          boxShadow: 'var(--shadow-md)'
                         }}
                       >
                         {item.type?.toUpperCase()}
                       </span>
-
                     </div>
                   </div>
 
-                  <div className="card-body p-4">
+                  {/* Card Content */}
+                  <div className="card-body-custom d-flex flex-column" style={{ padding: 'var(--spacing-4)' }}>
+                    {/* Title */}
                     <h5
-                      className="card-title fw-bold mb-2"
-                      style={{ color: "#667eea" }}
+                      className="fw-bold mb-2"
+                      style={{ 
+                        color: 'var(--color-gray-900)',
+                        fontSize: 'var(--font-size-lg)',
+                        lineHeight: 'var(--line-height-tight)',
+                        display: '-webkit-box',
+                        WebkitLineClamp: '1',
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden'
+                      }}
                     >
                       {item.title}
                     </h5>
+
+                    {/* Description */}
                     <p
-                      className="card-text small mb-3"
-                      style={{
-                        color: "#764ba2",
-                        display: "-webkit-box",
-                        WebkitLineClamp: "2",
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
+                      className="text-muted mb-3 flex-grow-1"
+                      style={{ 
+                        fontSize: 'var(--font-size-sm)',
+                        lineHeight: 'var(--line-height-relaxed)',
+                        display: '-webkit-box',
+                        WebkitLineClamp: '2',
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden'
                       }}
                     >
                       {item.description}
                     </p>
 
+                    {/* Metadata */}
                     <div className="mb-3">
-                      <div className="d-flex align-items-center small mb-2">
-                        <FaMapMarkerAlt
-                          className="me-2 flex-shrink-0"
-                          style={{ color: "#667eea" }}
-                          size={12}
-                        />
+                      <div className="d-flex align-items-center mb-2">
+                        <div 
+                          className="rounded-circle d-flex align-items-center justify-content-center me-2"
+                          style={{ 
+                            width: '24px', 
+                            height: '24px', 
+                            background: 'var(--color-primary-100)',
+                            color: 'var(--color-primary-600)'
+                          }}
+                        >
+                          <FaMapMarkerAlt size={10} />
+                        </div>
                         <span
                           className="text-truncate"
-                          style={{ color: "#764ba2" }}
+                          style={{ 
+                            fontSize: 'var(--font-size-sm)',
+                            color: 'var(--color-gray-600)'
+                          }}
                         >
                           {item.location}
                         </span>
                       </div>
 
                       {item.date && (
-                        <div className="d-flex align-items-center small">
-                          <FaCalendarAlt
-                            className="me-2 flex-shrink-0"
-                            style={{ color: "#667eea" }}
-                            size={12}
-                          />
-                          <span style={{ color: "#764ba2" }}>
+                        <div className="d-flex align-items-center">
+                          <div 
+                            className="rounded-circle d-flex align-items-center justify-content-center me-2"
+                            style={{ 
+                              width: '24px', 
+                              height: '24px', 
+                              background: 'var(--color-primary-100)',
+                              color: 'var(--color-primary-600)'
+                            }}
+                          >
+                            <FaCalendarAlt size={10} />
+                          </div>
+                          <span 
+                            style={{ 
+                              fontSize: 'var(--font-size-sm)',
+                              color: 'var(--color-gray-600)'
+                            }}
+                          >
                             {new Date(item.date).toLocaleDateString("en-US", {
                               month: "short",
                               day: "numeric",
@@ -915,65 +994,104 @@ export default function MyItemsPage() {
                       )}
                     </div>
 
+                    {/* Actions Footer */}
                     <div className="d-flex justify-content-between align-items-center pt-3 border-top">
                       <span
-                        className="badge"
+                        className="badge-custom"
                         style={{
-                          background: "rgba(102, 126, 234, 0.1)",
-                          color: "#667eea",
-                          textTransform: "capitalize",
+                          background: 'var(--color-primary-100)',
+                          color: 'var(--color-primary-700)',
+                          fontSize: '0.625rem',
+                          textTransform: 'capitalize'
                         }}
                       >
                         {item.category}
                       </span>
+                      
                       <div className="d-flex gap-2">
                         {item.type !== "resolved" && (
                           <button
-                            className="action-btn btn btn-sm px-3 py-1"
+                            className="btn btn-sm d-flex align-items-center justify-content-center"
                             style={{
-                              background: "transparent",
+                              width: '32px',
+                              height: '32px',
+                              background: 'var(--color-success-100)',
+                              color: 'var(--color-success-600)',
+                              border: 'none',
+                              borderRadius: 'var(--radius-md)',
+                              transition: 'var(--transition-base)'
                             }}
                             onClick={() => handleMarkAsResolved(item)}
-                            disabled={
-                              resolving && resolvingItem?._id === item._id
-                            }
+                            disabled={resolving && resolvingItem?._id === item._id}
+                            title="Mark as Resolved"
+                            onMouseEnter={(e) => {
+                              e.target.style.background = 'var(--color-success-200)';
+                              e.target.style.transform = 'translateY(-2px)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.target.style.background = 'var(--color-success-100)';
+                              e.target.style.transform = 'translateY(0)';
+                            }}
                           >
                             {resolving && resolvingItem?._id === item._id ? (
-                              <span
-                                className="spinner-border spinner-border-sm"
-                                role="status"
-                              ></span>
+                              <span className="spinner-custom spinner-sm"></span>
                             ) : (
-                              <div style={{ color: "#667eea" }}>
-                                <FaCheck size={12} />
-                              </div>
+                              <FaCheck size={12} />
                             )}
                           </button>
                         )}
+                        
                         <button
-                          className="action-btn btn btn-sm px-3 py-1"
+                          className="btn btn-sm d-flex align-items-center justify-content-center"
                           style={{
-                            background: "transparent",
+                            width: '32px',
+                            height: '32px',
+                            background: 'var(--color-primary-100)',
+                            color: 'var(--color-primary-600)',
+                            border: 'none',
+                            borderRadius: 'var(--radius-md)',
+                            transition: 'var(--transition-base)'
                           }}
                           onClick={() => openEditModal(item)}
+                          title="Edit Item"
+                          onMouseEnter={(e) => {
+                            e.target.style.background = 'var(--color-primary-200)';
+                            e.target.style.transform = 'translateY(-2px)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.target.style.background = 'var(--color-primary-100)';
+                            e.target.style.transform = 'translateY(0)';
+                          }}
                         >
-                          <div style={{ color: "#667eea" }}>
-                            <FaEdit size={12} />
-                          </div>
+                          <FaEdit size={12} />
                         </button>
+                        
                         <button
-                          className="action-btn btn btn-sm px-3 py-1"
+                          className="btn btn-sm d-flex align-items-center justify-content-center"
                           style={{
-                            background: "transparent",
+                            width: '32px',
+                            height: '32px',
+                            background: 'var(--color-error-100)',
+                            color: 'var(--color-error-600)',
+                            border: 'none',
+                            borderRadius: 'var(--radius-md)',
+                            transition: 'var(--transition-base)'
                           }}
                           onClick={() => {
                             openConfirmDelete(item);
                             document.body.style.overflow = "hidden";
                           }}
+                          title="Delete Item"
+                          onMouseEnter={(e) => {
+                            e.target.style.background = 'var(--color-error-200)';
+                            e.target.style.transform = 'translateY(-2px)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.target.style.background = 'var(--color-error-100)';
+                            e.target.style.transform = 'translateY(0)';
+                          }}
                         >
-                          <div style={{ color: "#667eea" }}>
-                            <FaTrash size={12} />
-                          </div>
+                          <FaTrash size={12} />
                         </button>
                       </div>
                     </div>

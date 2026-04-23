@@ -641,84 +641,228 @@ export default function Browse() {
                   onMouseLeave={() => setHoveredItem(null)}
                 >
                   <div
-                    className="card-custom card-hover-3d h-100 border-0 shadow-sm position-relative"
+                    className="card-custom h-100 position-relative cursor-pointer"
                     onClick={() => handleItemClick(item)}
+                    style={{
+                      transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                      borderRadius: 'var(--radius-xl)',
+                      overflow: 'hidden',
+                      border: '1px solid var(--color-gray-200)',
+                      background: 'white'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-8px)';
+                      e.currentTarget.style.boxShadow = 'var(--shadow-xl)';
+                      e.currentTarget.style.borderColor = 'var(--color-primary-300)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                      e.currentTarget.style.borderColor = 'var(--color-gray-200)';
+                    }}
                   >
-                    <div className="image-container">
+                    {/* Image Container with Fixed Aspect Ratio */}
+                    <div 
+                      className="position-relative overflow-hidden"
+                      style={{ 
+                        aspectRatio: '16/9',
+                        background: 'var(--color-gray-100)'
+                      }}
+                    >
                       {item.imageUrl ? (
-                        <>
-                          <img
-                            src={item.imageUrl}
-                            alt={item.title}
-                            className="w-100 h-100 object-cover"
-                          />
-                          <div className="image-overlay"></div>
-                        </>
+                        <img
+                          src={item.imageUrl}
+                          alt={item.title}
+                          loading="lazy"
+                          className="w-100 h-100"
+                          style={{ 
+                            objectFit: 'cover',
+                            transition: 'transform 0.3s ease'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.target.style.transform = 'scale(1.05)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.target.style.transform = 'scale(1)';
+                          }}
+                        />
                       ) : (
                         <div className="w-100 h-100 d-flex align-items-center justify-content-center"
-                          style={{ background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)' }}>
-                          <div className="text-center" style={{ color: 'var(--primary-color)' }}>
-                            <FaSearch size={40} className="mb-2 opacity-50" />
-                            <small className="d-block" style={{ color: 'var(--secondary-color)' }}>No Image Available</small>
+                          style={{ 
+                            background: 'linear-gradient(135deg, var(--color-primary-100) 0%, var(--color-secondary-100) 100%)'
+                          }}>
+                          <div className="text-center">
+                            <FaSearch size={32} className="mb-2" style={{ color: 'var(--color-primary-400)' }} />
+                            <small className="d-block text-muted">No Image Available</small>
                           </div>
                         </div>
                       )}
 
-                      <span className="type-badge position-absolute top-0 start-0 m-2 text-white"
+                      {/* Type Badge */}
+                      <span 
+                        className="badge-custom badge-primary position-absolute top-0 start-0 m-3"
                         style={{
-                          fontSize: '0.7rem',
-                          padding: '6px 15px',
-                          borderRadius: '12px',
+                          background: item.type === "lost" 
+                            ? 'var(--gradient-primary)' 
+                            : item.type === "found" 
+                              ? 'var(--gradient-success)' 
+                              : 'var(--color-gray-500)',
+                          color: 'white',
+                          fontSize: '0.75rem',
                           fontWeight: '600',
-                          letterSpacing: '0.5px',
-                          boxShadow: '0 4px 15px rgba(102, 126, 234, 0.3)',
+                          padding: '0.25rem 0.75rem',
+                          borderRadius: 'var(--radius-full)',
                           textTransform: 'uppercase',
-                          background: item.type === "lost"
-                            ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-                            : item.type === "found"
-                              ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-                              : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-                        }}>
+                          letterSpacing: '0.5px',
+                          boxShadow: 'var(--shadow-md)'
+                        }}
+                      >
                         {item.type === "lost" ? "LOST" : item.type === "found" ? "FOUND" : "RESOLVED"}
                       </span>
 
-                      <button className="view-details-btn">
-                        View Details
-                      </button>
+                      {/* Hover Overlay */}
+                      <div 
+                        className="position-absolute inset-0 d-flex align-items-center justify-content-center"
+                        style={{
+                          background: 'rgba(102, 126, 234, 0.9)',
+                          opacity: '0',
+                          transition: 'opacity 0.3s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.target.style.opacity = '1';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.opacity = '0';
+                        }}
+                      >
+                        <button 
+                          className="btn-primary-custom btn-sm d-flex align-items-center gap-2"
+                          style={{ pointerEvents: 'none' }}
+                        >
+                          <FaEye size={14} />
+                          View Details
+                        </button>
+                      </div>
                     </div>
 
-                    <div className="card-body-custom d-flex flex-column p-4">
-                      <h5 className="card-title fw-bold mb-2 line-clamp-1">{item.title}</h5>
-                      <p className="card-text small flex-grow-1 mb-3 line-clamp-2">
+                    {/* Card Content */}
+                    <div className="card-body-custom d-flex flex-column" style={{ padding: 'var(--spacing-4)' }}>
+                      {/* Title */}
+                      <h5 
+                        className="fw-bold mb-2"
+                        style={{ 
+                          color: 'var(--color-gray-900)',
+                          fontSize: 'var(--font-size-lg)',
+                          lineHeight: 'var(--line-height-tight)',
+                          display: '-webkit-box',
+                          WebkitLineClamp: '1',
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden'
+                        }}
+                      >
+                        {item.title}
+                      </h5>
+
+                      {/* Description */}
+                      <p 
+                        className="text-muted mb-3 flex-grow-1"
+                        style={{ 
+                          fontSize: 'var(--font-size-sm)',
+                          lineHeight: 'var(--line-height-relaxed)',
+                          display: '-webkit-box',
+                          WebkitLineClamp: '2',
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden'
+                        }}
+                      >
                         {item.description}
                       </p>
 
+                      {/* Metadata */}
                       <div className="mt-auto">
-                        <div className="d-flex align-items-center mb-2 small" style={{ color: 'var(--secondary-color)' }}>
-                          <div className="icon-container">
-                            <FaUser size={14} />
+                        <div className="d-flex align-items-center mb-2">
+                          <div 
+                            className="rounded-circle d-flex align-items-center justify-content-center me-2"
+                            style={{ 
+                              width: '24px', 
+                              height: '24px', 
+                              background: 'var(--color-primary-100)',
+                              color: 'var(--color-primary-600)'
+                            }}
+                          >
+                            <FaUser size={10} />
                           </div>
-                          <span className="fw-medium">{item.user?.name || "Anonymous"}</span>
+                          <span 
+                            className="fw-medium text-truncate"
+                            style={{ 
+                              fontSize: 'var(--font-size-sm)',
+                              color: 'var(--color-gray-700)'
+                            }}
+                          >
+                            {item.user?.name || "Anonymous"}
+                          </span>
                         </div>
 
-                        <div className="d-flex align-items-center mb-2 small" style={{ color: 'var(--secondary-color)' }}>
-                          <div className="icon-container">
-                            <FaMapMarkerAlt size={14} />
+                        <div className="d-flex align-items-center mb-2">
+                          <div 
+                            className="rounded-circle d-flex align-items-center justify-content-center me-2"
+                            style={{ 
+                              width: '24px', 
+                              height: '24px', 
+                              background: 'var(--color-primary-100)',
+                              color: 'var(--color-primary-600)'
+                            }}
+                          >
+                            <FaMapMarkerAlt size={10} />
                           </div>
-                          <span className="text-truncate">{item.location}</span>
+                          <span 
+                            className="text-truncate"
+                            style={{ 
+                              fontSize: 'var(--font-size-sm)',
+                              color: 'var(--color-gray-600)'
+                            }}
+                          >
+                            {item.location}
+                          </span>
                         </div>
 
                         {item.date && (
-                          <div className="d-flex align-items-center mb-2 small" style={{ color: 'var(--secondary-color)' }}>
-                            <div className="icon-container">
-                              <FaCalendarAlt size={14} />
+                          <div className="d-flex align-items-center justify-content-between">
+                            <div className="d-flex align-items-center">
+                              <div 
+                                className="rounded-circle d-flex align-items-center justify-content-center me-2"
+                                style={{ 
+                                  width: '24px', 
+                                  height: '24px', 
+                                  background: 'var(--color-primary-100)',
+                                  color: 'var(--color-primary-600)'
+                                }}
+                              >
+                                <FaCalendarAlt size={10} />
+                              </div>
+                              <span 
+                                style={{ 
+                                  fontSize: 'var(--font-size-sm)',
+                                  color: 'var(--color-gray-600)'
+                                }}
+                              >
+                                {new Date(item.date).toLocaleDateString('en-US', {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  year: 'numeric'
+                                })}
+                              </span>
                             </div>
-                            <span>
-                              {new Date(item.date).toLocaleDateString('en-US', {
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric'
-                              })}
+                            <span 
+                              className="badge-custom"
+                              style={{
+                                background: 'var(--color-primary-100)',
+                                color: 'var(--color-primary-700)',
+                                fontSize: '0.625rem',
+                                textTransform: 'capitalize'
+                              }}
+                            >
+                              {item.category}
                             </span>
                           </div>
                         )}

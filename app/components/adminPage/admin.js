@@ -402,74 +402,178 @@ export default function AdminDashboard() {
             const typeColor = getTypeColor(item.type);
             return (
               <div key={item._id} className="col-md-6 col-lg-4">
-                <div className="card border shadow-sm h-100">
-                  <div className="position-relative" style={{ height: "180px", overflow: "hidden" }}>
+                <div 
+                  className="card-custom h-100 position-relative"
+                  style={{
+                    transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                    borderRadius: 'var(--radius-xl)',
+                    overflow: 'hidden',
+                    border: '1px solid var(--color-gray-200)',
+                    background: 'white'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-8px)';
+                    e.currentTarget.style.boxShadow = 'var(--shadow-xl)';
+                    e.currentTarget.style.borderColor = 'var(--color-primary-300)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                    e.currentTarget.style.borderColor = 'var(--color-gray-200)';
+                  }}
+                >
+                  {/* Image Container with Fixed Aspect Ratio */}
+                  <div 
+                    className="position-relative overflow-hidden"
+                    style={{ 
+                      aspectRatio: '16/9',
+                      background: 'var(--color-gray-100)'
+                    }}
+                  >
                     <img
                       src={item.imageUrl || "/placeholder.jpg"}
-                      className="card-img-top w-100 h-100 object-fit-cover"
                       alt={item.title}
+                      loading="lazy"
+                      className="w-100 h-100"
+                      style={{ 
+                        objectFit: 'cover',
+                        transition: 'transform 0.3s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.transform = 'scale(1.05)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.transform = 'scale(1)';
+                      }}
                     />
+
+                    {/* Type Badge */}
                     <span
-                      className="position-absolute top-0 start-0 m-3 px-3 py-1 rounded-pill text-white fw-bold"
+                      className="badge-custom position-absolute top-0 start-0 m-3"
                       style={{ 
                         background: typeColor.gradient,
-                        fontSize: "0.75rem",
-                        letterSpacing: "0.5px"
+                        color: 'white',
+                        fontSize: '0.75rem',
+                        fontWeight: '600',
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: 'var(--radius-full)',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.5px',
+                        boxShadow: 'var(--shadow-md)'
                       }}
                     >
                       {item.type?.toUpperCase()}
                     </span>
                   </div>
 
-                  <div className="card-body d-flex flex-column">
-                    <h5 className="card-title fw-bold mb-2" style={{ color: "#667eea" }}>
+                  {/* Card Content */}
+                  <div className="card-body-custom d-flex flex-column" style={{ padding: 'var(--spacing-4)' }}>
+                    {/* Title */}
+                    <h5 
+                      className="fw-bold mb-2"
+                      style={{ 
+                        color: 'var(--color-gray-900)',
+                        fontSize: 'var(--font-size-lg)',
+                        lineHeight: 'var(--line-height-tight)',
+                        display: '-webkit-box',
+                        WebkitLineClamp: '1',
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden'
+                      }}
+                    >
                       {item.title}
                     </h5>
+
+                    {/* Description */}
                     <p
-                      className="card-text text-muted small mb-3 flex-grow-1"
-                      style={{
-                        display: "-webkit-box",
-                        WebkitLineClamp: "3",
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
+                      className="text-muted mb-3 flex-grow-1"
+                      style={{ 
+                        fontSize: 'var(--font-size-sm)',
+                        lineHeight: 'var(--line-height-relaxed)',
+                        display: '-webkit-box',
+                        WebkitLineClamp: '2',
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden'
                       }}
                     >
                       {item.description}
                     </p>
 
+                    {/* User Info */}
                     <div className="mb-3">
                       <div className="d-flex align-items-center mb-2">
                         <div 
                           className="rounded-circle d-flex align-items-center justify-content-center me-2"
                           style={{ 
-                            width: "36px", 
-                            height: "36px", 
-                            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                            color: "white",
-                            fontWeight: "600",
-                            fontSize: "14px"
+                            width: '32px', 
+                            height: '32px', 
+                            background: 'var(--gradient-primary)',
+                            color: 'white',
+                            fontWeight: '600',
+                            fontSize: '0.875rem'
                           }}
                         >
                           {item.user?.name?.charAt(0) || "A"}
                         </div>
-                        <div>
-                          <div style={{ color: "#667eea", fontWeight: "500" }}>
+                        <div className="flex-grow-1">
+                          <div 
+                            className="fw-medium"
+                            style={{ 
+                              color: 'var(--color-gray-900)',
+                              fontSize: 'var(--font-size-sm)'
+                            }}
+                          >
                             {item.user?.name || "Anonymous"}
                           </div>
-                          <small className="text-muted">{item.user?.email || "No email"}</small>
+                          <small className="text-muted">
+                            {item.user?.email || "No email"}
+                          </small>
                         </div>
                       </div>
 
-                      <div className="d-flex justify-content-between small">
+                      {/* Location and Date */}
+                      <div className="d-flex justify-content-between align-items-center">
                         <div className="d-flex align-items-center">
-                          <FaMapMarkerAlt className="me-1" size={12} style={{ color: "#667eea" }} />
-                          <span className="text-truncate" style={{ maxWidth: "100px" }}>
+                          <div 
+                            className="rounded-circle d-flex align-items-center justify-content-center me-2"
+                            style={{ 
+                              width: '20px', 
+                              height: '20px', 
+                              background: 'var(--color-primary-100)',
+                              color: 'var(--color-primary-600)'
+                            }}
+                          >
+                            <FaMapMarkerAlt size={8} />
+                          </div>
+                          <span 
+                            className="text-truncate"
+                            style={{ 
+                              maxWidth: '100px',
+                              fontSize: 'var(--font-size-sm)',
+                              color: 'var(--color-gray-600)'
+                            }}
+                          >
                             {item.location || "Unknown"}
                           </span>
                         </div>
                         <div className="d-flex align-items-center">
-                          <FaCalendarAlt className="me-1" size={12} style={{ color: "#667eea" }} />
-                          <span>
+                          <div 
+                            className="rounded-circle d-flex align-items-center justify-content-center me-2"
+                            style={{ 
+                              width: '20px', 
+                              height: '20px', 
+                              background: 'var(--color-primary-100)',
+                              color: 'var(--color-primary-600)'
+                            }}
+                          >
+                            <FaCalendarAlt size={8} />
+                          </div>
+                          <span 
+                            style={{ 
+                              fontSize: 'var(--font-size-sm)',
+                              color: 'var(--color-gray-600)'
+                            }}
+                          >
                             {new Date(item.createdAt || item.date).toLocaleDateString("en-US", {
                               month: "short",
                               day: "numeric",
@@ -479,12 +583,17 @@ export default function AdminDashboard() {
                       </div>
                     </div>
 
+                    {/* Actions Footer */}
                     <div className="d-flex justify-content-between align-items-center pt-3 border-top mt-auto">
-                      <span className="badge" style={{
-                        background: "rgba(102, 126, 234, 0.1)",
-                        color: "#667eea",
-                        textTransform: "capitalize"
-                      }}>
+                      <span 
+                        className="badge-custom"
+                        style={{
+                          background: 'var(--color-primary-100)',
+                          color: 'var(--color-primary-700)',
+                          fontSize: '0.625rem',
+                          textTransform: 'capitalize'
+                        }}
+                      >
                         {item.category || "Uncategorized"}
                       </span>
                       
@@ -492,19 +601,36 @@ export default function AdminDashboard() {
                         <button
                           className="btn btn-sm d-flex align-items-center justify-content-center"
                           style={{
-                            width: "36px",
-                            height: "36px",
-                            background: item.type === "resolved" ? "#6b7280" : "linear-gradient(135deg, #10b981 0%, #059669 100%)",
-                            color: "white",
-                            border: "none",
-                            borderRadius: "8px"
+                            width: '32px',
+                            height: '32px',
+                            background: item.type === "resolved" 
+                              ? 'var(--color-gray-400)' 
+                              : 'var(--color-success-100)',
+                            color: item.type === "resolved" 
+                              ? 'white' 
+                              : 'var(--color-success-600)',
+                            border: 'none',
+                            borderRadius: 'var(--radius-md)',
+                            transition: 'var(--transition-base)'
                           }}
                           onClick={() => handleResolve(item._id)}
                           disabled={actionLoading === item._id || item.type === "resolved"}
                           title={item.type === "resolved" ? "Already Resolved" : "Mark as Resolved"}
+                          onMouseEnter={(e) => {
+                            if (item.type !== "resolved") {
+                              e.target.style.background = 'var(--color-success-200)';
+                              e.target.style.transform = 'translateY(-2px)';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (item.type !== "resolved") {
+                              e.target.style.background = 'var(--color-success-100)';
+                              e.target.style.transform = 'translateY(0)';
+                            }
+                          }}
                         >
                           {actionLoading === item._id ? (
-                            <span className="spinner-border spinner-border-sm"></span>
+                            <span className="spinner-custom spinner-sm"></span>
                           ) : item.type === "resolved" ? (
                             <FaCheck />
                           ) : (
@@ -515,16 +641,25 @@ export default function AdminDashboard() {
                         <button
                           className="btn btn-sm d-flex align-items-center justify-content-center"
                           style={{
-                            width: "36px",
-                            height: "36px",
-                            background: "linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)",
-                            color: "white",
-                            border: "none",
-                            borderRadius: "8px"
+                            width: '32px',
+                            height: '32px',
+                            background: 'var(--color-error-100)',
+                            color: 'var(--color-error-600)',
+                            border: 'none',
+                            borderRadius: 'var(--radius-md)',
+                            transition: 'var(--transition-base)'
                           }}
                           onClick={() => openDeleteModal(item)}
                           disabled={actionLoading === item._id}
                           title="Delete Item"
+                          onMouseEnter={(e) => {
+                            e.target.style.background = 'var(--color-error-200)';
+                            e.target.style.transform = 'translateY(-2px)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.target.style.background = 'var(--color-error-100)';
+                            e.target.style.transform = 'translateY(0)';
+                          }}
                         >
                           <FaTrash />
                         </button>
@@ -532,15 +667,24 @@ export default function AdminDashboard() {
                         <button
                           className="btn btn-sm d-flex align-items-center justify-content-center"
                           style={{
-                            width: "36px",
-                            height: "36px",
-                            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                            color: "white",
-                            border: "none",
-                            borderRadius: "8px"
+                            width: '32px',
+                            height: '32px',
+                            background: 'var(--color-primary-100)',
+                            color: 'var(--color-primary-600)',
+                            border: 'none',
+                            borderRadius: 'var(--radius-md)',
+                            transition: 'var(--transition-base)'
                           }}
                           onClick={() => openItemModal(item)}
                           title="View Details"
+                          onMouseEnter={(e) => {
+                            e.target.style.background = 'var(--color-primary-200)';
+                            e.target.style.transform = 'translateY(-2px)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.target.style.background = 'var(--color-primary-100)';
+                            e.target.style.transform = 'translateY(0)';
+                          }}
                         >
                           <FaEye />
                         </button>
