@@ -23,7 +23,7 @@ export function middleware(req) {
       if (decoded.role !== "admin") {
         return NextResponse.redirect(new URL("/", req.url));
       }
-    } catch {
+    } catch (e) {
       return NextResponse.redirect(new URL("/loginPage", req.url));
     }
   }

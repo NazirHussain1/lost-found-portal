@@ -89,7 +89,7 @@ export default function MyItemsPage() {
       try {
         const res = await fetch("/api/profile");
         if (!res.ok) router.push("/loginPage");
-      } catch {
+      } catch (e) {
         router.push("/loginPage");
       }
     }, 2000);
@@ -168,13 +168,11 @@ export default function MyItemsPage() {
       imageUrl: item.imageUrl || "",
     });
     setImagePreview(item.imageUrl || "");
-    document.body.style.overflow = "hidden";
   }
 
   function closeEditModal() {
     setEditingItem(null);
     setImagePreview("");
-    document.body.style.overflow = "auto";
   }
 
   function closeDeleteModal() {
@@ -1012,7 +1010,6 @@ export default function MyItemsPage() {
                           }}
                           onClick={() => {
                             openConfirmDelete(item);
-                            document.body.style.overflow = "hidden";
                           }}
                           title="Delete Item"
                           onMouseEnter={(e) => {

@@ -18,7 +18,7 @@ export async function PATCH(req, context) {
   let decoded;
   try {
     decoded = jwt.verify(token, process.env.JWT_SECRET);
-  } catch {
+  } catch (e) {
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });
   }
 
@@ -54,7 +54,7 @@ export async function DELETE(req, context) {
   let decoded;
   try {
     decoded = jwt.verify(token, process.env.JWT_SECRET);
-  } catch {
+  } catch (e) {
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });
   }
 

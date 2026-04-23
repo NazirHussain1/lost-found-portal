@@ -34,7 +34,7 @@ async function deleteHandler(req, context) {
     let decoded;
     try {
       decoded = jwt.verify(token, process.env.JWT_SECRET);
-    } catch {
+    } catch (e) {
       return createErrorResponse([
         { field: 'auth', message: 'Invalid or expired token' }
       ], 401);
@@ -97,7 +97,7 @@ async function putHandler(req, context) {
     let decoded;
     try {
       decoded = jwt.verify(token, process.env.JWT_SECRET);
-    } catch {
+    } catch (e) {
       return createErrorResponse([
         { field: 'auth', message: 'Invalid or expired token' }
       ], 401);

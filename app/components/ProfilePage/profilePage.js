@@ -327,7 +327,7 @@ export default function ProfilePage() {
         month: "short",
         day: "numeric"
       });
-    } catch {
+    } catch (e) {
       return "Recently";
     }
   }
