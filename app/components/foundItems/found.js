@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { addItem } from "../../store/slices/itemsSlice";
-import { FaCamera, FaUpload, FaTrash, FaMapMarkerAlt, FaTag, FaInfoCircle, FaUser, FaCheckCircle, FaHandHolding, FaSearch, FaGift, FaExclamationTriangle } from "react-icons/fa";
+import { FaCamera, FaUpload, FaTrash, FaMapMarkerAlt, FaTag, FaInfoCircle, FaUser, FaCheckCircle, FaHandHolding, FaGift, FaExclamationTriangle } from "react-icons/fa";
 
 export default function FoundItemForm() {
   const dispatch = useDispatch();
@@ -255,177 +255,19 @@ export default function FoundItemForm() {
   };
 
   return (
-    <>
-      <style jsx global>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
-        .fade-in {
-          animation: fadeIn 0.6s ease-out;
-        }
-        
-        .input-focus-effect:focus {
-          border-color: #667eea;
-          box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.15);
-        }
-        
-        .submit-btn {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          border: none;
-          transition: all 0.3s ease;
-          color: white;
-          font-weight: 600;
-        }
-        
-        .submit-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-        
-        .image-upload-area {
-          border: 2px dashed rgba(102, 126, 234, 0.3);
-          border-radius: 12px;
-          transition: all 0.3s ease;
-          background: rgba(102, 126, 234, 0.03);
-          cursor: pointer;
-        }
-        
-        .image-upload-area:hover {
-          background: rgba(102, 126, 234, 0.08);
-          border-color: #667eea;
-        }
-        
-        .card-hover-3d {
-          transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        
-        .card-hover-3d:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 20px 40px rgba(102, 126, 234, 0.1) !important;
-        }
-        
-        .form-gradient {
-          background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 255, 0.95) 100%);
-          border-radius: 16px;
-        }
-        
-        .stat-card {
-          background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-          border-radius: 12px;
-          border: 1px solid rgba(102, 126, 234, 0.1);
-          transition: all 0.3s ease;
-        }
-        
-        .stat-card:hover {
-          border-color: rgba(102, 126, 234, 0.3);
-        }
-        
-        .found-header {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        
-        .icon-gradient {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-        
-        .text-gradient {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-        
-        .btn-outline-gradient {
-          border: 2px solid;
-          border-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          border-image-slice: 1;
-          color: #667eea;
-        }
-        
-        .btn-outline-gradient:hover {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-        }
-        
-        .form-label {
-          color: #4a5568;
-          font-weight: 600;
-        }
-        
-        .form-control, .form-select {
-          border-radius: 10px;
-          border: 1px solid #e2e8f0;
-          padding: 0.75rem 1rem;
-          font-size: 0.95rem;
-        }
-        
-        .form-control:focus, .form-select:focus {
-          border-color: #667eea;
-          box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.15);
-        }
-        
-        .input-focus-effect:focus {
-          border-color: var(--color-primary-500) !important;
-          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
-          outline: none;
-        }
-        
-        .input-error {
-          border-color: var(--color-error-500) !important;
-        }
-        
-        .input-error:focus {
-          border-color: var(--color-error-500) !important;
-          box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
-        }
-        
-        .form-control, .form-select, .input-custom, .textarea-custom {
-          transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-        
-        .form-control:focus, .form-select:focus, .input-custom:focus, .textarea-custom:focus {
-          border-color: var(--color-primary-500);
-          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-          outline: none;
-        }
-        
-        .alert-success {
-          background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%);
-          border: 1px solid rgba(16, 185, 129, 0.2);
-          color: #065f46;
-        }
-        
-        .alert-danger {
-          background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
-          border: 1px solid rgba(239, 68, 68, 0.2);
-          color: #7f1d1d;
-        }
-      `}</style>
-
-      <div className="container-fluid px-3 px-md-4 py-3 py-md-4 fade-in">
-        <div className="row justify-content-center">
-          <div className="col-12 col-xl-10 col-xxl-8">
+    <div className="container-fluid px-3 px-md-4 py-3 py-md-4 animate-fadeIn">
+      <div className="row justify-content-center">
+        <div className="col-12 col-xl-10 col-xxl-8">
           
             {user && (
-              <div className="card shadow-sm border-0 mb-3 mb-md-4 stat-card">
-                <div className="card-body p-3 p-md-4">
+              <div className="card shadow-sm border-0 mb-3 mb-md-4">
+                <div className="card-body p-3 p-md-4" style={{ background: 'var(--gradient-primary)', opacity: 0.05 }}>
                   <div className="d-flex flex-column flex-sm-row align-items-center align-items-sm-start text-center text-sm-start">
-                    <div className="rounded-circle p-2 me-0 me-sm-3 mb-2 mb-sm-0" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+                    <div className="rounded-circle p-2 me-0 me-sm-3 mb-2 mb-sm-0 bg-gradient-primary">
                       <FaUser size={20} className="text-white" />
                     </div>
                     <div className="flex-grow-1">
-                      <h6 className="mb-1 fw-bold text-gradient">Reporting as: {user.name || "Student"}</h6>
+                      <h6 className="mb-1 fw-bold text-primary">Reporting as: {user.name || "Student"}</h6>
                       <small className="text-muted">GAMICA Campus Member</small>
                     </div>
                   </div>
@@ -434,12 +276,12 @@ export default function FoundItemForm() {
             )}
 
           
-            <div className="card shadow-lg border-0 card-hover-3d overflow-hidden mb-3 mb-md-4">
+            <div className="card shadow-lg border-0 overflow-hidden mb-3 mb-md-4 transition-all">
              
-              <div className="card-header found-header text-white py-3 py-md-4 px-3 px-md-4">
+              <div className="card-header bg-gradient-primary text-white py-3 py-md-4 px-3 px-md-4">
                 <div className="d-flex flex-column flex-sm-row align-items-center align-items-sm-start text-center text-sm-start">
                   <div className="rounded-circle p-2 me-0 me-sm-3 mb-2 mb-sm-0">
-                    <FaHandHolding size={24} className="icon-gradient" />
+                    <FaHandHolding size={24} className="text-white" />
                   </div>
                   <div className="flex-grow-1">
                     <h1 className="h3 h-md-2 fw-bold mb-1">Report Found Item</h1>
@@ -448,9 +290,9 @@ export default function FoundItemForm() {
                 </div>
               </div>
               
-              <div className="card-body p-3 p-md-4 form-gradient">
+              <div className="card-body p-3 p-md-4">
                 {message.text && (
-                  <div className={`alert alert-${message.type === "success" ? "success" : "danger"} alert-dismissible fade show d-flex align-items-center p-3 mb-4 rounded-lg`} role="alert">
+                  <div className={`alert ${message.type === "success" ? "alert-success" : "alert-danger"} alert-dismissible fade show d-flex align-items-center p-3 mb-4 rounded-lg`} role="alert">
                     <FaCheckCircle className="me-3" size={18} />
                     <div className="flex-grow-1 fw-medium">{message.text}</div>
                     <button 
@@ -464,9 +306,9 @@ export default function FoundItemForm() {
 
                 <form onSubmit={handleSubmit}>
                 
-                  <div className="mb-4">
-                    <label htmlFor="title" className="form-label d-flex align-items-center mb-2">
-                      <FaTag className="me-2" style={{ color: '#667eea' }} size={16} />
+                  <div className="mb-3 mb-md-4">
+                    <label htmlFor="title" className="form-label d-flex align-items-center mb-2 text-primary fw-semibold">
+                      <FaTag className="me-2" size={16} />
                       Item Title <span className="text-danger ms-1">*</span>
                     </label>
                     <input
@@ -477,7 +319,7 @@ export default function FoundItemForm() {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       placeholder="e.g., 'Black Wallet', 'Laptop Bag', 'Student ID'"
-                      className={`form-control ${errors.title ? "is-invalid" : ""} input-focus-effect`}
+                      className={`form-control ${errors.title ? "is-invalid" : ""}`}
                       style={{
                         borderColor: errors.title ? 'var(--color-error-500)' : 'var(--color-gray-300)',
                         transition: 'var(--transition-base)'
@@ -612,6 +454,7 @@ export default function FoundItemForm() {
                           <img 
                             src={imagePreview} 
                             alt="Preview" 
+                            loading="lazy"
                             className="img-fluid rounded-lg shadow-sm"
                             style={{ maxHeight: '200px', objectFit: 'cover' }}
                           />
@@ -650,7 +493,7 @@ export default function FoundItemForm() {
                   <div className="d-flex flex-column flex-sm-row gap-2 gap-sm-3 justify-content-end mt-3 mt-md-4 pt-3 pt-md-4 border-top">
                     <button
                       type="button"
-                      className="btn btn-outline-gradient px-3 px-md-4 py-2 rounded-pill fw-medium order-2 order-sm-1"
+                      className="btn btn-outline-primary px-3 px-md-4 py-2 rounded-pill fw-medium order-2 order-sm-1"
                       onClick={handleClearForm}
                       disabled={loading}
                     >
@@ -659,7 +502,7 @@ export default function FoundItemForm() {
                     </button>
                     <button
                       type="submit"
-                      className="btn submit-btn px-4 px-md-5 py-2 rounded-pill fw-bold order-1 order-sm-2"
+                      className="btn btn-primary px-4 px-md-5 py-2 rounded-pill fw-bold order-1 order-sm-2"
                       disabled={loading}
                     >
                       {loading ? (
@@ -680,31 +523,31 @@ export default function FoundItemForm() {
             </div>
 
           
-            <div className="card shadow-sm border-0 stat-card">
-              <div className="card-body p-3 p-md-4">
+            <div className="card shadow-sm border-0">
+              <div className="card-body p-3 p-md-4" style={{ background: 'var(--gradient-primary)', opacity: 0.05 }}>
                 <div className="row g-2 g-md-3">
                   <div className="col-4">
                     <div className="text-center p-2">
                       <div className="h5 h-md-4 fw-bold mb-1 mb-md-2">
-                        <FaHandHolding className="icon-gradient" />
+                        <FaHandHolding className="text-primary" />
                       </div>
-                      <div className="small fw-semibold" style={{ color: '#4a5568' }}>Helping Others</div>
+                      <div className="small fw-semibold text-muted">Helping Others</div>
                     </div>
                   </div>
                   <div className="col-4">
                     <div className="text-center p-2">
                       <div className="h5 h-md-4 fw-bold mb-1 mb-md-2">
-                        <FaCheckCircle className="icon-gradient" />
+                        <FaCheckCircle className="text-primary" />
                       </div>
-                      <div className="small fw-semibold" style={{ color: '#4a5568' }}>Good Deeds</div>
+                      <div className="small fw-semibold text-muted">Good Deeds</div>
                     </div>
                   </div>
                   <div className="col-4">
                     <div className="text-center p-2">
                       <div className="h5 h-md-4 fw-bold mb-1 mb-md-2">
-                        <FaGift className="icon-gradient" />
+                        <FaGift className="text-primary" />
                       </div>
-                      <div className="small fw-semibold" style={{ color: '#4a5568' }}>Positive Impact</div>
+                      <div className="small fw-semibold text-muted">Positive Impact</div>
                     </div>
                   </div>
                 </div>
@@ -713,6 +556,6 @@ export default function FoundItemForm() {
           </div>
         </div>
       </div>
-    </>
-  );
+    );
+  }
 }

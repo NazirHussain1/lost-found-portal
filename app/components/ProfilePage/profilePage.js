@@ -12,17 +12,13 @@ import {
   FaMapMarkerAlt,
   FaCalendarAlt,
   FaBoxOpen,
-  FaCheckCircle,
   FaHistory,
   FaSignOutAlt,
   FaCamera,
   FaShieldAlt,
-  FaBell,
   FaGlobe,
   FaUser,
-  FaArrowLeft,
-  FaTrash,
-  FaCheck
+  FaArrowLeft
 } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 
@@ -532,8 +528,10 @@ export default function ProfilePage() {
                 <div className="avatar-container me-0 me-md-4 mb-3 mb-md-0">
                   <img
                     src={editMode ? editForm.avatar : userData.avatar}
-                    className="w-100 h-100 object-cover"
+                    className="w-100 h-100"
+                    style={{ objectFit: 'cover' }}
                     alt="Profile"
+                    loading="lazy"
                   />
                   {editMode && (
                     <div 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMyItems } from "../../store/slices/myItemsSlice";
 import { useRouter } from "next/navigation";
@@ -14,13 +14,190 @@ import {
   FaSearch,
   FaCamera,
   FaTimes,
-  FaCheckCircle,
   FaCheck,
-  FaHistory,
 } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 import { CardSkeleton } from "../Skeleton";
 import Modal, { ConfirmModal } from "../Modal";
+
+// Memoized ItemCard component for better performance
+const ItemCard = memo(({ 
+  item, 
+  onEdit, 
+  onDelete, 
+  onMarkResolved, 
+  resolving, 
+  resolvingItem 
+}) => {
+  return (
+    <div 
+      className="card-custom h-100 position-relative"
+      style={{
+        transition: 'var(--transition-all)',
+        borderRadius: 'var(--radius-xl)',
+        overflow: 'hidden',
+        border: '1px solid var(--color-gray-200)',
+        background: 'white'
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = 'translateY(-8px)';
+        e.currentTarget.style.boxShadow = 'var(--shadow-xl)';
+        e.currentTarget.style.borderColor = 'var(--color-primary-300)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = 'translateY(0)';
+        e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+        e.currentTarget.style.borderColor = 'var(--color-gray-200)';
+      }}
+    >
+      {/* Image Container */}
+      <div 
+        className="position-relative overflow-hidden"
+        style={{ 
+          aspectRatio: '16/9',
+          background: 'var(--color-gray-100)'
+        }}
+      >
+        <img
+          src={item.imageUrl || "/placeholder.jpg"}
+          alt={item.title}
+          loading="lazy"
+          className="w-100 h-100"
+          style={{ 
+            objectFit: 'cover',
+            transition: 'transform 0.3s ease'
+          }}
+        />
+
+        {/* Type Badge */}
+        <div className="position-absolute top-0 start-0 m-3">
+          <span
+            className="badge"
+            style={{
+              background: item.type === "lost"
+                ? 'var(--gradient-primary)'
+                : item.type === "found"
+                  ? 'var(--gradient-success)'
+                  : 'var(--color-gray-500)',
+              color: 'white',
+              fontSize: '0.75rem',
+              fontWeight: '600',
+              padding: '0.25rem 0.75rem',
+              borderRadius: 'var(--radius-full)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.5px',
+              boxShadow: 'var(--shadow-md)'
+            }}
+          >
+            {item.type?.toUpperCase()}
+          </span>
+        </div>
+      </div>
+
+      {/* Card Content */}
+      <div className="p-3 d-flex flex-column">
+        {/* Title */}
+        <h5
+          className="fw-bold mb-2 text-truncate"
+          style={{ 
+            color: 'var(--color-gray-900)',
+            fontSize: 'var(--font-size-lg)'
+          }}
+        >
+          {item.title}
+        </h5>
+
+        {/* Description */}
+        <p
+          className="text-muted mb-3 flex-grow-1"
+          style={{ 
+            fontSize: 'var(--font-size-sm)',
+            display: '-webkit-box',
+            WebkitLineClamp: '2',
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden'
+          }}
+        >
+          {item.description}
+        </p>
+
+        {/* Metadata */}
+        <div className="mb-3">
+          <div className="d-flex align-items-center mb-2">
+            <FaMapMarkerAlt 
+              size={12} 
+              className="me-2 text-primary" 
+            />
+            <span className="text-truncate small text-muted">
+              {item.location}
+            </span>
+          </div>
+
+          {item.date && (
+            <div className="d-flex align-items-center">
+              <FaCalendarAlt 
+                size={12} 
+                className="me-2 text-primary" 
+              />
+              <span className="small text-muted">
+                {new Date(item.date).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </span>
+            </div>
+          )}
+        </div>
+
+        {/* Actions Footer */}
+        <div className="d-flex justify-content-between align-items-center pt-3 border-top">
+          <span className="badge bg-primary bg-opacity-10 text-primary">
+            {item.category}
+          </span>
+          
+          <div className="d-flex gap-2">
+            {item.type !== "resolved" && (
+              <button
+                className="btn btn-sm btn-success"
+                style={{ width: '32px', height: '32px' }}
+                onClick={() => onMarkResolved(item)}
+                disabled={resolving && resolvingItem?._id === item._id}
+                title="Mark as Resolved"
+              >
+                {resolving && resolvingItem?._id === item._id ? (
+                  <div className="spinner-border spinner-border-sm"></div>
+                ) : (
+                  <FaCheck size={12} />
+                )}
+              </button>
+            )}
+            
+            <button
+              className="btn btn-sm btn-primary"
+              style={{ width: '32px', height: '32px' }}
+              onClick={() => onEdit(item)}
+              title="Edit Item"
+            >
+              <FaEdit size={12} />
+            </button>
+            
+            <button
+              className="btn btn-sm btn-danger"
+              style={{ width: '32px', height: '32px' }}
+              onClick={() => onDelete(item)}
+              title="Delete Item"
+            >
+              <FaTrash size={12} />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+});
+
+ItemCard.displayName = 'ItemCard';
 
 export default function MyItemsPage() {
   const dispatch = useDispatch();
@@ -325,216 +502,8 @@ export default function MyItemsPage() {
   }
 
   return (
-    <>
-      <style jsx global>{`
-        .gradient-bg {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          border-radius: 20px;
-        }
-
-        .glass-effect {
-          backdrop-filter: blur(10px);
-          background: rgba(255, 255, 255, 0.92);
-          border: 1px solid rgba(102, 126, 234, 0.1);
-          border-radius: 16px;
-        }
-
-        .stat-card {
-          background: linear-gradient(
-            135deg,
-            rgba(102, 126, 234, 0.05) 0%,
-            rgba(118, 75, 162, 0.05) 100%
-          );
-          border-radius: 16px;
-          border: 2px solid rgba(102, 126, 234, 0.1);
-          transition: all 0.3s ease;
-        }
-
-        .stat-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 15px 30px rgba(102, 126, 234, 0.15);
-          border-color: rgba(102, 126, 234, 0.3);
-        }
-
-        .item-card {
-          transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-          border: 1px solid rgba(102, 126, 234, 0.1);
-          border-radius: 16px;
-          overflow: hidden;
-          background: white;
-        }
-
-        .item-card:hover {
-          transform: translateY(-10px);
-          box-shadow: 0 25px 50px rgba(102, 126, 234, 0.15),
-            0 15px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .type-badge {
-          font-weight: 600;
-          letter-spacing: 0.5px;
-          padding: 2px 8px;
-          border-radius: 20px;
-          box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
-          text-transform: uppercase;
-          font-size: 0.7rem;
-        }
-
-        .status-badge {
-          font-weight: 600;
-          letter-spacing: 0.5px;
-          padding: 2px 8px;
-          border-radius: 20px;
-          box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
-          text-transform: uppercase;
-          font-size: 0.7rem;
-        }
-
-        .image-container {
-          height: 200px;
-          overflow: hidden;
-          border-radius: 16px 16px 0 0;
-        }
-
-        .image-container img {
-          transition: transform 0.6s ease;
-        }
-
-        .item-card:hover .image-container img {
-          transform: scale(1.1);
-        }
-
-        .form-control-custom {
-          border: 1px solid rgba(102, 126, 234, 0.2);
-          border-radius: 10px;
-          padding: 12px 16px;
-          font-size: 14px;
-          transition: all 0.2s ease;
-          width: 100%;
-          margin-bottom: 16px;
-        }
-
-        .form-control-custom:focus {
-          outline: none;
-          border-color: #667eea;
-          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .image-upload-container {
-          border: 2px dashed rgba(102, 126, 234, 0.3);
-          border-radius: 12px;
-          padding: 20px;
-          text-align: center;
-          background: rgba(102, 126, 234, 0.03);
-          cursor: pointer;
-          transition: all 0.2s ease;
-          margin-bottom: 16px;
-        }
-
-        .image-upload-container:hover {
-          background: rgba(102, 126, 234, 0.08);
-          border-color: #667eea;
-        }
-
-        .image-preview {
-          border-radius: 12px;
-          overflow: hidden;
-          margin-bottom: 16px;
-          max-height: 200px;
-        }
-
-        .image-preview img {
-          width: 100%;
-          height: auto;
-          object-fit: cover;
-        }
-
-        .btn-primary-custom {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          border: none;
-          border-radius: 10px;
-          padding: 12px 24px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-
-        .btn-primary-custom:hover:not(:disabled) {
-          transform: translateY(-2px);
-          box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-primary-custom:disabled {
-          opacity: 0.6;
-          cursor: not-allowed;
-        }
-
-        .btn-outline-custom {
-          background: transparent;
-          color: #667eea;
-          border: 2px solid #667eea;
-          border-radius: 10px;
-          padding: 12px 24px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-
-        .btn-outline-custom:hover {
-          background: rgba(102, 126, 234, 0.1);
-        }
-
-        .btn-danger-custom {
-          background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
-          color: white;
-          border: none;
-          border-radius: 10px;
-          padding: 12px 24px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-
-        .btn-danger-custom:hover:not(:disabled) {
-          transform: translateY(-2px);
-          box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3);
-        }
-
-        .btn-success-custom {
-          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-          color: white;
-          border: none;
-          border-radius: 10px;
-          padding: 12px 24px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-
-        .btn-success-custom:hover:not(:disabled) {
-          transform: translateY(-2px);
-          box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
-        }
-
-        .action-btn {
-          transition: all 0.3s ease;
-          border-radius: 8px;
-          width: 32px;
-          height: 32px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .action-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
-        }
-      `}</style>
-
-      <div className="container-fluid px-3 px-md-4 py-3 py-md-5">
-        <div className="gradient-bg text-white rounded-4 p-3 p-md-5 mb-3 mb-md-5 shadow-lg">
+    <div className="container-fluid px-3 px-md-4 py-3 py-md-5">
+        <div className="bg-gradient-primary text-white rounded-4 p-3 p-md-5 mb-3 mb-md-5 shadow-lg">
           <div className="row align-items-center">
             <div className="col-12 col-md-8 mb-3 mb-md-0">
               <div className="d-flex flex-column flex-sm-row align-items-center align-items-sm-start text-center text-sm-start">
@@ -564,60 +533,48 @@ export default function MyItemsPage() {
 
         <div className="row g-2 g-md-4 mb-3 mb-md-5">
           <div className="col-6 col-md-3">
-            <div className="stat-card text-center p-2 p-md-4">
-              <div
-                className="h5 h-md-3 fw-bold mb-1"
-                style={{ color: "#667eea" }}
-              >
+            <div className="card shadow-sm border-primary border-opacity-25 text-center p-2 p-md-4 transition-all">
+              <div className="h5 h-md-3 fw-bold mb-1 text-primary">
                 {stats.total}
               </div>
-              <div className="small" style={{ color: "#764ba2" }}>
+              <div className="small text-muted">
                 Total Items
               </div>
             </div>
           </div>
           <div className="col-6 col-md-3">
-            <div className="stat-card text-center p-2 p-md-4">
-              <div
-                className="h5 h-md-3 fw-bold mb-1"
-                style={{ color: "#667eea" }}
-              >
+            <div className="card shadow-sm border-primary border-opacity-25 text-center p-2 p-md-4 transition-all">
+              <div className="h5 h-md-3 fw-bold mb-1 text-primary">
                 {stats.lost}
               </div>
-              <div className="small" style={{ color: "#764ba2" }}>
+              <div className="small text-muted">
                 Lost Items
               </div>
             </div>
           </div>
           <div className="col-6 col-md-3">
-            <div className="stat-card text-center p-2 p-md-4">
-              <div
-                className="h5 h-md-3 fw-bold mb-1"
-                style={{ color: "#667eea" }}
-              >
+            <div className="card shadow-sm border-primary border-opacity-25 text-center p-2 p-md-4 transition-all">
+              <div className="h5 h-md-3 fw-bold mb-1 text-primary">
                 {stats.found}
               </div>
-              <div className="small" style={{ color: "#764ba2" }}>
+              <div className="small text-muted">
                 Found Items
               </div>
             </div>
           </div>
           <div className="col-6 col-md-3">
-            <div className="stat-card text-center p-2 p-md-4">
-              <div
-                className="h5 h-md-3 fw-bold mb-1"
-                style={{ color: "#667eea" }}
-              >
+            <div className="card shadow-sm border-primary border-opacity-25 text-center p-2 p-md-4 transition-all">
+              <div className="h5 h-md-3 fw-bold mb-1 text-primary">
                 {stats.resolved}
               </div>
-              <div className="small" style={{ color: "#764ba2" }}>
+              <div className="small text-muted">
                 Resolved
               </div>
             </div>
           </div>
         </div>
 
-        <div className="glass-effect p-3 p-md-4 mb-3 mb-md-5">
+        <div className="card shadow-sm border-0 p-3 p-md-4 mb-3 mb-md-5">
           <div className="row align-items-center">
             <div className="col-12 col-md-6 mb-3 mb-md-0">
               <div className="input-group">
@@ -626,7 +583,7 @@ export default function MyItemsPage() {
                 </span>
                 <input
                   type="text"
-                  className="input-custom border-start-0"
+                  className="form-control border-start-0"
                   placeholder="Search your items..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -636,74 +593,26 @@ export default function MyItemsPage() {
             <div className="col-12 col-md-6">
               <div className="d-flex flex-wrap gap-2 justify-content-start justify-content-md-end">
                 <button
-                  className={`filter-btn btn px-3 py-2 rounded-pill fw-medium ${activeFilter === "all" ? "active" : ""
-                    }`}
+                  className={`btn px-3 py-2 rounded-pill fw-medium ${activeFilter === "all" ? "btn-primary" : "btn-outline-primary"}`}
                   onClick={() => setActiveFilter("all")}
-                  style={{
-                    background:
-                      activeFilter === "all"
-                        ? "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
-                        : "transparent",
-                    color: activeFilter === "all" ? "white" : "#667eea",
-                    border:
-                      activeFilter === "all"
-                        ? "2px solid transparent"
-                        : "2px solid #667eea",
-                  }}
                 >
                   All Items
                 </button>
                 <button
-                  className={`filter-btn btn px-3 py-2 rounded-pill fw-medium ${activeFilter === "lost" ? "active" : ""
-                    }`}
+                  className={`btn px-3 py-2 rounded-pill fw-medium ${activeFilter === "lost" ? "btn-primary" : "btn-outline-primary"}`}
                   onClick={() => setActiveFilter("lost")}
-                  style={{
-                    background:
-                      activeFilter === "lost"
-                        ? "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
-                        : "transparent",
-                    color: activeFilter === "lost" ? "white" : "#667eea",
-                    border:
-                      activeFilter === "lost"
-                        ? "2px solid transparent"
-                        : "2px solid #667eea",
-                  }}
                 >
                   Lost Items
                 </button>
                 <button
-                  className={`filter-btn btn px-3 py-2 rounded-pill fw-medium ${activeFilter === "found" ? "active" : ""
-                    }`}
+                  className={`btn px-3 py-2 rounded-pill fw-medium ${activeFilter === "found" ? "btn-primary" : "btn-outline-primary"}`}
                   onClick={() => setActiveFilter("found")}
-                  style={{
-                    background:
-                      activeFilter === "found"
-                        ? "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
-                        : "transparent",
-                    color: activeFilter === "found" ? "white" : "#667eea",
-                    border:
-                      activeFilter === "found"
-                        ? "2px solid transparent"
-                        : "2px solid #667eea",
-                  }}
                 >
                   Found Items
                 </button>
                 <button
-                  className={`filter-btn btn px-3 py-2 rounded-pill fw-medium ${activeFilter === "resolved" ? "active" : ""
-                    }`}
+                  className={`btn px-3 py-2 rounded-pill fw-medium ${activeFilter === "resolved" ? "btn-primary" : "btn-outline-primary"}`}
                   onClick={() => setActiveFilter("resolved")}
-                  style={{
-                    background:
-                      activeFilter === "resolved"
-                        ? "linear-gradient(135deg, #667eea 0%, #667eea 100%)"
-                        : "transparent",
-                    color: activeFilter === "resolved" ? "white" : "#667eea",
-                    border:
-                      activeFilter === "resolved"
-                        ? "2px solid transparent"
-                        : "2px solid #667eea",
-                  }}
                 >
                   Resolved
                 </button>
@@ -730,7 +639,7 @@ export default function MyItemsPage() {
               {error}
             </p>
             <button
-              className="btn-primary-custom px-4 py-2 rounded-pill fw-bold text-white"
+              className="btn btn-primary px-3 px-md-4 py-2 rounded-pill fw-bold text-white"
               onClick={() => dispatch(fetchMyItems())}
             >
               Try Again
@@ -749,15 +658,15 @@ export default function MyItemsPage() {
                 ? "Try adjusting your filters or search"
                 : "You haven't reported any items yet"}
             </p>
-            <div className="d-flex justify-content-center gap-3">
+            <div className="d-flex flex-column flex-md-row flex-wrap justify-content-center gap-2 gap-md-3">
               <button
-                className="btn-primary-custom px-4 py-2 rounded-pill fw-bold text-white"
+                className="btn btn-primary px-3 px-md-4 py-2 rounded-pill fw-bold text-white"
                 onClick={() => router.push("/lost")}
               >
                 Report Lost Item
               </button>
               <button
-                className="btn-primary-custom px-4 py-2 rounded-pill fw-bold text-white"
+                className="btn btn-primary px-3 px-md-4 py-2 rounded-pill fw-bold text-white"
                 onClick={() => router.push("/found")}
               >
                 Report Found Item
@@ -768,265 +677,14 @@ export default function MyItemsPage() {
           <div className="row g-3 g-md-4">
             {filteredItems.map((item) => (
               <div key={item._id} className="col-12 col-md-6 col-lg-4">
-                <div 
-                  className="card-custom h-100 position-relative"
-                  style={{
-                    transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-                    borderRadius: 'var(--radius-xl)',
-                    overflow: 'hidden',
-                    border: '1px solid var(--color-gray-200)',
-                    background: 'white'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-8px)';
-                    e.currentTarget.style.boxShadow = 'var(--shadow-xl)';
-                    e.currentTarget.style.borderColor = 'var(--color-primary-300)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-                    e.currentTarget.style.borderColor = 'var(--color-gray-200)';
-                  }}
-                >
-                  {/* Image Container with Fixed Aspect Ratio */}
-                  <div 
-                    className="position-relative overflow-hidden"
-                    style={{ 
-                      aspectRatio: '16/9',
-                      background: 'var(--color-gray-100)'
-                    }}
-                  >
-                    <img
-                      src={item.imageUrl || "/placeholder.jpg"}
-                      alt={item.title}
-                      loading="lazy"
-                      className="w-100 h-100"
-                      style={{ 
-                        objectFit: 'cover',
-                        transition: 'transform 0.3s ease'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.target.style.transform = 'scale(1.05)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.transform = 'scale(1)';
-                      }}
-                    />
-
-                    {/* Type Badge */}
-                    <div className="position-absolute top-0 start-0 m-3 d-flex flex-column gap-1">
-                      <span
-                        className="badge-custom"
-                        style={{
-                          background: item.type === "lost"
-                            ? 'var(--gradient-primary)'
-                            : item.type === "found"
-                              ? 'var(--gradient-success)'
-                              : 'var(--color-gray-500)',
-                          color: 'white',
-                          fontSize: '0.75rem',
-                          fontWeight: '600',
-                          padding: '0.25rem 0.75rem',
-                          borderRadius: 'var(--radius-full)',
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.5px',
-                          boxShadow: 'var(--shadow-md)'
-                        }}
-                      >
-                        {item.type?.toUpperCase()}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Card Content */}
-                  <div className="card-body-custom d-flex flex-column" style={{ padding: 'var(--spacing-4)' }}>
-                    {/* Title */}
-                    <h5
-                      className="fw-bold mb-2"
-                      style={{ 
-                        color: 'var(--color-gray-900)',
-                        fontSize: 'var(--font-size-lg)',
-                        lineHeight: 'var(--line-height-tight)',
-                        display: '-webkit-box',
-                        WebkitLineClamp: '1',
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden'
-                      }}
-                    >
-                      {item.title}
-                    </h5>
-
-                    {/* Description */}
-                    <p
-                      className="text-muted mb-3 flex-grow-1"
-                      style={{ 
-                        fontSize: 'var(--font-size-sm)',
-                        lineHeight: 'var(--line-height-relaxed)',
-                        display: '-webkit-box',
-                        WebkitLineClamp: '2',
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden'
-                      }}
-                    >
-                      {item.description}
-                    </p>
-
-                    {/* Metadata */}
-                    <div className="mb-3">
-                      <div className="d-flex align-items-center mb-2">
-                        <div 
-                          className="rounded-circle d-flex align-items-center justify-content-center me-2"
-                          style={{ 
-                            width: '24px', 
-                            height: '24px', 
-                            background: 'var(--color-primary-100)',
-                            color: 'var(--color-primary-600)'
-                          }}
-                        >
-                          <FaMapMarkerAlt size={10} />
-                        </div>
-                        <span
-                          className="text-truncate"
-                          style={{ 
-                            fontSize: 'var(--font-size-sm)',
-                            color: 'var(--color-gray-600)'
-                          }}
-                        >
-                          {item.location}
-                        </span>
-                      </div>
-
-                      {item.date && (
-                        <div className="d-flex align-items-center">
-                          <div 
-                            className="rounded-circle d-flex align-items-center justify-content-center me-2"
-                            style={{ 
-                              width: '24px', 
-                              height: '24px', 
-                              background: 'var(--color-primary-100)',
-                              color: 'var(--color-primary-600)'
-                            }}
-                          >
-                            <FaCalendarAlt size={10} />
-                          </div>
-                          <span 
-                            style={{ 
-                              fontSize: 'var(--font-size-sm)',
-                              color: 'var(--color-gray-600)'
-                            }}
-                          >
-                            {new Date(item.date).toLocaleDateString("en-US", {
-                              month: "short",
-                              day: "numeric",
-                              year: "numeric",
-                            })}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Actions Footer */}
-                    <div className="d-flex justify-content-between align-items-center pt-3 border-top">
-                      <span
-                        className="badge-custom"
-                        style={{
-                          background: 'var(--color-primary-100)',
-                          color: 'var(--color-primary-700)',
-                          fontSize: '0.625rem',
-                          textTransform: 'capitalize'
-                        }}
-                      >
-                        {item.category}
-                      </span>
-                      
-                      <div className="d-flex gap-2">
-                        {item.type !== "resolved" && (
-                          <button
-                            className="btn btn-sm d-flex align-items-center justify-content-center"
-                            style={{
-                              width: '32px',
-                              height: '32px',
-                              background: 'var(--color-success-100)',
-                              color: 'var(--color-success-600)',
-                              border: 'none',
-                              borderRadius: 'var(--radius-md)',
-                              transition: 'var(--transition-base)'
-                            }}
-                            onClick={() => handleMarkAsResolved(item)}
-                            disabled={resolving && resolvingItem?._id === item._id}
-                            title="Mark as Resolved"
-                            onMouseEnter={(e) => {
-                              e.target.style.background = 'var(--color-success-200)';
-                              e.target.style.transform = 'translateY(-2px)';
-                            }}
-                            onMouseLeave={(e) => {
-                              e.target.style.background = 'var(--color-success-100)';
-                              e.target.style.transform = 'translateY(0)';
-                            }}
-                          >
-                            {resolving && resolvingItem?._id === item._id ? (
-                              <span className="spinner-custom spinner-sm"></span>
-                            ) : (
-                              <FaCheck size={12} />
-                            )}
-                          </button>
-                        )}
-                        
-                        <button
-                          className="btn btn-sm d-flex align-items-center justify-content-center"
-                          style={{
-                            width: '32px',
-                            height: '32px',
-                            background: 'var(--color-primary-100)',
-                            color: 'var(--color-primary-600)',
-                            border: 'none',
-                            borderRadius: 'var(--radius-md)',
-                            transition: 'var(--transition-base)'
-                          }}
-                          onClick={() => openEditModal(item)}
-                          title="Edit Item"
-                          onMouseEnter={(e) => {
-                            e.target.style.background = 'var(--color-primary-200)';
-                            e.target.style.transform = 'translateY(-2px)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.target.style.background = 'var(--color-primary-100)';
-                            e.target.style.transform = 'translateY(0)';
-                          }}
-                        >
-                          <FaEdit size={12} />
-                        </button>
-                        
-                        <button
-                          className="btn btn-sm d-flex align-items-center justify-content-center"
-                          style={{
-                            width: '32px',
-                            height: '32px',
-                            background: 'var(--color-error-100)',
-                            color: 'var(--color-error-600)',
-                            border: 'none',
-                            borderRadius: 'var(--radius-md)',
-                            transition: 'var(--transition-base)'
-                          }}
-                          onClick={() => {
-                            openConfirmDelete(item);
-                          }}
-                          title="Delete Item"
-                          onMouseEnter={(e) => {
-                            e.target.style.background = 'var(--color-error-200)';
-                            e.target.style.transform = 'translateY(-2px)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.target.style.background = 'var(--color-error-100)';
-                            e.target.style.transform = 'translateY(0)';
-                          }}
-                        >
-                          <FaTrash size={12} />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <ItemCard
+                  item={item}
+                  onEdit={openEditModal}
+                  onDelete={openConfirmDelete}
+                  onMarkResolved={handleMarkAsResolved}
+                  resolving={resolving}
+                  resolvingItem={resolvingItem}
+                />
               </div>
             ))}
           </div>
@@ -1036,19 +694,19 @@ export default function MyItemsPage() {
           <div className="text-center mt-3 mt-md-5 pt-3 pt-md-4 border-top">
             <div className="d-flex flex-column flex-md-row flex-wrap justify-content-center gap-2 gap-md-3">
               <button
-                className="btn-primary-custom px-3 px-md-4 py-2 rounded-pill fw-bold text-white"
+                className="btn btn-primary px-3 px-md-4 py-2 rounded-pill fw-bold text-white"
                 onClick={() => router.push("/lost")}
               >
                 Report New Lost Item
               </button>
               <button
-                className="btn-primary-custom px-3 px-md-4 py-2 rounded-pill fw-bold text-white"
+                className="btn btn-primary px-3 px-md-4 py-2 rounded-pill fw-bold text-white"
                 onClick={() => router.push("/found")}
               >
                 Report New Found Item
               </button>
               <button
-                className="btn-outline-custom px-3 px-md-4 py-2 rounded-pill fw-bold"
+                className="btn btn-outline-primary px-3 px-md-4 py-2 rounded-pill fw-bold"
                 onClick={() => router.push("/browse")}
               >
                 Browse Community Items
@@ -1080,14 +738,14 @@ export default function MyItemsPage() {
         footer={
           <>
             <button
-              className="btn-secondary-custom"
+              className="btn btn-secondary"
               onClick={closeEditModal}
               disabled={updating}
             >
               Cancel
             </button>
             <button
-              className="btn-primary-custom"
+              className="btn btn-primary"
               onClick={handleUpdateSubmit}
               disabled={updating}
             >
@@ -1102,7 +760,7 @@ export default function MyItemsPage() {
               Title
             </label>
             <input
-              className="input-custom"
+              className="form-control"
               placeholder="Title"
               value={editForm.title}
               onChange={(e) =>
@@ -1116,7 +774,7 @@ export default function MyItemsPage() {
               Description
             </label>
             <textarea
-              className="textarea-custom"
+              className="form-control"
               placeholder="Description"
               rows="3"
               value={editForm.description}
@@ -1131,7 +789,7 @@ export default function MyItemsPage() {
               Location
             </label>
             <input
-              className="input-custom"
+              className="form-control"
               placeholder="Location"
               value={editForm.location}
               onChange={(e) =>
@@ -1146,7 +804,7 @@ export default function MyItemsPage() {
                 Category
               </label>
               <select
-                className="select-custom"
+                className="form-select"
                 value={editForm.category}
                 onChange={(e) =>
                   setEditForm({ ...editForm, category: e.target.value })
@@ -1169,7 +827,7 @@ export default function MyItemsPage() {
                 Type
               </label>
               <select
-                className="select-custom"
+                className="form-select"
                 value={editForm.type}
                 onChange={(e) =>
                   setEditForm({ ...editForm, type: e.target.value })

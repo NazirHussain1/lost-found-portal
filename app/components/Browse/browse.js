@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchItems } from "../../store/slices/itemsSlice";
 import { FaSearch, FaWhatsapp, FaFilter, FaMapMarkerAlt, FaCalendarAlt, FaTag, FaUser, FaPhone, FaEnvelope, FaEye } from 'react-icons/fa';
@@ -8,6 +8,112 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Pagination from "../Pagination/Pagination";
 import { CardSkeleton } from "../Skeleton";
 import Modal from "../Modal";
+
+// Memoized ItemCard component for better performance
+const ItemCard = memo(({ item, onClick }) => {
+  return (
+    <div
+      className="bg-white rounded-xl shadow-sm border hover:shadow-lg transition-all duration-300 cursor-pointer group"
+      onClick={() => onClick(item)}
+    >
+      {/* Image Container */}
+      <div className="relative aspect-video overflow-hidden rounded-t-xl bg-gray-100">
+        {item.imageUrl ? (
+          <img
+            src={item.imageUrl}
+            alt={item.title}
+            loading="lazy"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-50">
+            <div className="text-center">
+              <FaSearch size={32} className="text-indigo-400 mb-2" />
+              <span className="text-sm text-gray-500">No Image Available</span>
+            </div>
+          </div>
+        )}
+
+        {/* Type Badge */}
+        <div className="position-absolute top-3 start-3">
+          <span
+            className={`px-2 py-1 text-xs font-semibold text-white rounded-full ${
+              item.type === "lost"
+                ? "bg-gradient-to-r from-red-500 to-pink-500"
+                : item.type === "found"
+                ? "bg-gradient-to-r from-green-500 to-emerald-500"
+                : "bg-gray-500"
+            }`}
+          >
+            {item.type?.toUpperCase()}
+          </span>
+        </div>
+
+        {/* Hover Overlay */}
+        <div className="position-absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 d-flex align-items-center justify-content-center">
+          <div className="d-flex align-items-center gap-2 text-white fw-medium">
+            <FaEye size={16} />
+            View Details
+          </div>
+        </div>
+      </div>
+
+      {/* Card Content */}
+      <div className="p-4">
+        {/* Title */}
+        <h3 className="fw-semibold text-gray-900 mb-2 text-truncate">
+          {item.title}
+        </h3>
+
+        {/* Description */}
+        <p 
+          className="text-muted small mb-3"
+          style={{
+            display: '-webkit-box',
+            WebkitLineClamp: '2',
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden'
+          }}
+        >
+          {item.description}
+        </p>
+
+        {/* Metadata */}
+        <div className="d-flex flex-column gap-2">
+          <div className="d-flex align-items-center small text-muted">
+            <FaUser size={12} className="me-2" />
+            <span className="text-truncate">{item.user?.name || "Anonymous"}</span>
+          </div>
+          
+          <div className="d-flex align-items-center small text-muted">
+            <FaMapMarkerAlt size={12} className="me-2" />
+            <span className="text-truncate">{item.location}</span>
+          </div>
+
+          {item.date && (
+            <div className="d-flex align-items-center justify-content-between">
+              <div className="d-flex align-items-center small text-muted">
+                <FaCalendarAlt size={12} className="me-2" />
+                <span>
+                  {new Date(item.date).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                  })}
+                </span>
+              </div>
+              <span className="badge bg-primary bg-opacity-10 text-primary text-capitalize">
+                {item.category}
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+});
+
+ItemCard.displayName = 'ItemCard';
 
 export default function Browse() {
   const dispatch = useDispatch();
@@ -232,9 +338,11 @@ export default function Browse() {
       <div>
         {/* Loading State */}
         {status === "loading" && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="row g-4">
             {Array.from({ length: 8 }, (_, index) => (
-              <CardSkeleton key={index} />
+              <div key={index} className="col-12 col-md-6 col-lg-4 col-xl-3">
+                <CardSkeleton />
+              </div>
             ))}
           </div>
         )}
@@ -284,98 +392,10 @@ export default function Browse() {
         {/* Items Grid */}
         {status === "succeeded" && sortedItems.length > 0 && (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="row g-4">
               {sortedItems.map((item) => (
-                <div
-                  key={item._id}
-                  className="bg-white rounded-xl shadow-sm border hover:shadow-lg transition-all duration-300 cursor-pointer group"
-                  onClick={() => handleItemClick(item)}
-                >
-                  {/* Image Container */}
-                  <div className="relative aspect-video overflow-hidden rounded-t-xl bg-gray-100">
-                    {item.imageUrl ? (
-                      <img
-                        src={item.imageUrl}
-                        alt={item.title}
-                        loading="lazy"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-50">
-                        <div className="text-center">
-                          <FaSearch size={32} className="text-indigo-400 mb-2" />
-                          <span className="text-sm text-gray-500">No Image Available</span>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Type Badge */}
-                    <div className="absolute top-3 left-3">
-                      <span
-                        className={`px-2 py-1 text-xs font-semibold text-white rounded-full ${
-                          item.type === "lost"
-                            ? "bg-gradient-to-r from-red-500 to-pink-500"
-                            : item.type === "found"
-                            ? "bg-gradient-to-r from-green-500 to-emerald-500"
-                            : "bg-gray-500"
-                        }`}
-                      >
-                        {item.type?.toUpperCase()}
-                      </span>
-                    </div>
-
-                    {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                      <div className="flex items-center gap-2 text-white font-medium">
-                        <FaEye size={16} />
-                        View Details
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Card Content */}
-                  <div className="p-4">
-                    {/* Title */}
-                    <h3 className="font-semibold text-gray-900 mb-2 line-clamp-1">
-                      {item.title}
-                    </h3>
-
-                    {/* Description */}
-                    <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                      {item.description}
-                    </p>
-
-                    {/* Metadata */}
-                    <div className="space-y-2">
-                      <div className="flex items-center text-sm text-gray-500">
-                        <FaUser size={12} className="mr-2" />
-                        <span className="truncate">{item.user?.name || "Anonymous"}</span>
-                      </div>
-                      
-                      <div className="flex items-center text-sm text-gray-500">
-                        <FaMapMarkerAlt size={12} className="mr-2" />
-                        <span className="truncate">{item.location}</span>
-                      </div>
-
-                      {item.date && (
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center text-sm text-gray-500">
-                            <FaCalendarAlt size={12} className="mr-2" />
-                            <span>
-                              {new Date(item.date).toLocaleDateString('en-US', {
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric'
-                              })}
-                            </span>
-                          </div>
-                          <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded-full capitalize">
-                            {item.category}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                <div key={item._id} className="col-12 col-md-6 col-lg-4 col-xl-3">
+                  <ItemCard item={item} onClick={handleItemClick} />
                 </div>
               ))}
             </div>
@@ -420,11 +440,13 @@ export default function Browse() {
 
           {/* Item Image */}
           {selectedItem.imageUrl && (
-            <div className="mb-6 rounded-xl overflow-hidden shadow-lg">
+            <div className="mb-4 rounded-xl overflow-hidden shadow-lg">
               <img
                 src={selectedItem.imageUrl}
                 alt={selectedItem.title}
-                className="w-full h-64 object-cover"
+                loading="lazy"
+                className="w-100"
+                style={{ height: '16rem', objectFit: 'cover' }}
               />
             </div>
           )}

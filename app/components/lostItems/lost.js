@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { addItem } from "../../store/slices/itemsSlice";
-import { FaCamera, FaUpload, FaTrash, FaMapMarkerAlt, FaTag, FaInfoCircle, FaUser, FaExclamationTriangle, FaCheckCircle, FaSearch, FaCalendarAlt } from "react-icons/fa";
+import { FaCamera, FaUpload, FaTrash, FaMapMarkerAlt, FaTag, FaInfoCircle, FaUser, FaExclamationTriangle, FaCheckCircle, FaSearch } from "react-icons/fa";
 
 export default function LostItemForm() {
   const dispatch = useDispatch();
@@ -625,6 +625,7 @@ export default function LostItemForm() {
                           <img 
                             src={imagePreview} 
                             alt="Preview" 
+                            loading="lazy"
                             className="img-fluid rounded-lg shadow-sm"
                             style={{ maxHeight: '200px', maxWidth: '100%', objectFit: 'cover' }}
                           />
