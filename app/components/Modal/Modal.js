@@ -137,11 +137,10 @@ export default function Modal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:justify-center p-0 sm:p-4"
+      className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:justify-center p-0 sm:p-4 modal-fade-in"
       style={{
         backgroundColor: "rgba(0, 0, 0, 0.5)",
-        backdropFilter: "blur(4px)",
-        animation: "fadeIn 200ms ease-out"
+        backdropFilter: "blur(4px)"
       }}
       onClick={handleBackdropClick}
       role="dialog"
@@ -151,14 +150,11 @@ export default function Modal({
       <div
         ref={modalRef}
         className={`
-          bg-white shadow-2xl overflow-hidden
+          bg-white shadow-2xl overflow-hidden modal-scale-in
           ${getMobileClasses()}
           sm:${getSizeClasses()}
           ${className}
         `}
-        style={{
-          animation: "slideUp 300ms cubic-bezier(0.175, 0.885, 0.32, 1.275)"
-        }}
         onClick={(e) => e.stopPropagation()}
         tabIndex={-1}
         {...props}
@@ -180,7 +176,7 @@ export default function Modal({
                 onClick={onClose}
                 className="
                   flex items-center justify-center w-8 h-8 rounded-full
-                  bg-white/20 hover:bg-white/30 transition-all duration-200
+                  bg-white/20 hover:bg-white/30 btn-hover-subtle
                   focus:outline-none focus:ring-2 focus:ring-white/50
                 "
                 aria-label="Close modal"
@@ -214,35 +210,6 @@ export default function Modal({
           </div>
         )}
       </div>
-
-      <style jsx>{`
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-
-        @keyframes slideUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px) scale(0.95);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-          }
-        }
-
-        /* Mobile-first full screen on small devices */
-        @media (max-width: 767px) {
-          .modal-mobile-full {
-            width: 100% !important;
-            height: 100% !important;
-            max-width: none !important;
-            max-height: none !important;
-            border-radius: 0 !important;
-          }
-        }
-      `}</style>
     </div>
   );
 }
@@ -275,14 +242,14 @@ export function ConfirmModal({
   const footer = (
     <>
       <button
-        className="btn-secondary-custom w-full sm:w-auto"
+        className="btn-secondary-custom btn-hover-subtle w-full sm:w-auto"
         onClick={onClose}
         disabled={isLoading}
       >
         {cancelText}
       </button>
       <button
-        className={`${getConfirmButtonClass()} w-full sm:w-auto`}
+        className={`${getConfirmButtonClass()} btn-hover-lift w-full sm:w-auto`}
         onClick={onConfirm}
         disabled={isLoading}
       >

@@ -255,12 +255,12 @@ export default function FoundItemForm() {
   };
 
   return (
-    <div className="container-fluid px-3 px-md-4 py-3 py-md-4 animate-fadeIn">
+    <div className="container-fluid px-3 px-md-4 py-3 py-md-4 page-fade-in">
       <div className="row justify-content-center">
         <div className="col-12 col-xl-10 col-xxl-8">
           
             {user && (
-              <div className="card shadow-sm border-0 mb-3 mb-md-4">
+              <div className="card shadow-sm border-0 mb-3 mb-md-4 card-hover-subtle">
                 <div className="card-body p-3 p-md-4" style={{ background: 'var(--gradient-primary)', opacity: 0.05 }}>
                   <div className="d-flex flex-column flex-sm-row align-items-center align-items-sm-start text-center text-sm-start">
                     <div className="rounded-circle p-2 me-0 me-sm-3 mb-2 mb-sm-0 bg-gradient-primary">
@@ -276,7 +276,7 @@ export default function FoundItemForm() {
             )}
 
           
-            <div className="card shadow-lg border-0 overflow-hidden mb-3 mb-md-4 transition-all">
+            <div className="card shadow-lg border-0 overflow-hidden mb-3 mb-md-4 card-hover-subtle">
              
               <div className="card-header bg-gradient-primary text-white py-3 py-md-4 px-3 px-md-4">
                 <div className="d-flex flex-column flex-sm-row align-items-center align-items-sm-start text-center text-sm-start">
@@ -493,7 +493,7 @@ export default function FoundItemForm() {
                   <div className="d-flex flex-column flex-sm-row gap-2 gap-sm-3 justify-content-end mt-3 mt-md-4 pt-3 pt-md-4 border-top">
                     <button
                       type="button"
-                      className="btn btn-outline-primary px-3 px-md-4 py-2 rounded-pill fw-medium order-2 order-sm-1"
+                      className="btn btn-outline-primary px-3 px-md-4 py-2 rounded-pill fw-medium order-2 order-sm-1 btn-hover-subtle"
                       onClick={handleClearForm}
                       disabled={loading}
                     >
@@ -502,7 +502,7 @@ export default function FoundItemForm() {
                     </button>
                     <button
                       type="submit"
-                      className="btn btn-primary px-4 px-md-5 py-2 rounded-pill fw-bold order-1 order-sm-2"
+                      className="btn btn-primary px-4 px-md-5 py-2 rounded-pill fw-bold order-1 order-sm-2 btn-hover-lift"
                       disabled={loading}
                     >
                       {loading ? (
@@ -523,7 +523,7 @@ export default function FoundItemForm() {
             </div>
 
           
-            <div className="card shadow-sm border-0">
+            <div className="card shadow-sm border-0 card-hover-subtle">
               <div className="card-body p-3 p-md-4" style={{ background: 'var(--gradient-primary)', opacity: 0.05 }}>
                 <div className="row g-2 g-md-3">
                   <div className="col-4">

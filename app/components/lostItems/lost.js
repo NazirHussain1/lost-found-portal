@@ -420,7 +420,7 @@ export default function LostItemForm() {
         }
       `}</style>
 
-      <div className="container py-4 fade-in">
+      <div className="container py-4 page-fade-in">
         <div className="row justify-content-center">
           <div className="col-12 col-lg-8">
           

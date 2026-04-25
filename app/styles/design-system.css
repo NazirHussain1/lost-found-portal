@@ -363,6 +363,57 @@
 .transition-slow { transition: var(--transition-slow) !important; }
 .transition-all { transition: var(--transition-all) !important; }
 
+/* Button Animations */
+.btn-hover-lift {
+  transition: transform var(--duration-150) var(--ease-out), box-shadow var(--duration-150) var(--ease-out);
+}
+
+.btn-hover-lift:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-hover-subtle {
+  transition: transform var(--duration-150) var(--ease-out), box-shadow var(--duration-150) var(--ease-out);
+}
+
+.btn-hover-subtle:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Card Animations */
+.card-hover {
+  transition: transform var(--duration-200) var(--ease-out), box-shadow var(--duration-200) var(--ease-out);
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+.card-hover-subtle {
+  transition: transform var(--duration-150) var(--ease-out), box-shadow var(--duration-150) var(--ease-out);
+}
+
+.card-hover-subtle:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Interactive Elements */
+.interactive {
+  transition: transform var(--duration-150) var(--ease-out), opacity var(--duration-150) var(--ease-out);
+}
+
+.interactive:hover {
+  transform: scale(1.02);
+}
+
+.interactive:active {
+  transform: scale(0.98);
+}
+
 /* ============================================
    GLOBAL RESETS & BASE STYLES
    ============================================ */
@@ -531,6 +582,28 @@ html {
   animation: pulse var(--duration-1000) var(--ease-in-out) infinite;
 }
 
+/* Modal Animations */
+.modal-fade-in {
+  animation: modalFadeIn var(--duration-200) var(--ease-out);
+}
+
+.modal-fade-out {
+  animation: modalFadeOut var(--duration-200) var(--ease-in);
+}
+
+.modal-scale-in {
+  animation: modalScaleIn var(--duration-200) var(--ease-out);
+}
+
+.modal-scale-out {
+  animation: modalScaleOut var(--duration-200) var(--ease-in);
+}
+
+/* Page Transition */
+.page-fade-in {
+  animation: pageLoad var(--duration-300) var(--ease-out);
+}
+
 /* ============================================
    PRINT STYLES
    ============================================ */
@@ -590,6 +663,57 @@ html {
   }
   100% {
     background-position: 200% 0;
+  }
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes modalScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes modalScaleOut {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+}
+
+@keyframes pageLoad {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

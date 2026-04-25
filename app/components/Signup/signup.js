@@ -335,7 +335,7 @@ export default function ProfessionalRegister() {
         }
       `}</style>
 
-      <div className="login-gradient-bg d-flex align-items-center justify-content-center fade-in">
+      <div className="login-gradient-bg d-flex align-items-center justify-content-center page-fade-in">
         <div className="container py-3">
           <div className="row justify-content-center">
             <div className="col-12 col-md-8 col-lg-6 col-xl-5">
@@ -343,7 +343,7 @@ export default function ProfessionalRegister() {
                 <p className="text-white opacity-90">Join our community to report lost and found items</p>
               </div>
 
-              <div className="login-card p-2 p-md-5 fade-in" style={{ animationDelay: '0.1s' }}>
+              <div className="login-card p-2 p-md-5 animate-slideUp">>
                 <form onSubmit={register}>
                   <div className="mb-3">
                     <label htmlFor="name" className="form-label fw-medium d-flex align-items-center" style={{ color: '#667eea' }}>

@@ -128,7 +128,7 @@ export default function Home() {
         <section className="hero-gradient text-white py-5 position-relative overflow-hidden">
           <div className="container position-relative z-10 py-5">
             <div className="row align-items-center">
-              <div className="col-lg-6 mb-5 mb-lg-0 fade-in">
+              <div className="col-lg-6 mb-5 mb-lg-0 animate-slideUp">
                 <div className="mb-4">
                   <h1 className="display-4 fw-bold mb-4 hero-title">
                     GAMICA Lost & Found Portal
@@ -157,7 +157,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="col-lg-6 fade-in" style={{ animationDelay: '0.2s' }}>
+              <div className="col-lg-6 animate-slideUp" style={{ animationDelay: '0.2s' }}>
                 <div className="position-relative">
                   <div className="floating" style={{ animationDelay: '1s' }}>
                     <div className="card-custom p-5 mx-auto" style={{ maxWidth: '500px' }}>
@@ -200,12 +200,12 @@ export default function Home() {
 
         <section className="py-5 bg-white">
           <div className="container">
-            <div className="text-center mb-5 fade-in">
+            <div className="text-center mb-5 animate-fadeIn">
               <h2 className="display-5 fw-bold mb-3 text-gray-800">Browse By Category</h2>
               <p className="lead text-muted mb-4">Find items based on their type</p>
             </div>
 
-            <div className="row g-4 justify-content-center fade-in">
+            <div className="row g-4 justify-content-center animate-slideUp">
               {categories.map((category, index) => (
                 <div key={category.id} className="col-6 col-md-4 col-lg-2">
                   <button
@@ -234,13 +234,13 @@ export default function Home() {
 
         <section className="py-5 bg-white">
           <div className="container">
-            <div className="text-center mb-5 fade-in">
+            <div className="text-center mb-5 animate-fadeIn">
               <h2 className="display-5 fw-bold mb-3 text-gray-800">GAMICA Support Services</h2>
               <p className="lead text-muted mb-4">Additional resources available on campus</p>
             </div>
 
             <div className="row g-4">
-              <div className="col-md-4 fade-in">
+              <div className="col-md-4 animate-slideUp">
                 <div className="service-card p-4 h-100">
                   <div className="d-flex align-items-start mb-3">
                     <div className="rounded-circle p-3 me-3" style={{ background: '#667eea', color: 'white' }}>
@@ -255,7 +255,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="col-md-4 fade-in" style={{ animationDelay: '0.1s' }}>
+              <div className="col-md-4 animate-slideUp" style={{ animationDelay: '0.1s' }}>
                 <div className="service-card p-4 h-100">
                   <div className="d-flex align-items-start mb-3">
                     <div className="rounded-circle p-3 me-3" style={{ background: '#667eea', color: 'white' }}>
@@ -270,7 +270,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="col-md-4 fade-in" style={{ animationDelay: '0.2s' }}>
+              <div className="col-md-4 animate-slideUp" style={{ animationDelay: '0.2s' }}>
                 <div className="service-card p-4 h-100">
                   <div className="d-flex align-items-start mb-3">
                     <div className="rounded-circle p-3 me-3" style={{ background: '#667eea', color: 'white' }}>
@@ -290,7 +290,7 @@ export default function Home() {
 
         <section className="py-5" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
           <div className="container">
-            <div className="text-center py-5 fade-in">
+            <div className="text-center py-5 animate-fadeIn">
               <h2 className="display-5 fw-bold mb-4 text-white">Need to Report Something?</h2>
               <p className="lead mb-5 opacity-90 text-white">
                 Our portal is the fastest way to report lost or found items on campus.

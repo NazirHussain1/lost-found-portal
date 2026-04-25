@@ -508,7 +508,7 @@ export default function ProfilePage() {
         }
       `}</style>
 
-      <div className="container-fluid px-3 px-md-4 py-3 py-md-5">
+      <div className="container-fluid px-3 px-md-4 py-3 py-md-5 page-fade-in">
         
         <div className="d-block d-md-none mb-3">
           <button
@@ -521,7 +521,7 @@ export default function ProfilePage() {
         </div>
 
       
-        <div className="profile-gradient-bg text-white rounded-4 p-3 p-md-5 mb-3 mb-md-5 shadow-lg">
+        <div className="profile-gradient-bg text-white rounded-4 p-3 p-md-5 mb-3 mb-md-5 shadow-lg card-hover-subtle">
           <div className="row align-items-center">
             <div className="col-12 col-md-8 mb-3 mb-md-0">
               <div className="d-flex flex-column flex-md-row align-items-center align-items-md-start text-center text-md-start">
@@ -610,7 +610,7 @@ export default function ProfilePage() {
               {editMode ? (
                 <div className="d-flex flex-column flex-md-row gap-2 justify-content-center justify-content-md-end">
                   <button
-                    className="btn-secondary-custom btn-sm px-3 py-2 rounded-pill fw-bold mb-2 mb-md-0"
+                    className="btn-secondary-custom btn-sm px-3 py-2 rounded-pill fw-bold mb-2 mb-md-0 btn-hover-subtle"
                     onClick={() => {
                       setEditMode(false);
                       setEditForm({ ...userData });
@@ -620,7 +620,7 @@ export default function ProfilePage() {
                     Cancel
                   </button>
                   <button
-                    className="btn-primary-custom btn-sm px-3 py-2 rounded-pill"
+                    className="btn-primary-custom btn-sm px-3 py-2 rounded-pill btn-hover-lift"
                     onClick={handleSaveProfile}
                     disabled={loading || uploadingImage}
                   >
@@ -640,14 +640,14 @@ export default function ProfilePage() {
               ) : (
                 <div className="d-flex flex-column flex-md-row gap-2 justify-content-center justify-content-md-end">
                   <button
-                    className="btn-secondary-custom btn-sm px-3 py-2 rounded-pill fw-bold mb-2 mb-md-0"
+                    className="btn-secondary-custom btn-sm px-3 py-2 rounded-pill fw-bold mb-2 mb-md-0 btn-hover-subtle"
                     onClick={() => setEditMode(true)}
                   >
                     <FaEdit className="me-2" />
                     Edit Profile
                   </button>
                   <button
-                    className="btn-danger-custom btn-sm px-3 py-2 rounded-pill"
+                    className="btn-danger-custom btn-sm px-3 py-2 rounded-pill btn-hover-lift"
                     onClick={() => setShowLogoutConfirm(true)}
                   >
                     <FaSignOutAlt className="me-2" />
@@ -662,7 +662,7 @@ export default function ProfilePage() {
         <div className="row g-3 g-md-4">
          
           <div className="col-12 col-lg-4 order-2 order-lg-1">
-            <div className="glass-effect p-3 p-md-4 mb-3 mb-md-4">
+            <div className="glass-effect p-3 p-md-4 mb-3 mb-md-4 card-hover-subtle">
               <h4 className="fw-bold mb-3 gradient-text">Profile Information</h4>
               
               <div className="mb-4">
@@ -822,7 +822,7 @@ export default function ProfilePage() {
                 <h4 className="fw-bold mb-2 mb-md-0 gradient-text">Recent Activity</h4>
                 <div className="d-flex gap-2">
                   <button
-                    className="btn-outline-custom"
+                    className="btn-outline-custom btn-hover-subtle"
                     onClick={fetchUserProfile}
                   >
                     Refresh
@@ -833,7 +833,7 @@ export default function ProfilePage() {
               {recentActivity.length > 0 ? (
                 <div className="d-flex flex-column gap-2 gap-md-3">
                   {recentActivity.map((activity, index) => (
-                    <div key={activity.id || index} className="activity-card p-2 p-md-3">
+                    <div key={activity.id || index} className="activity-card p-2 p-md-3 card-hover-subtle">
                       <div className="d-flex align-items-start">
                         <div className="flex-shrink-0">
                           <div
@@ -910,7 +910,7 @@ export default function ProfilePage() {
                     Your activity will appear here when you report items
                   </p>
                   <button
-                    className="btn-outline-custom mt-3"
+                    className="btn-outline-custom mt-3 btn-hover-lift"
                     onClick={() => router.push("/lost")}
                   >
                     Report Your First Item

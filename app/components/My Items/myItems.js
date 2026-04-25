@@ -31,23 +31,12 @@ const ItemCard = memo(({
 }) => {
   return (
     <div 
-      className="card-custom h-100 position-relative"
+      className="card h-100 position-relative card-hover"
       style={{
-        transition: 'var(--transition-all)',
         borderRadius: 'var(--radius-xl)',
         overflow: 'hidden',
         border: '1px solid var(--color-gray-200)',
         background: 'white'
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'translateY(-8px)';
-        e.currentTarget.style.boxShadow = 'var(--shadow-xl)';
-        e.currentTarget.style.borderColor = 'var(--color-primary-300)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-        e.currentTarget.style.borderColor = 'var(--color-gray-200)';
       }}
     >
       {/* Image Container */}
@@ -159,7 +148,7 @@ const ItemCard = memo(({
           <div className="d-flex gap-2">
             {item.type !== "resolved" && (
               <button
-                className="btn btn-sm btn-success"
+                className="btn btn-sm btn-success btn-hover-subtle"
                 style={{ width: '32px', height: '32px' }}
                 onClick={() => onMarkResolved(item)}
                 disabled={resolving && resolvingItem?._id === item._id}
@@ -174,7 +163,7 @@ const ItemCard = memo(({
             )}
             
             <button
-              className="btn btn-sm btn-primary"
+              className="btn btn-sm btn-primary btn-hover-subtle"
               style={{ width: '32px', height: '32px' }}
               onClick={() => onEdit(item)}
               title="Edit Item"
@@ -183,7 +172,7 @@ const ItemCard = memo(({
             </button>
             
             <button
-              className="btn btn-sm btn-danger"
+              className="btn btn-sm btn-danger btn-hover-subtle"
               style={{ width: '32px', height: '32px' }}
               onClick={() => onDelete(item)}
               title="Delete Item"
@@ -502,8 +491,8 @@ export default function MyItemsPage() {
   }
 
   return (
-    <div className="container-fluid px-3 px-md-4 py-3 py-md-5">
-        <div className="bg-gradient-primary text-white rounded-4 p-3 p-md-5 mb-3 mb-md-5 shadow-lg">
+    <div className="container-fluid px-3 px-md-4 py-3 py-md-5 page-fade-in">
+        <div className="bg-gradient-primary text-white rounded-4 p-3 p-md-5 mb-3 mb-md-5 shadow-lg card-hover-subtle">
           <div className="row align-items-center">
             <div className="col-12 col-md-8 mb-3 mb-md-0">
               <div className="d-flex flex-column flex-sm-row align-items-center align-items-sm-start text-center text-sm-start">
@@ -522,7 +511,7 @@ export default function MyItemsPage() {
             </div>
             <div className="col-12 col-md-4 text-center text-md-end">
               <button
-                className="btn-primary-custom btn-lg px-3 px-md-4 py-2 rounded-pill fw-bold"
+                className="btn btn-primary btn-lg px-3 px-md-4 py-2 rounded-pill fw-bold btn-hover-lift"
                 onClick={() => router.push("/browse")}
               >
                 Browse All Items
@@ -533,7 +522,7 @@ export default function MyItemsPage() {
 
         <div className="row g-2 g-md-4 mb-3 mb-md-5">
           <div className="col-6 col-md-3">
-            <div className="card shadow-sm border-primary border-opacity-25 text-center p-2 p-md-4 transition-all">
+            <div className="card shadow-sm border-primary border-opacity-25 text-center p-2 p-md-4 card-hover-subtle">
               <div className="h5 h-md-3 fw-bold mb-1 text-primary">
                 {stats.total}
               </div>
@@ -543,7 +532,7 @@ export default function MyItemsPage() {
             </div>
           </div>
           <div className="col-6 col-md-3">
-            <div className="card shadow-sm border-primary border-opacity-25 text-center p-2 p-md-4 transition-all">
+            <div className="card shadow-sm border-primary border-opacity-25 text-center p-2 p-md-4 card-hover-subtle">
               <div className="h5 h-md-3 fw-bold mb-1 text-primary">
                 {stats.lost}
               </div>
@@ -553,7 +542,7 @@ export default function MyItemsPage() {
             </div>
           </div>
           <div className="col-6 col-md-3">
-            <div className="card shadow-sm border-primary border-opacity-25 text-center p-2 p-md-4 transition-all">
+            <div className="card shadow-sm border-primary border-opacity-25 text-center p-2 p-md-4 card-hover-subtle">
               <div className="h5 h-md-3 fw-bold mb-1 text-primary">
                 {stats.found}
               </div>
@@ -563,7 +552,7 @@ export default function MyItemsPage() {
             </div>
           </div>
           <div className="col-6 col-md-3">
-            <div className="card shadow-sm border-primary border-opacity-25 text-center p-2 p-md-4 transition-all">
+            <div className="card shadow-sm border-primary border-opacity-25 text-center p-2 p-md-4 card-hover-subtle">
               <div className="h5 h-md-3 fw-bold mb-1 text-primary">
                 {stats.resolved}
               </div>
@@ -639,7 +628,7 @@ export default function MyItemsPage() {
               {error}
             </p>
             <button
-              className="btn btn-primary px-3 px-md-4 py-2 rounded-pill fw-bold text-white"
+              className="btn btn-primary px-3 px-md-4 py-2 rounded-pill fw-bold text-white btn-hover-lift"
               onClick={() => dispatch(fetchMyItems())}
             >
               Try Again
@@ -660,13 +649,13 @@ export default function MyItemsPage() {
             </p>
             <div className="d-flex flex-column flex-md-row flex-wrap justify-content-center gap-2 gap-md-3">
               <button
-                className="btn btn-primary px-3 px-md-4 py-2 rounded-pill fw-bold text-white"
+                className="btn btn-primary px-3 px-md-4 py-2 rounded-pill fw-bold text-white btn-hover-lift"
                 onClick={() => router.push("/lost")}
               >
                 Report Lost Item
               </button>
               <button
-                className="btn btn-primary px-3 px-md-4 py-2 rounded-pill fw-bold text-white"
+                className="btn btn-primary px-3 px-md-4 py-2 rounded-pill fw-bold text-white btn-hover-lift"
                 onClick={() => router.push("/found")}
               >
                 Report Found Item
@@ -694,19 +683,19 @@ export default function MyItemsPage() {
           <div className="text-center mt-3 mt-md-5 pt-3 pt-md-4 border-top">
             <div className="d-flex flex-column flex-md-row flex-wrap justify-content-center gap-2 gap-md-3">
               <button
-                className="btn btn-primary px-3 px-md-4 py-2 rounded-pill fw-bold text-white"
+                className="btn btn-primary px-3 px-md-4 py-2 rounded-pill fw-bold text-white btn-hover-lift"
                 onClick={() => router.push("/lost")}
               >
                 Report New Lost Item
               </button>
               <button
-                className="btn btn-primary px-3 px-md-4 py-2 rounded-pill fw-bold text-white"
+                className="btn btn-primary px-3 px-md-4 py-2 rounded-pill fw-bold text-white btn-hover-lift"
                 onClick={() => router.push("/found")}
               >
                 Report New Found Item
               </button>
               <button
-                className="btn btn-outline-primary px-3 px-md-4 py-2 rounded-pill fw-bold"
+                className="btn btn-outline-primary px-3 px-md-4 py-2 rounded-pill fw-bold btn-hover-subtle"
                 onClick={() => router.push("/browse")}
               >
                 Browse Community Items
@@ -738,14 +727,14 @@ export default function MyItemsPage() {
         footer={
           <>
             <button
-              className="btn btn-secondary"
+              className="btn btn-secondary btn-hover-subtle"
               onClick={closeEditModal}
               disabled={updating}
             >
               Cancel
             </button>
             <button
-              className="btn btn-primary"
+              className="btn btn-primary btn-hover-lift"
               onClick={handleUpdateSubmit}
               disabled={updating}
             >

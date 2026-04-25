@@ -13,7 +13,7 @@ import Modal from "../Modal";
 const ItemCard = memo(({ item, onClick }) => {
   return (
     <div
-      className="bg-white rounded-xl shadow-sm border hover:shadow-lg transition-all duration-300 cursor-pointer group"
+      className="bg-white rounded-xl shadow-sm border card-hover cursor-pointer"
       onClick={() => onClick(item)}
     >
       {/* Image Container */}
@@ -23,7 +23,11 @@ const ItemCard = memo(({ item, onClick }) => {
             src={item.imageUrl}
             alt={item.title}
             loading="lazy"
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-100 h-100"
+            style={{ 
+              objectFit: 'cover',
+              transition: 'transform var(--duration-300) var(--ease-out)'
+            }}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-50">
@@ -214,7 +218,7 @@ export default function Browse() {
   };
 
   return (
-    <div className="container py-5">
+    <div className="container py-5 page-fade-in">
       {/* Header Section */}
       <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl p-6 mb-6 shadow-lg">
         <div className="text-center">
@@ -355,7 +359,7 @@ export default function Browse() {
             <p className="text-gray-600 mb-4">{error || "Something went wrong while loading items."}</p>
             <button
               onClick={() => dispatch(fetchItems({ type: typeFilter, category: categoryFilter, page: currentPage, limit: 20 }))}
-              className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+              className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors btn-hover-lift"
             >
               Try Again
             </button>
@@ -372,16 +376,16 @@ export default function Browse() {
                 ? "Try adjusting your search criteria or clear the filters"
                 : "No items have been reported yet"}
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="d-flex flex-column flex-sm-row gap-3 justify-content-center">
               <button
                 onClick={() => router.push("/lost")}
-                className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors btn-hover-lift"
               >
                 Report Lost Item
               </button>
               <button
                 onClick={() => router.push("/found")}
-                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors btn-hover-lift"
               >
                 Report Found Item
               </button>
@@ -542,7 +546,7 @@ export default function Browse() {
                       {selectedItem.user.phone}
                     </div>
                     <button
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
+                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors d-flex align-items-center gap-2 btn-hover-lift"
                       onClick={() => handleWhatsAppClick(selectedItem.user.phone)}
                     >
                       <FaWhatsapp size={16} />
