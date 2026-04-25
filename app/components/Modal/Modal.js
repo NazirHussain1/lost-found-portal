@@ -157,23 +157,31 @@ export default function Modal({
         `}
         onClick={(e) => e.stopPropagation()}
         tabIndex={-1}
+        aria-labelledby={title ? "modal-title" : undefined}
+        aria-describedby="modal-content"
         {...props}
       >
         {/* Header */}
         {(title || showCloseButton) && (
-          <div
+          <header
             className={`
               flex items-center justify-between p-4 sm:p-6
               bg-gradient-to-r from-indigo-600 to-purple-600 text-white
               ${headerClassName}
             `}
           >
-            <h2 className="text-lg sm:text-xl font-bold truncate pr-4">
-              {title}
-            </h2>
+            {title && (
+              <h1 
+                id="modal-title"
+                className="text-lg sm:text-xl font-bold truncate pr-4"
+              >
+                {title}
+              </h1>
+            )}
             {showCloseButton && (
               <button
                 onClick={onClose}
+                type="button"
                 className="
                   flex items-center justify-center w-8 h-8 rounded-full
                   bg-white/20 hover:bg-white/30 btn-hover-subtle
@@ -181,25 +189,26 @@ export default function Modal({
                 "
                 aria-label="Close modal"
               >
-                <FaTimes size={16} />
+                <FaTimes size={16} aria-hidden="true" />
               </button>
             )}
-          </div>
+          </header>
         )}
 
         {/* Body */}
-        <div
+        <main
+          id="modal-content"
           className={`
             flex-1 overflow-y-auto p-4 sm:p-6
             ${bodyClassName}
           `}
         >
           {children}
-        </div>
+        </main>
 
         {/* Footer */}
         {footer && (
-          <div
+          <footer
             className={`
               flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 p-4 sm:p-6
               border-t border-gray-200 bg-gray-50
@@ -207,7 +216,7 @@ export default function Modal({
             `}
           >
             {footer}
-          </div>
+          </footer>
         )}
       </div>
     </div>

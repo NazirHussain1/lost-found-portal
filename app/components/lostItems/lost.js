@@ -475,12 +475,14 @@ export default function LostItemForm() {
                   </div>
                 )}
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} noValidate>
+                  <fieldset>
+                    <legend className="sr-only">Lost Item Report Form</legend>
                 
                   <div className="mb-3 mb-sm-4">
                     <label htmlFor="title" className="form-label d-flex align-items-center mb-2">
-                      <FaTag className="me-2" style={{ color: '#667eea' }} size={16} />
-                      Item Title <span className="text-danger ms-1">*</span>
+                      <FaTag className="me-2" style={{ color: '#667eea' }} size={16} aria-hidden="true" />
+                      Item Title <span className="text-danger ms-1" aria-label="required">*</span>
                     </label>
                     <input
                       type="text"
@@ -495,15 +497,17 @@ export default function LostItemForm() {
                         borderColor: errors.title ? 'var(--color-error-500)' : 'var(--color-gray-300)',
                         transition: 'var(--transition-base)'
                       }}
+                      aria-describedby={errors.title ? "title-error" : "title-help"}
+                      aria-invalid={errors.title ? "true" : "false"}
                       required
                     />
                     {errors.title && (
-                      <div className="invalid-feedback d-flex align-items-center mt-1">
-                        <FaExclamationTriangle className="me-1" size={12} />
+                      <div id="title-error" className="invalid-feedback d-flex align-items-center mt-1" role="alert">
+                        <FaExclamationTriangle className="me-1" size={12} aria-hidden="true" />
                         {errors.title}
                       </div>
                     )}
-                    <div className="form-text small text-muted mt-1">
+                    <div id="title-help" className="form-text small text-muted mt-1">
                       {form.title.length}/100 characters
                     </div>
                   </div>
@@ -511,8 +515,8 @@ export default function LostItemForm() {
                 
                   <div className="mb-3 mb-sm-4">
                     <label htmlFor="description" className="form-label d-flex align-items-center mb-2">
-                      <FaInfoCircle className="me-2" style={{ color: '#667eea' }} size={16} />
-                      Description <span className="text-danger ms-1">*</span>
+                      <FaInfoCircle className="me-2" style={{ color: '#667eea' }} size={16} aria-hidden="true" />
+                      Description <span className="text-danger ms-1" aria-label="required">*</span>
                     </label>
                     <textarea
                       id="description"
@@ -528,15 +532,17 @@ export default function LostItemForm() {
                         transition: 'var(--transition-base)',
                         resize: 'vertical'
                       }}
+                      aria-describedby={errors.description ? "description-error" : "description-help"}
+                      aria-invalid={errors.description ? "true" : "false"}
                       required
                     />
                     {errors.description && (
-                      <div className="invalid-feedback d-flex align-items-center mt-1">
-                        <FaExclamationTriangle className="me-1" size={12} />
+                      <div id="description-error" className="invalid-feedback d-flex align-items-center mt-1" role="alert">
+                        <FaExclamationTriangle className="me-1" size={12} aria-hidden="true" />
                         {errors.description}
                       </div>
                     )}
-                    <div className="form-text small d-flex flex-column flex-sm-row justify-content-between mt-1">
+                    <div id="description-help" className="form-text small d-flex flex-column flex-sm-row justify-content-between mt-1">
                       <span className="text-muted">{form.description.length}/500 characters</span>
                       <span className={form.description.length > 450 ? 'text-warning' : 'text-muted'}>
                         {form.description.length > 450 ? `${500 - form.description.length} remaining` : ''}

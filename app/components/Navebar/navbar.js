@@ -169,13 +169,17 @@ export default function Navbar() {
   return (
     <>
       {/* Navbar */}
-      <nav className={`
-        fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out
-        ${scrolled 
-          ? 'bg-gradient-to-r from-indigo-600 to-purple-600 backdrop-blur-md border-b border-white/10 shadow-lg' 
-          : 'bg-gradient-to-r from-indigo-600 to-purple-600'
-        }
-      `}>
+      <nav 
+        className={`
+          fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out
+          ${scrolled 
+            ? 'bg-gradient-to-r from-indigo-600 to-purple-600 backdrop-blur-md border-b border-white/10 shadow-lg' 
+            : 'bg-gradient-to-r from-indigo-600 to-purple-600'
+          }
+        `}
+        role="navigation"
+        aria-label="Main navigation"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             
@@ -184,50 +188,54 @@ export default function Navbar() {
               href="/" 
               onClick={handleLinkClick}
               className="flex items-center space-x-2 group"
+              aria-label="Lost & Found Portal - Home"
             >
               <img
                 src="/images/lost and found logo.png"
-                alt="Lost & Found Logo"
+                alt="Lost & Found Portal Logo"
                 className="w-10 h-7 sm:w-12 sm:h-8 transition-transform duration-200 group-hover:scale-105 drop-shadow-md"
               />
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-1">
+            <ul className="hidden lg:flex items-center space-x-1" role="menubar">
               {navLinks.map((link) => {
                 const Icon = link.icon;
                 const isActive = isActiveLink(link.href);
                 
                 return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={handleLinkClick}
-                    className={`
-                      flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium
-                      transition-all duration-200 ease-in-out relative group
-                      ${isActive 
-                        ? 'text-white bg-white/20 shadow-sm' 
-                        : 'text-white/90 hover:text-white hover:bg-white/10'
-                      }
-                    `}
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span>{link.label}</span>
-                    
-                    {/* Active indicator */}
-                    {isActive && (
-                      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-white rounded-full" />
-                    )}
-                    
-                    {/* Hover indicator */}
-                    {!isActive && (
-                      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-white rounded-full transition-all duration-200 group-hover:w-6" />
-                    )}
-                  </Link>
+                  <li key={link.href} role="none">
+                    <Link
+                      href={link.href}
+                      onClick={handleLinkClick}
+                      role="menuitem"
+                      aria-current={isActive ? "page" : undefined}
+                      className={`
+                        flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium
+                        transition-all duration-200 ease-in-out relative group
+                        ${isActive 
+                          ? 'text-white bg-white/20 shadow-sm' 
+                          : 'text-white/90 hover:text-white hover:bg-white/10'
+                        }
+                      `}
+                    >
+                      <Icon className="w-4 h-4" aria-hidden="true" />
+                      <span>{link.label}</span>
+                      
+                      {/* Active indicator */}
+                      {isActive && (
+                        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-white rounded-full" aria-hidden="true" />
+                      )}
+                      
+                      {/* Hover indicator */}
+                      {!isActive && (
+                        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-white rounded-full transition-all duration-200 group-hover:w-6" aria-hidden="true" />
+                      )}
+                    </Link>
+                  </li>
                 );
               })}
-            </div>
+            </ul>
 
             {/* Desktop Profile & Mobile Controls */}
             <div className="flex items-center space-x-2">
@@ -236,11 +244,13 @@ export default function Navbar() {
               <div className="hidden lg:block relative">
                 <button
                   ref={profileButtonRef}
+                  id="profile-button"
                   onClick={toggleProfileDropdown}
                   onKeyDown={(e) => handleKeyDown(e, toggleProfileDropdown)}
                   aria-expanded={isProfileDropdownOpen}
                   aria-controls="profile-dropdown"
-                  aria-label="User menu"
+                  aria-haspopup="menu"
+                  aria-label="User account menu"
                   className={`
                     flex items-center space-x-2 p-2 rounded-lg transition-all duration-200
                     ${isProfileDropdownOpen 
@@ -249,7 +259,7 @@ export default function Navbar() {
                     }
                   `}
                 >
-                  <FaUserCircle className="w-6 h-6" />
+                  <FaUserCircle className="w-6 h-6" aria-hidden="true" />
                 </button>
 
                 {/* Desktop Profile Dropdown Menu */}
@@ -257,6 +267,8 @@ export default function Navbar() {
                   <div
                     ref={profileDropdownRef}
                     id="profile-dropdown"
+                    role="menu"
+                    aria-labelledby="profile-button"
                     className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
                   >
                     {user ? (
@@ -283,9 +295,10 @@ export default function Navbar() {
                           <Link
                             href="/userProfile"
                             onClick={handleLinkClick}
+                            role="menuitem"
                             className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
                           >
-                            <FaUserCircle className="w-4 h-4 mr-3 text-gray-400" />
+                            <FaUserCircle className="w-4 h-4 mr-3 text-gray-400" aria-hidden="true" />
                             <div>
                               <div className="font-medium">My Profile</div>
                               <div className="text-xs text-gray-500">View your profile</div>
@@ -295,22 +308,24 @@ export default function Navbar() {
                           <Link
                             href="/myItems"
                             onClick={handleLinkClick}
+                            role="menuitem"
                             className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
                           >
-                            <FaTh className="w-4 h-4 mr-3 text-gray-400" />
+                            <FaTh className="w-4 h-4 mr-3 text-gray-400" aria-hidden="true" />
                             <div>
                               <div className="font-medium">My Items</div>
                               <div className="text-xs text-gray-500">Manage your reports</div>
                             </div>
                           </Link>
 
-                          <hr className="my-1 border-gray-100" />
+                          <hr className="my-1 border-gray-100" role="separator" />
                           
                           <button
                             onClick={handleLogout}
+                            role="menuitem"
                             className="w-full flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-150"
                           >
-                            <FaSignOutAlt className="w-4 h-4 mr-3" />
+                            <FaSignOutAlt className="w-4 h-4 mr-3" aria-hidden="true" />
                             <div>
                               <div className="font-medium">Logout</div>
                               <div className="text-xs text-red-500">Sign out of account</div>
@@ -331,17 +346,19 @@ export default function Navbar() {
                           <Link
                             href="/loginPage"
                             onClick={handleLinkClick}
+                            role="menuitem"
                             className="w-full flex items-center justify-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors duration-150"
                           >
-                            <FaSignInAlt className="w-4 h-4 mr-2" />
+                            <FaSignInAlt className="w-4 h-4 mr-2" aria-hidden="true" />
                             Login
                           </Link>
                           <Link
                             href="/signup"
                             onClick={handleLinkClick}
+                            role="menuitem"
                             className="w-full flex items-center justify-center px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors duration-150"
                           >
-                            <FaUserPlus className="w-4 h-4 mr-2" />
+                            <FaUserPlus className="w-4 h-4 mr-2" aria-hidden="true" />
                             Register
                           </Link>
                         </div>
@@ -357,7 +374,8 @@ export default function Navbar() {
                 onKeyDown={(e) => handleKeyDown(e, toggleProfileDropdown)}
                 aria-expanded={isProfileDropdownOpen}
                 aria-controls="mobile-profile-menu"
-                aria-label="User menu"
+                aria-haspopup="menu"
+                aria-label="User account menu"
                 className={`
                   lg:hidden p-2 rounded-lg transition-all duration-200
                   ${isProfileDropdownOpen 
@@ -366,7 +384,7 @@ export default function Navbar() {
                   }
                 `}
               >
-                <FaUserCircle className="w-5 h-5" />
+                <FaUserCircle className="w-5 h-5" aria-hidden="true" />
               </button>
 
               {/* Mobile Menu Button */}
@@ -376,6 +394,7 @@ export default function Navbar() {
                 onKeyDown={(e) => handleKeyDown(e, toggleMobileMenu)}
                 aria-expanded={isMobileMenuOpen}
                 aria-controls="mobile-menu"
+                aria-haspopup="menu"
                 aria-label="Toggle navigation menu"
                 className={`
                   lg:hidden p-2 rounded-lg transition-all duration-200
@@ -386,9 +405,9 @@ export default function Navbar() {
                 `}
               >
                 {isMobileMenuOpen ? (
-                  <FaTimes className="w-5 h-5" />
+                  <FaTimes className="w-5 h-5" aria-hidden="true" />
                 ) : (
-                  <FaBars className="w-5 h-5" />
+                  <FaBars className="w-5 h-5" aria-hidden="true" />
                 )}
               </button>
             </div>
@@ -400,32 +419,37 @@ export default function Navbar() {
           <div
             ref={mobileMenuRef}
             id="mobile-menu"
+            role="menu"
+            aria-labelledby="mobile-menu-button"
             className="lg:hidden bg-white border-t border-gray-200 shadow-lg animate-in slide-in-from-top duration-200"
           >
-            <div className="px-4 py-3 space-y-1">
+            <ul className="px-4 py-3 space-y-1" role="none">
               {navLinks.map((link) => {
                 const Icon = link.icon;
                 const isActive = isActiveLink(link.href);
                 
                 return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={handleLinkClick}
-                    className={`
-                      flex items-center space-x-3 px-4 py-4 rounded-lg text-sm font-medium transition-colors duration-150
-                      ${isActive 
-                        ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' 
-                        : 'text-gray-700 hover:bg-gray-50'
-                      }
-                    `}
-                  >
-                    <Icon className={`w-5 h-5 ${isActive ? 'text-indigo-600' : 'text-gray-400'}`} />
-                    <span>{link.label}</span>
-                  </Link>
+                  <li key={link.href} role="none">
+                    <Link
+                      href={link.href}
+                      onClick={handleLinkClick}
+                      role="menuitem"
+                      aria-current={isActive ? "page" : undefined}
+                      className={`
+                        flex items-center space-x-3 px-4 py-4 rounded-lg text-sm font-medium transition-colors duration-150
+                        ${isActive 
+                          ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' 
+                          : 'text-gray-700 hover:bg-gray-50'
+                        }
+                      `}
+                    >
+                      <Icon className={`w-5 h-5 ${isActive ? 'text-indigo-600' : 'text-gray-400'}`} aria-hidden="true" />
+                      <span>{link.label}</span>
+                    </Link>
+                  </li>
                 );
               })}
-            </div>
+            </ul>
           </div>
         )}
 

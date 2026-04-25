@@ -315,6 +315,93 @@
 }
 
 /* ============================================
+   ACCESSIBILITY UTILITIES
+   ============================================ */
+
+/* Screen Reader Only */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.sr-only-focusable:focus {
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+  padding: inherit !important;
+  margin: inherit !important;
+  overflow: visible !important;
+  clip: auto !important;
+  white-space: normal !important;
+}
+
+/* Skip Links */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--color-primary-600);
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 9999;
+  transition: top 0.3s;
+}
+
+.skip-link:focus {
+  top: 6px;
+}
+
+/* Focus Indicators */
+.focus-visible {
+  outline: 2px solid var(--color-primary-500) !important;
+  outline-offset: 2px !important;
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .btn-hover-lift:hover:not(:disabled),
+  .btn-hover-subtle:hover:not(:disabled) {
+    outline: 2px solid currentColor;
+  }
+  
+  .card-hover:hover,
+  .card-hover-subtle:hover {
+    outline: 2px solid var(--color-gray-600);
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .btn-hover-lift:hover:not(:disabled),
+  .btn-hover-subtle:hover:not(:disabled) {
+    transform: none !important;
+  }
+  
+  .card-hover:hover,
+  .card-hover-subtle:hover {
+    transform: none !important;
+  }
+}
+
+/* ============================================
    UTILITY CLASSES
    ============================================ */
 

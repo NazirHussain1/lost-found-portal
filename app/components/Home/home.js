@@ -125,34 +125,39 @@ export default function Home() {
       `}</style>
 
       <div className="min-vh-100 bg-gray-50">
-        <section className="hero-gradient text-white py-5 position-relative overflow-hidden">
+        {/* Hero Section */}
+        <section className="hero-gradient text-white py-5 position-relative overflow-hidden" aria-labelledby="hero-heading">
           <div className="container position-relative z-10 py-5">
             <div className="row align-items-center">
               <div className="col-lg-6 mb-5 mb-lg-0 animate-slideUp">
                 <div className="mb-4">
-                  <h1 className="display-4 fw-bold mb-4 hero-title">
+                  <h1 id="hero-heading" className="display-4 fw-bold mb-4 hero-title">
                     GAMICA Lost & Found Portal
                   </h1>
 
                   <p className="lead mb-5 opacity-90 fs-5">
-                    Report lost items or found belongings within our Camous community.
+                    Report lost items or found belongings within our Campus community.
                     Our portal connects campus members to help reunite items with their owners.
                   </p>
 
-                  <div className="d-flex flex-wrap gap-3">
+                  <div className="d-flex flex-wrap gap-3" role="group" aria-label="Main actions">
                     <Link
                       href="/lost"
                       className="btn-primary-custom btn-lg px-4 py-3 fw-bold rounded-pill shadow"
+                      aria-describedby="lost-item-desc"
                     >
-                      <FaBullhorn className="me-2" />
+                      <FaBullhorn className="me-2" aria-hidden="true" />
                       Report Lost Item
                     </Link>
+                    <div id="lost-item-desc" className="sr-only">Report an item you have lost</div>
                     <Link
                       href="/found"
                       className="btn-outline-custom btn-lg px-4 py-3 fw-bold rounded-pill"
+                      aria-describedby="found-item-desc"
                     >
                       Report Found Item
                     </Link>
+                    <div id="found-item-desc" className="sr-only">Report an item you have found</div>
                   </div>
                 </div>
               </div>
@@ -160,22 +165,22 @@ export default function Home() {
               <div className="col-lg-6 animate-slideUp" style={{ animationDelay: '0.2s' }}>
                 <div className="position-relative">
                   <div className="floating" style={{ animationDelay: '1s' }}>
-                    <div className="card-custom p-5 mx-auto" style={{ maxWidth: '500px' }}>
+                    <div className="card-custom p-5 mx-auto" style={{ maxWidth: '500px' }} role="region" aria-labelledby="stats-heading">
                       <div className="text-center mb-4">
-                        <div className="display-3 fw-bold mb-2" style={{ color: '#667eea' }}>{stats.total || 0}</div>
-                        <h3 className="h5" style={{ color: '#667eea' }}>Active Reports</h3>
+                        <div className="display-3 fw-bold mb-2" style={{ color: '#667eea' }} aria-label={`${stats.total || 0} total active reports`}>{stats.total || 0}</div>
+                        <h2 id="stats-heading" className="h5" style={{ color: '#667eea' }}>Active Reports</h2>
                       </div>
 
                       <div className="row g-3">
                         <div className="col-6">
                           <div className="text-center p-3">
-                            <div className="h2 fw-bold mb-1" style={{ color: '#667eea' }}>{stats.lost || 0}</div>
+                            <div className="h3 fw-bold mb-1" style={{ color: '#667eea' }} aria-label={`${stats.lost || 0} lost items`}>{stats.lost || 0}</div>
                             <div className="text-muted small">Lost Items</div>
                           </div>
                         </div>
                         <div className="col-6">
                           <div className="text-center p-3">
-                            <div className="h2 fw-bold mb-1"  style={{ color: "#667eea" }}>{stats.found || 0}</div>
+                            <div className="h3 fw-bold mb-1"  style={{ color: "#667eea" }} aria-label={`${stats.found || 0} found items`}>{stats.found || 0}</div>
                             <div className="text-muted small">Found Items</div>
                           </div>
                         </div>
@@ -185,7 +190,7 @@ export default function Home() {
                         <div className="d-flex justify-content-between align-items-center">
                           <span className="text-muted small">Campus Community</span>
                           <span className="fw-bold" style={{ color: '#667eea' }}>
-                            <FaUsers className="me-1" />
+                            <FaUsers className="me-1" aria-hidden="true" />
                             Active Portal
                           </span>
                         </div>
@@ -198,52 +203,59 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="py-5 bg-white">
+        {/* Categories Section */}
+        <section className="py-5 bg-white" aria-labelledby="categories-heading">
           <div className="container">
             <div className="text-center mb-5 animate-fadeIn">
-              <h2 className="display-5 fw-bold mb-3 text-gray-800">Browse By Category</h2>
+              <h2 id="categories-heading" className="display-5 fw-bold mb-3 text-gray-800">Browse By Category</h2>
               <p className="lead text-muted mb-4">Find items based on their type</p>
             </div>
 
-            <div className="row g-4 justify-content-center animate-slideUp">
+            <div className="row g-4 justify-content-center animate-slideUp" role="group" aria-labelledby="categories-heading">
               {categories.map((category, index) => (
                 <div key={category.id} className="col-6 col-md-4 col-lg-2">
                   <button
                     className="category-btn w-100 p-4 rounded-3"
                     onClick={() => handleCategoryClick(category.id)}
                     style={{ animationDelay: `${index * 0.05}s` }}
+                    aria-label={`Browse ${category.name} items`}
                   >
-                    <div className="category-icon mb-3">
+                    <div className="category-icon mb-3" aria-hidden="true">
                       {category.icon}
                     </div>
                     <div className="fw-bold mb-2 text-gray-800">{category.name}</div>
-                   
                   </button>
                 </div>
               ))}
             </div>
 
             <div className="text-center mt-5">
-              <Link href="/browse" className="btn-primary-custom btn-lg px-5 py-3 rounded-pill fw-bold">
-                <FaSearch className="me-2" />
+              <Link 
+                href="/browse" 
+                className="btn-primary-custom btn-lg px-5 py-3 rounded-pill fw-bold"
+                aria-describedby="browse-all-desc"
+              >
+                <FaSearch className="me-2" aria-hidden="true" />
                 Browse All Categories
               </Link>
+              <div id="browse-all-desc" className="sr-only">View all items across all categories</div>
             </div>
           </div>
         </section>
 
-        <section className="py-5 bg-white">
+        {/* Support Services Section */}
+        <section className="py-5 bg-white" aria-labelledby="services-heading">
           <div className="container">
             <div className="text-center mb-5 animate-fadeIn">
-              <h2 className="display-5 fw-bold mb-3 text-gray-800">GAMICA Support Services</h2>
+              <h2 id="services-heading" className="display-5 fw-bold mb-3 text-gray-800">GAMICA Support Services</h2>
               <p className="lead text-muted mb-4">Additional resources available on campus</p>
             </div>
 
             <div className="row g-4">
               <div className="col-md-4 animate-slideUp">
-                <div className="service-card p-4 h-100">
+                <article className="service-card p-4 h-100">
                   <div className="d-flex align-items-start mb-3">
-                    <div className="rounded-circle p-3 me-3" style={{ background: '#667eea', color: 'white' }}>
+                    <div className="rounded-circle p-3 me-3" style={{ background: '#667eea', color: 'white' }} aria-hidden="true">
                       <FaShieldAlt size={24} />
                     </div>
                     <div>
@@ -251,14 +263,16 @@ export default function Home() {
                       <p className="text-muted small mb-0">24/7 security assistance for urgent lost items</p>
                     </div>
                   </div>
-                  <div className="fw-bold" style={{ color: '#667eea' }}>Ext. 911</div>
-                </div>
+                  <div className="fw-bold" style={{ color: '#667eea' }}>
+                    <a href="tel:911" className="text-decoration-none" style={{ color: '#667eea' }}>Ext. 911</a>
+                  </div>
+                </article>
               </div>
 
               <div className="col-md-4 animate-slideUp" style={{ animationDelay: '0.1s' }}>
-                <div className="service-card p-4 h-100">
+                <article className="service-card p-4 h-100">
                   <div className="d-flex align-items-start mb-3">
-                    <div className="rounded-circle p-3 me-3" style={{ background: '#667eea', color: 'white' }}>
+                    <div className="rounded-circle p-3 me-3" style={{ background: '#667eea', color: 'white' }} aria-hidden="true">
                       <FaBookOpen size={24} />
                     </div>
                     <div>
@@ -266,14 +280,16 @@ export default function Home() {
                       <p className="text-muted small mb-0">Common location for found academic items</p>
                     </div>
                   </div>
-                  <div className="fw-bold" style={{ color: '#667eea' }}>library@uni.edu</div>
-                </div>
+                  <div className="fw-bold" style={{ color: '#667eea' }}>
+                    <a href="mailto:library@uni.edu" className="text-decoration-none" style={{ color: '#667eea' }}>library@uni.edu</a>
+                  </div>
+                </article>
               </div>
 
               <div className="col-md-4 animate-slideUp" style={{ animationDelay: '0.2s' }}>
-                <div className="service-card p-4 h-100">
+                <article className="service-card p-4 h-100">
                   <div className="d-flex align-items-start mb-3">
-                    <div className="rounded-circle p-3 me-3" style={{ background: '#667eea', color: 'white' }}>
+                    <div className="rounded-circle p-3 me-3" style={{ background: '#667eea', color: 'white' }} aria-hidden="true">
                       <FaUsers size={24} />
                     </div>
                     <div>
@@ -281,8 +297,10 @@ export default function Home() {
                       <p className="text-muted small mb-0">Official documentation and ID assistance</p>
                     </div>
                   </div>
-                  <div className="fw-bold" style={{ color: '#667eea' }}>student@uni.edu</div>
-                </div>
+                  <div className="fw-bold" style={{ color: '#667eea' }}>
+                    <a href="mailto:student@uni.edu" className="text-decoration-none" style={{ color: '#667eea' }}>student@uni.edu</a>
+                  </div>
+                </article>
               </div>
             </div>
           </div>

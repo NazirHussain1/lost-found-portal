@@ -273,47 +273,52 @@ export default function ProfessionalLogin() {
               
               <div className="login-card p-4 p-md-5 fade-in" style={{ animationDelay: '0.1s' }}>
                
-                <form onSubmit={login}>
-                  <div className="mb-3">
-                    <label htmlFor="email" className="form-label fw-medium d-flex align-items-center" style={{ color: '#667eea' }}>
-                      <FaEnvelope className="me-2" size={14} />
-                      Email Address
-                    </label>
-                    <div className="input-group">
-                      <span className="input-group-text login-input-icon border-end-0">
-                        <FaEnvelope size={16} />
-                      </span>
-                      <input
-                        id="email"
-                        name="email"
-                        type="email"
-                        className={`input-custom border-start-0 ${errors.email ? "input-error" : ""}`}
-                        placeholder="name@example.com"
-                        value={email}
-                        onChange={(e) => handleInputChange('email', e.target.value)}
-                        onBlur={(e) => handleInputBlur('email', e.target.value)}
-                        onKeyPress={handleKeyPress}
-                        autoComplete="email"
-                        style={{
-                          borderColor: errors.email ? 'var(--color-error-500)' : 'var(--color-gray-300)'
-                        }}
-                        required
-                      />
-                    </div>
-                    {errors.email && (
-                      <div className="invalid-feedback d-block mt-2" style={{ color: '#ef4444' }}>
-                        {errors.email}
+                <form onSubmit={login} noValidate>
+                  <fieldset>
+                    <legend className="sr-only">Login credentials</legend>
+                    
+                    <div className="mb-3">
+                      <label htmlFor="email" className="form-label fw-medium d-flex align-items-center" style={{ color: '#667eea' }}>
+                        <FaEnvelope className="me-2" size={14} aria-hidden="true" />
+                        Email Address <span className="text-danger ms-1" aria-label="required">*</span>
+                      </label>
+                      <div className="input-group">
+                        <span className="input-group-text login-input-icon border-end-0" aria-hidden="true">
+                          <FaEnvelope size={16} />
+                        </span>
+                        <input
+                          id="email"
+                          name="email"
+                          type="email"
+                          className={`input-custom border-start-0 ${errors.email ? "input-error" : ""}`}
+                          placeholder="name@example.com"
+                          value={email}
+                          onChange={(e) => handleInputChange('email', e.target.value)}
+                          onBlur={(e) => handleInputBlur('email', e.target.value)}
+                          onKeyPress={handleKeyPress}
+                          autoComplete="email"
+                          aria-describedby={errors.email ? "email-error" : undefined}
+                          aria-invalid={errors.email ? "true" : "false"}
+                          style={{
+                            borderColor: errors.email ? 'var(--color-error-500)' : 'var(--color-gray-300)'
+                          }}
+                          required
+                        />
                       </div>
-                    )}
-                  </div>
+                      {errors.email && (
+                        <div id="email-error" className="invalid-feedback d-block mt-2" style={{ color: '#ef4444' }} role="alert">
+                          {errors.email}
+                        </div>
+                      )}
+                    </div>
                   
                   <div className="mb-3">
                     <label htmlFor="password" className="form-label fw-medium d-flex align-items-center" style={{ color: '#667eea' }}>
-                      <FaLock className="me-2" size={14} />
-                      Password
+                      <FaLock className="me-2" size={14} aria-hidden="true" />
+                      Password <span className="text-danger ms-1" aria-label="required">*</span>
                     </label>
                     <div className="input-group">
-                      <span className="input-group-text login-input-icon border-end-0">
+                      <span className="input-group-text login-input-icon border-end-0" aria-hidden="true">
                         <FaLock size={16} />
                       </span>
                       <input
@@ -327,6 +332,8 @@ export default function ProfessionalLogin() {
                         onBlur={(e) => handleInputBlur('password', e.target.value)}
                         onKeyPress={handleKeyPress}
                         autoComplete="current-password"
+                        aria-describedby={errors.password ? "password-error" : "password-toggle-help"}
+                        aria-invalid={errors.password ? "true" : "false"}
                         style={{
                           borderColor: errors.password ? 'var(--color-error-500)' : 'var(--color-gray-300)'
                         }}
@@ -336,12 +343,17 @@ export default function ProfessionalLogin() {
                         type="button"
                         className="input-group-text password-toggle-btn border-start-0"
                         onClick={() => setShowPassword(!showPassword)}
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                        aria-describedby="password-toggle-help"
                       >
-                        {showPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
+                        {showPassword ? <FaEyeSlash size={16} aria-hidden="true" /> : <FaEye size={16} aria-hidden="true" />}
                       </button>
                     </div>
+                    <div id="password-toggle-help" className="sr-only">
+                      Use the button to toggle password visibility
+                    </div>
                     {errors.password && (
-                      <div className="invalid-feedback d-block mt-2" style={{ color: '#ef4444' }}>
+                      <div id="password-error" className="invalid-feedback d-block mt-2" style={{ color: '#ef4444' }} role="alert">
                         {errors.password}
                       </div>
                     )}
@@ -366,26 +378,29 @@ export default function ProfessionalLogin() {
                     type="submit"
                     className="btn-primary-custom w-100 py-3 mb-2 fw-semibold"
                     disabled={isLoading}
+                    aria-describedby={isLoading ? "loading-status" : undefined}
                   >
                     {isLoading ? (
                       <>
                         <span className="spinner-custom me-2" role="status" aria-hidden="true"></span>
-                        Signing in...
+                        <span id="loading-status">Signing in...</span>
                       </>
                     ) : (
                       "Sign In"
                     )}
                   </button>
 
-                  <div className="text-center mt-3">
-                    <p className="mb-2" style={{ color: '#764ba2' }}>
-                      Don't have an account?{" "}
-                      <a href="/signup" className="fw-bold text-decoration-none" style={{ color: '#667eea' }}>
-                        Sign up
-                      </a>
-                    </p>
-                  </div>
+                  </fieldset>
                 </form>
+                
+                <div className="text-center mt-3">
+                  <p className="mb-2" style={{ color: '#764ba2' }}>
+                    Don't have an account?{" "}
+                    <a href="/signup" className="fw-bold text-decoration-none" style={{ color: '#667eea' }}>
+                      Sign up
+                    </a>
+                  </p>
+                </div>
               </div>
               
               <div className="text-center mt-3">
