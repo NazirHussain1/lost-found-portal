@@ -557,5 +557,4 @@ export default function FoundItemForm() {
         </div>
       </div>
     );
-  }
 }

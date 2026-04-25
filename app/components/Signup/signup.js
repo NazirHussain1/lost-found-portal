@@ -343,7 +343,7 @@ export default function ProfessionalRegister() {
                 <p className="text-white opacity-90">Join our community to report lost and found items</p>
               </div>
 
-              <div className="login-card p-2 p-md-5 animate-slideUp">>
+              <div className="login-card p-2 p-md-5 animate-slideUp">
                 <form onSubmit={register}>
                   <div className="mb-3">
                     <label htmlFor="name" className="form-label fw-medium d-flex align-items-center" style={{ color: '#667eea' }}>

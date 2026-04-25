@@ -491,6 +491,7 @@ export default function MyItemsPage() {
   }
 
   return (
+    <>
     <div className="container-fluid px-3 px-md-4 py-3 py-md-5 page-fade-in">
         <div className="bg-gradient-primary text-white rounded-4 p-3 p-md-5 mb-3 mb-md-5 shadow-lg card-hover-subtle">
           <div className="row align-items-center">
