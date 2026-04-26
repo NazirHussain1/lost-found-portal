@@ -69,10 +69,7 @@ Navigate to [http://localhost:3000](http://localhost:3000)
 
 ## 📚 Documentation
 
-- **Quick Start**: See [QUICK_START.md](QUICK_START.md)
-- **Detailed Setup**: See [SETUP_INSTRUCTIONS.md](SETUP_INSTRUCTIONS.md)
-- **Commands Reference**: See [COMMANDS.md](COMMANDS.md)
-- **Fixes Applied**: See [FIXES_APPLIED.md](FIXES_APPLIED.md)
+This README contains all the information needed to set up and deploy the project.
 
 ## 🗄️ Database Setup
 

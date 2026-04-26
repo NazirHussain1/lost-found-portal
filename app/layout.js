@@ -4,14 +4,41 @@ import "./globals.css";
 import Script from "next/script";
 
 export const metadata = {
-  title: "GAMICA Lost & Found Portal",
-  description: "University Lost & Found Portal - Report and find lost items on campus",
+  title: "GAMICA Lost & Found Portal - Campus Community Hub",
+  description: "University Lost & Found Portal - Report and find lost items on campus. Connect with fellow students to reunite lost belongings with their owners.",
+  keywords: "lost and found, university, campus, GAMICA, lost items, found items, student portal",
+  authors: [{ name: "Nazir Hussain" }],
+  creator: "Nazir Hussain",
+  publisher: "GAMICA University",
+  robots: "index, follow",
+  openGraph: {
+    title: "GAMICA Lost & Found Portal",
+    description: "University Lost & Found Portal - Report and find lost items on campus",
+    type: "website",
+    locale: "en_US",
+    siteName: "GAMICA Lost & Found Portal",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "GAMICA Lost & Found Portal",
+    description: "University Lost & Found Portal - Report and find lost items on campus",
+  },
+  viewport: "width=device-width, initial-scale=1",
+  themeColor: "#667eea",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#667eea" />
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+        
         <link
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
           rel="stylesheet"

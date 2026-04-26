@@ -31,7 +31,7 @@ export default function Navbar() {
       await fetch("/api/logout", { method: "POST" });
       setUser(null);
     } catch (error) {
-      console.error("Logout failed:", error);
+      setUser(null);
     }
   };
 

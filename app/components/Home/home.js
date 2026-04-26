@@ -25,7 +25,6 @@ export default function Home() {
           found: allItems.filter(item => item.type === 'found').length
         });
       } catch (error) {
-        console.error("Error fetching data:", error);
         setStats({ total: 0, lost: 0, found: 0 });
       } finally {
         setLoading(false);

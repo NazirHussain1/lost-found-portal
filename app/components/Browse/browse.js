@@ -220,67 +220,81 @@ export default function Browse() {
   return (
     <div className="container py-5 page-fade-in">
       {/* Header Section */}
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl p-6 mb-6 shadow-lg">
+      <div className="bg-primary text-white rounded-3 p-4 p-md-5 mb-4 shadow-lg" style={{ background: 'var(--gradient-primary)' }}>
         <div className="text-center">
-          <h1 className="text-4xl font-bold mb-3">GAMICA Lost & Found Hub</h1>
-          <p className="text-lg opacity-90 mb-4">
+          <h1 className="display-4 fw-bold mb-3">GAMICA Lost & Found Hub</h1>
+          <p className="lead mb-4" style={{ opacity: 0.9 }}>
             A dedicated platform for our campus community to report lost items and return found belongings.
             Every reunion starts here.
           </p>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-              <div className="text-3xl font-bold">{items?.length || 0}</div>
-              <div className="text-sm opacity-80">Total Items</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-              <div className="text-3xl font-bold">
-                {items?.filter(i => i.type === 'found').length || 0}
+          <div className="row g-3 mt-4">
+            <div className="col-12 col-md-4">
+              <div className="bg-white bg-opacity-10 rounded-3 p-4" style={{ backdropFilter: 'blur(10px)' }}>
+                <div className="display-6 fw-bold">{items?.length || 0}</div>
+                <div className="small" style={{ opacity: 0.8 }}>Total Items</div>
               </div>
-              <div className="text-sm opacity-80">Found Items</div>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-              <div className="text-3xl font-bold">
-                {items?.filter(i => i.type === 'lost').length || 0}
+            <div className="col-12 col-md-4">
+              <div className="bg-white bg-opacity-10 rounded-3 p-4" style={{ backdropFilter: 'blur(10px)' }}>
+                <div className="display-6 fw-bold">
+                  {items?.filter(i => i.type === 'found').length || 0}
+                </div>
+                <div className="small" style={{ opacity: 0.8 }}>Found Items</div>
               </div>
-              <div className="text-sm opacity-80">Lost Items</div>
+            </div>
+            <div className="col-12 col-md-4">
+              <div className="bg-white bg-opacity-10 rounded-3 p-4" style={{ backdropFilter: 'blur(10px)' }}>
+                <div className="display-6 fw-bold">
+                  {items?.filter(i => i.type === 'lost').length || 0}
+                </div>
+                <div className="small" style={{ opacity: 0.8 }}>Lost Items</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Filters Section */}
-      <div className="bg-white rounded-xl p-6 mb-6 shadow-sm border">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="bg-white rounded-3 p-4 p-md-5 mb-4 shadow-sm border">
+        <div className="row g-4">
           {/* Search */}
-          <div className="lg:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <FaSearch className="inline mr-2" />
+          <div className="col-12 col-lg-6">
+            <label className="form-label fw-medium text-dark">
+              <FaSearch className="me-2" />
               Search Items
             </label>
-            <div className="relative">
-              <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <div className="position-relative">
+              <FaSearch className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted" />
               <input
                 type="text"
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="form-control ps-5 py-3 border-2 rounded-3"
                 placeholder="Search items (e.g., iPhone, wallet, keys)..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                style={{ 
+                  borderColor: 'var(--color-gray-300)',
+                  fontSize: '1rem'
+                }}
               />
             </div>
           </div>
 
           {/* Type Filter */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <FaFilter className="inline mr-2" />
+          <div className="col-12 col-md-6 col-lg-3">
+            <label className="form-label fw-medium text-dark">
+              <FaFilter className="me-2" />
               Item Type
             </label>
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="form-select py-3 border-2 rounded-3"
+              style={{ 
+                borderColor: 'var(--color-gray-300)',
+                fontSize: '1rem'
+              }}
             >
               <option value="all">All Items</option>
               <option value="lost">Lost Items</option>
@@ -289,12 +303,16 @@ export default function Browse() {
           </div>
 
           {/* Category Filter */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+          <div className="col-12 col-md-6 col-lg-3">
+            <label className="form-label fw-medium text-dark">Category</label>
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="form-select py-3 border-2 rounded-3"
+              style={{ 
+                borderColor: 'var(--color-gray-300)',
+                fontSize: '1rem'
+              }}
             >
               <option value="all">All Categories</option>
               <option value="electronics">Electronics</option>
@@ -310,13 +328,17 @@ export default function Browse() {
         </div>
 
         {/* Sort and Clear Filters */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 pt-4 border-t">
-          <div className="mb-2 sm:mb-0">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
+        <div className="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mt-4 pt-4 border-top">
+          <div className="mb-2 mb-sm-0">
+            <label className="form-label fw-medium text-dark mb-1">Sort By</label>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="form-select border-2 rounded-3"
+              style={{ 
+                borderColor: 'var(--color-gray-300)',
+                minWidth: '150px'
+              }}
             >
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>
@@ -330,7 +352,7 @@ export default function Browse() {
                 setTypeFilter("all");
                 setCategoryFilter("all");
               }}
-              className="px-4 py-2 text-sm text-indigo-600 hover:text-indigo-800 font-medium"
+              className="btn btn-outline-primary btn-sm fw-medium"
             >
               Clear All Filters
             </button>
@@ -353,13 +375,13 @@ export default function Browse() {
 
         {/* Error State */}
         {status === "failed" && (
-          <div className="text-center py-12">
-            <div className="text-6xl mb-4">❌</div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Error Loading Items</h3>
-            <p className="text-gray-600 mb-4">{error || "Something went wrong while loading items."}</p>
+          <div className="text-center py-5">
+            <div className="display-1 mb-4">❌</div>
+            <h3 className="h4 fw-semibold text-dark mb-3">Error Loading Items</h3>
+            <p className="text-muted mb-4">{error || "Something went wrong while loading items."}</p>
             <button
               onClick={() => dispatch(fetchItems({ type: typeFilter, category: categoryFilter, page: currentPage, limit: 20 }))}
-              className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors btn-hover-lift"
+              className="btn-primary-custom btn-hover-lift"
             >
               Try Again
             </button>
@@ -368,10 +390,10 @@ export default function Browse() {
 
         {/* Empty State */}
         {status === "succeeded" && sortedItems.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">No items found</h3>
-            <p className="text-gray-600 mb-6">
+          <div className="text-center py-5">
+            <div className="display-1 mb-4">🔍</div>
+            <h3 className="h4 fw-semibold text-dark mb-3">No items found</h3>
+            <p className="text-muted mb-4">
               {searchQuery || typeFilter !== "all" || categoryFilter !== "all"
                 ? "Try adjusting your search criteria or clear the filters"
                 : "No items have been reported yet"}
@@ -379,13 +401,13 @@ export default function Browse() {
             <div className="d-flex flex-column flex-sm-row gap-3 justify-content-center">
               <button
                 onClick={() => router.push("/lost")}
-                className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors btn-hover-lift"
+                className="btn-primary-custom btn-hover-lift"
               >
                 Report Lost Item
               </button>
               <button
                 onClick={() => router.push("/found")}
-                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors btn-hover-lift"
+                className="btn-success-custom btn-hover-lift"
               >
                 Report Found Item
               </button>
@@ -456,36 +478,36 @@ export default function Browse() {
           )}
 
           {/* Item Details */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
+          <div className="row g-4">
+            <div className="col-12 col-md-6">
               <div className="mb-4">
-                <h6 className="text-sm font-semibold text-indigo-600 uppercase tracking-wide mb-1">
+                <h6 className="small fw-semibold text-primary text-uppercase tracking-wide mb-2">
                   Description
                 </h6>
-                <p className="text-gray-700">{selectedItem.description}</p>
+                <p className="text-dark">{selectedItem.description}</p>
               </div>
 
               <div className="mb-4">
-                <h6 className="text-sm font-semibold text-indigo-600 uppercase tracking-wide mb-1">
+                <h6 className="small fw-semibold text-primary text-uppercase tracking-wide mb-2">
                   Location
                 </h6>
-                <div className="flex items-center text-gray-700">
-                  <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
-                    <FaMapMarkerAlt className="text-indigo-600" size={14} />
+                <div className="d-flex align-items-center text-dark">
+                  <div className="d-flex align-items-center justify-content-center me-3 bg-primary bg-opacity-10 rounded-3" style={{ width: '32px', height: '32px' }}>
+                    <FaMapMarkerAlt className="text-primary" size={14} />
                   </div>
                   {selectedItem.location}
                 </div>
               </div>
             </div>
 
-            <div>
+            <div className="col-12 col-md-6">
               <div className="mb-4">
-                <h6 className="text-sm font-semibold text-indigo-600 uppercase tracking-wide mb-1">
+                <h6 className="small fw-semibold text-primary text-uppercase tracking-wide mb-2">
                   Date Reported
                 </h6>
-                <div className="flex items-center text-gray-700">
-                  <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
-                    <FaCalendarAlt className="text-indigo-600" size={14} />
+                <div className="d-flex align-items-center text-dark">
+                  <div className="d-flex align-items-center justify-content-center me-3 bg-primary bg-opacity-10 rounded-3" style={{ width: '32px', height: '32px' }}>
+                    <FaCalendarAlt className="text-primary" size={14} />
                   </div>
                   {new Date(selectedItem.date).toLocaleDateString('en-US', {
                     weekday: 'long',
@@ -497,56 +519,56 @@ export default function Browse() {
               </div>
 
               <div className="mb-4">
-                <h6 className="text-sm font-semibold text-indigo-600 uppercase tracking-wide mb-1">
+                <h6 className="small fw-semibold text-primary text-uppercase tracking-wide mb-2">
                   Category
                 </h6>
-                <div className="flex items-center text-gray-700">
-                  <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
-                    <FaTag className="text-indigo-600" size={14} />
+                <div className="d-flex align-items-center text-dark">
+                  <div className="d-flex align-items-center justify-content-center me-3 bg-primary bg-opacity-10 rounded-3" style={{ width: '32px', height: '32px' }}>
+                    <FaTag className="text-primary" size={14} />
                   </div>
-                  <span className="capitalize">{selectedItem.category}</span>
+                  <span className="text-capitalize">{selectedItem.category}</span>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Contact Information */}
-          <div className="mt-6 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-100">
-            <h6 className="flex items-center text-indigo-700 font-semibold mb-4">
-              <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
-                <FaUser className="text-indigo-600" size={14} />
+          <div className="mt-4 p-4 rounded-3 border" style={{ background: 'linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-secondary-50) 100%)', borderColor: 'var(--color-primary-200)' }}>
+            <h6 className="d-flex align-items-center text-primary fw-semibold mb-4">
+              <div className="d-flex align-items-center justify-content-center me-3 bg-primary bg-opacity-10 rounded-3" style={{ width: '32px', height: '32px' }}>
+                <FaUser className="text-primary" size={14} />
               </div>
               Contact Information
             </h6>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm font-medium text-indigo-600 mb-1">Reported By</p>
-                <p className="font-semibold text-purple-700">
+            <div className="row g-4">
+              <div className="col-12 col-md-6">
+                <p className="small fw-medium text-primary mb-1">Reported By</p>
+                <p className="fw-semibold text-dark mb-0">
                   {selectedItem.user?.name || "Anonymous"}
                 </p>
               </div>
               
               {selectedItem.user?.email && (
-                <div>
-                  <p className="text-sm font-medium text-indigo-600 mb-1">Email</p>
-                  <div className="flex items-center text-gray-700">
-                    <FaEnvelope className="text-indigo-500 mr-2" size={14} />
+                <div className="col-12 col-md-6">
+                  <p className="small fw-medium text-primary mb-1">Email</p>
+                  <div className="d-flex align-items-center text-dark">
+                    <FaEnvelope className="text-primary me-2" size={14} />
                     {selectedItem.user.email}
                   </div>
                 </div>
               )}
               
               {selectedItem.user?.phone && user && user.id !== selectedItem.user._id && (
-                <div className="md:col-span-2">
-                  <p className="text-sm font-medium text-indigo-600 mb-2">Phone</p>
-                  <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-indigo-200">
-                    <div className="flex items-center text-gray-700">
-                      <FaPhone className="text-indigo-500 mr-2" size={14} />
+                <div className="col-12">
+                  <p className="small fw-medium text-primary mb-2">Phone</p>
+                  <div className="d-flex align-items-center justify-content-between p-3 bg-white rounded-3 border" style={{ borderColor: 'var(--color-primary-200)' }}>
+                    <div className="d-flex align-items-center text-dark">
+                      <FaPhone className="text-primary me-2" size={14} />
                       {selectedItem.user.phone}
                     </div>
                     <button
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors d-flex align-items-center gap-2 btn-hover-lift"
+                      className="btn-success-custom btn-hover-lift d-flex align-items-center gap-2"
                       onClick={() => handleWhatsAppClick(selectedItem.user.phone)}
                     >
                       <FaWhatsapp size={16} />
@@ -557,10 +579,10 @@ export default function Browse() {
               )}
               
               {!selectedItem.user?.phone && user && user.id !== selectedItem.user._id && (
-                <div className="md:col-span-2">
-                  <div className="flex items-center p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                    <FaPhone className="text-blue-500 mr-3" size={16} />
-                    <span className="text-blue-700 text-sm">
+                <div className="col-12">
+                  <div className="d-flex align-items-center p-3 bg-info bg-opacity-10 border border-info border-opacity-25 rounded-3">
+                    <FaPhone className="text-info me-3" size={16} />
+                    <span className="text-info small">
                       Contact not available - Please use email to reach out
                     </span>
                   </div>

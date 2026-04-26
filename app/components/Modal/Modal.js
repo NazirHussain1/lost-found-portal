@@ -110,37 +110,38 @@ export default function Modal({
   };
 
   const getSizeClasses = () => {
-    const baseClasses = "w-full max-h-[90vh] overflow-hidden";
+    const baseClasses = "w-100 overflow-hidden";
     
     switch (size) {
       case "sm":
-        return `${baseClasses} max-w-md`;
+        return `${baseClasses} modal-sm`;
       case "md":
-        return `${baseClasses} max-w-lg`;
+        return `${baseClasses} modal-md`;
       case "lg":
-        return `${baseClasses} max-w-2xl`;
+        return `${baseClasses} modal-lg`;
       case "xl":
-        return `${baseClasses} max-w-4xl`;
+        return `${baseClasses} modal-xl`;
       case "full":
-        return "w-full h-full max-w-none max-h-none";
+        return "w-100 h-100";
       default:
-        return `${baseClasses} max-w-lg`;
+        return `${baseClasses} modal-md`;
     }
   };
 
   const getMobileClasses = () => {
     if (size === "full") {
-      return "w-full h-full rounded-none";
+      return "w-100 h-100 rounded-0";
     }
-    return "w-full h-full max-h-[100vh] rounded-t-xl sm:h-auto sm:max-h-[90vh] sm:rounded-xl";
+    return "w-100 h-100 rounded-top-3 rounded-sm-3";
   };
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:justify-center p-0 sm:p-4 modal-fade-in"
+      className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-end align-items-sm-center justify-content-center p-0 p-sm-4 modal-fade-in"
       style={{
         backgroundColor: "rgba(0, 0, 0, 0.5)",
-        backdropFilter: "blur(4px)"
+        backdropFilter: "blur(4px)",
+        zIndex: "var(--z-modal-backdrop)"
       }}
       onClick={handleBackdropClick}
       role="dialog"
@@ -150,11 +151,15 @@ export default function Modal({
       <div
         ref={modalRef}
         className={`
-          bg-white shadow-2xl overflow-hidden modal-scale-in
+          bg-white shadow-lg overflow-hidden modal-scale-in
           ${getMobileClasses()}
-          sm:${getSizeClasses()}
+          ${getSizeClasses()}
           ${className}
         `}
+        style={{ 
+          maxWidth: size === "sm" ? "400px" : size === "md" ? "500px" : size === "lg" ? "800px" : size === "xl" ? "1200px" : "500px",
+          maxHeight: "90vh"
+        }}
         onClick={(e) => e.stopPropagation()}
         tabIndex={-1}
         aria-labelledby={title ? "modal-title" : undefined}
@@ -165,15 +170,16 @@ export default function Modal({
         {(title || showCloseButton) && (
           <header
             className={`
-              flex items-center justify-between p-4 sm:p-6
-              bg-gradient-to-r from-indigo-600 to-purple-600 text-white
+              d-flex align-items-center justify-content-between p-4 p-sm-4
+              text-white
               ${headerClassName}
             `}
+            style={{ background: 'var(--gradient-primary)' }}
           >
             {title && (
               <h1 
                 id="modal-title"
-                className="text-lg sm:text-xl font-bold truncate pr-4"
+                className="h5 h-sm-4 fw-bold text-truncate pe-4 mb-0"
               >
                 {title}
               </h1>
@@ -183,10 +189,10 @@ export default function Modal({
                 onClick={onClose}
                 type="button"
                 className="
-                  flex items-center justify-center w-8 h-8 rounded-full
-                  bg-white/20 hover:bg-white/30 btn-hover-subtle
-                  focus:outline-none focus:ring-2 focus:ring-white/50
+                  d-flex align-items-center justify-content-center rounded-circle border-0 btn-hover-subtle
+                  bg-white bg-opacity-20
                 "
+                style={{ width: '32px', height: '32px' }}
                 aria-label="Close modal"
               >
                 <FaTimes size={16} aria-hidden="true" />
@@ -199,7 +205,7 @@ export default function Modal({
         <main
           id="modal-content"
           className={`
-            flex-1 overflow-y-auto p-4 sm:p-6
+            flex-fill overflow-auto p-4 p-sm-4
             ${bodyClassName}
           `}
         >
@@ -210,8 +216,8 @@ export default function Modal({
         {footer && (
           <footer
             className={`
-              flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 p-4 sm:p-6
-              border-t border-gray-200 bg-gray-50
+              d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center justify-content-end gap-3 p-4 p-sm-4
+              border-top bg-light
               ${footerClassName}
             `}
           >
