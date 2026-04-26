@@ -3,7 +3,7 @@ import Item from "@/app/models/items";
 import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
 
-/* ================= PATCH (RESOLVE) ================= */
+// PATCH (RESOLVE)
 export async function PATCH(req, context) {
   await connectDB();
 
@@ -39,7 +39,7 @@ export async function PATCH(req, context) {
   return NextResponse.json(item);
 }
 
-/* ================= DELETE ================= */
+// DELETE
 export async function DELETE(req, context) {
   await connectDB();
 

@@ -3,9 +3,7 @@
  * Standardized component classes using design system variables
  */
 
-/* ============================================
-   BUTTONS
-   ============================================ */
+/* Buttons */
 
 .btn-primary-custom {
   background: var(--gradient-primary);
@@ -165,9 +163,7 @@
   text-decoration: none;
 }
 
-/* ============================================
-   CARDS
-   ============================================ */
+/* Cards */
 
 .card-custom {
   background: white;
@@ -226,9 +222,7 @@
   box-shadow: var(--shadow-primary-lg);
 }
 
-/* ============================================
-   INPUTS
-   ============================================ */
+/* Inputs */
 
 .input-custom {
   width: 100%;
@@ -346,9 +340,7 @@
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-/* ============================================
-   BADGES
-   ============================================ */
+/* Badges */
 
 .badge-custom {
   display: inline-flex;
@@ -408,9 +400,7 @@
   font-size: var(--font-size-sm);
 }
 
-/* ============================================
-   MODALS
-   ============================================ */
+/* Modals */
 
 .modal-backdrop-custom {
   position: fixed;
@@ -483,9 +473,7 @@
   gap: var(--spacing-3);
 }
 
-/* ============================================
-   ALERTS
-   ============================================ */
+/* Alerts */
 
 .alert-custom {
   padding: var(--spacing-4);
@@ -522,9 +510,7 @@
   color: var(--color-info-800);
 }
 
-/* ============================================
-   LOADING STATES
-   ============================================ */
+/* Loading States */
 
 .spinner-custom {
   width: 20px;
@@ -576,9 +562,7 @@
   border-radius: var(--radius-circle);
 }
 
-/* ============================================
-   RESPONSIVE UTILITIES
-   ============================================ */
+/* Responsive Utilities */
 
 @media (max-width: 767px) {
   .modal-content-custom {
@@ -608,9 +592,7 @@
   }
 }
 
-/* ============================================
-   ACCESSIBILITY
-   ============================================ */
+/* Accessibility */
 
 @media (prefers-reduced-motion: reduce) {
   .card-custom,
