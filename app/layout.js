@@ -23,7 +23,11 @@ export const metadata = {
     title: "GAMICA Lost & Found Portal",
     description: "University Lost & Found Portal - Report and find lost items on campus",
   },
-  viewport: "width=device-width, initial-scale=1",
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
   themeColor: "#667eea",
 };
 

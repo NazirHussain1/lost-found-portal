@@ -5,6 +5,12 @@
 @import "./styles/design-system.css";
 @import "./styles/components.css";
 
+/* Prevent horizontal scroll */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
 /* Category Button Styles */
 .category-btn {
   transition: all 0.3s ease;
@@ -26,10 +32,19 @@
   border-radius: 0.5rem;
 }
 
-/* Legacy Variables (kept for backward compatibility) */
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Smooth transitions for all interactive elements */
+button, a, input, select, textarea {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Focus states for accessibility */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
 }
 
 body {

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import {
   FaSearch,
   FaPlusCircle,
@@ -59,11 +60,13 @@ export default function Navbar() {
         <div className="container-fluid">
           {/* Logo */}
           <Link href="/" className="navbar-brand d-flex align-items-center">
-            <img
+            <Image
               src="/images/lost and found logo.png"
               alt="Lost & Found Portal"
-              height="32"
+              width={32}
+              height={32}
               className="me-2"
+              priority
             />
             <span className="text-white fw-bold d-none d-sm-inline">GAMICA Portal</span>
           </Link>

@@ -313,7 +313,6 @@ export default function MyItemsPage() {
         prevItems.filter((item) => item._id !== confirmDelete._id)
       );
     } catch (err) {
-      console.error(err);
       toast.error(err.message || "Failed to delete item.", {
         style: { background: "#ef4444", color: "white" },
       });
@@ -377,7 +376,6 @@ export default function MyItemsPage() {
         style: { background: "#667eea", color: "white" },
       });
     } catch (err) {
-      console.error(err);
       toast.error(err.message || "Failed to mark as resolved.", {
         style: { background: "#ef4444", color: "white" },
       });
@@ -419,7 +417,6 @@ export default function MyItemsPage() {
           style: { background: "#667eea", color: "white" },
         });
       } catch (err) {
-        console.error(err);
         toast.dismiss(uploadToastId);
         toast.error("Image upload failed", {
           style: { background: "#ef4444", color: "white" },
@@ -462,7 +459,6 @@ export default function MyItemsPage() {
 
       closeEditModal();
     } catch (err) {
-      console.error(err);
       toast.error(err.message || "Failed to update item.", {
         style: { background: "#ef4444", color: "white" },
       });

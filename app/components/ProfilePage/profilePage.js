@@ -179,7 +179,6 @@ export default function ProfilePage() {
       }
 
     } catch (error) {
-      console.error("Error fetching profile:", error);
       toast.error("Failed to load profile");
     } finally {
       setLoading(false);
@@ -219,7 +218,6 @@ export default function ProfilePage() {
       });
 
     } catch (error) {
-      console.error("Error updating profile:", error);
       toast.error(error.message || "Failed to update profile");
     } finally {
       setLoading(false);
@@ -263,7 +261,6 @@ export default function ProfilePage() {
         });
 
       } catch (err) {
-        console.error(err);
         toast.error("Failed to upload image");
       } finally {
         setUploadingImage(false);
@@ -311,7 +308,6 @@ export default function ProfilePage() {
       }, 1000);
       
     } catch (err) {
-      console.error("Logout error:", err);
       toast.error("Logout failed");
     }
   }

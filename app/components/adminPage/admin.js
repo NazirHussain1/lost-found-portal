@@ -67,7 +67,6 @@ export default function AdminDashboard() {
         dispatch(fetchAdminItems());
         
       } catch (err) {
-        console.error("Auth check failed:", err);
         toast.error("Authentication failed");
         window.location.href = "/loginPage";
       } finally {
