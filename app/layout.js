@@ -1,10 +1,11 @@
 import ClientProvider from "./components/ClientProvider";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
+import Script from "next/script";
 
 export const metadata = {
-  title: "Portal",
-  description: "University Lost & Found",
+  title: "GAMICA Lost & Found Portal",
+  description: "University Lost & Found Portal - Report and find lost items on campus",
 };
 
 export default function RootLayout({ children }) {
@@ -25,6 +26,11 @@ export default function RootLayout({ children }) {
           {children}
         </ClientProvider>
         <Toaster position="top-right" />
+        
+        <Script 
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
