@@ -2,17 +2,6 @@ import { uploadOptimizedImage, getUploadPreset } from "@/app/lib/cloudinary";
 import { withRateLimit, uploadRateLimit } from "@/app/lib/rateLimiter";
 import { createErrorResponse, createSuccessResponse } from "@/app/lib/validations/helper";
 
-/**
- * Upload image to Cloudinary with optimizations
- * POST /api/upload
- * 
- * Features:
- * - Max size: 5MB
- * - Auto format: WebP
- * - Multiple sizes: thumbnail (200x200), medium (800x600), full (1920x1080)
- * - Progressive loading
- * - Automatic quality optimization
- */
 async function uploadHandler(req) {
   try {
     const data = await req.json();
@@ -55,10 +44,6 @@ async function uploadHandler(req) {
   }
 }
 
-/**
- * Get upload configuration
- * GET /api/upload
- */
 async function getConfigHandler(req) {
   try {
     const config = getUploadPreset();

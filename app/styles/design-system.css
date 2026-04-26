@@ -1,8 +1,3 @@
-/**
- * Design System - Lost & Found Portal
- * Global CSS Variables for consistent styling
- */
-
 :root {
   /* Primary Colors */
   --color-primary-50: #f5f7ff;
@@ -282,9 +277,6 @@
   --backdrop-blur-2xl: blur(24px);
 }
 
-/* Accessibility Utilities */
-
-/* Screen Reader Only */
 .sr-only {
   position: absolute !important;
   width: 1px !important;
@@ -366,8 +358,6 @@
     transform: none !important;
   }
 }
-
-/* Utility Classes */
 
 /* Text Colors */
 .text-primary { color: var(--color-primary-500) !important; }
@@ -604,7 +594,6 @@ html {
   }
 }
 
-/* Animation Classes */
 .animate-fadeIn {
   animation: fadeIn var(--duration-300) var(--ease-out);
 }
