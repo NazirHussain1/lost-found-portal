@@ -45,17 +45,26 @@ export async function PUT(req) {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const body = await req.json();
 
+    // Validate that user exists
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    // Only update allowed fields
+    const allowedUpdates = ['name', 'bio', 'location', 'avatar'];
+    const updates = {};
+    
+    allowedUpdates.forEach(field => {
+      if (body[field] !== undefined) {
+        updates[field] = body[field];
+      }
+    });
+
     const updatedUser = await User.findByIdAndUpdate(
       decoded.id,
-      {
-        name: body.name,
-        email: body.email,
-        phone: body.phone,
-        bio: body.bio,
-        location: body.location,
-        avatar: body.avatar,
-      },
-      { new: true }
+      updates,
+      { new: true, runValidators: true }
     ).select("-password -__v");
 
     return NextResponse.json({
@@ -68,6 +77,6 @@ export async function PUT(req) {
       joinDate: updatedUser.createdAt,
     });
   } catch (err) {
-    return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+    return NextResponse.json({ error: "Invalid token or update failed" }, { status: 401 });
   }
 }

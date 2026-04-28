@@ -51,7 +51,7 @@ cp .env.example .env.local
 Edit `.env.local` with your credentials:
 ```env
 MONGODB_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
+JWT_SECRET=your_jwt_secret_key_min_32_chars
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
@@ -70,32 +70,54 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Deployment
 
-### Build for production
-```bash
-npm run build
-npm start
-```
+### Recommended: Vercel
 
-### Deploy to Vercel
-```bash
-npm install -g vercel
-vercel
-```
+1. Push your code to GitHub
+2. Import project on [Vercel](https://vercel.com)
+3. Add environment variables
+4. Deploy
+
+### Alternative: Railway
+
+1. Push code to GitHub
+2. Create new project on [Railway](https://railway.app)
+3. Connect GitHub repository
+4. Add environment variables
+5. Deploy
+
+### Alternative: Render
+
+1. Push code to GitHub
+2. Create new Web Service on [Render](https://render.com)
+3. Connect repository
+4. Add environment variables
+5. Deploy
+
+## Environment Variables
+
+Required for production:
+- `MONGODB_URI` - MongoDB connection string (use MongoDB Atlas)
+- `JWT_SECRET` - Random 32+ character string
+- `CLOUDINARY_CLOUD_NAME` - From Cloudinary dashboard
+- `CLOUDINARY_API_KEY` - From Cloudinary dashboard
+- `CLOUDINARY_API_SECRET` - From Cloudinary dashboard
+- `EMAIL_SERVICE` - Email service provider
+- `EMAIL_USER` - Email address
+- `EMAIL_PASSWORD` - Email app password
+- `NEXT_PUBLIC_APP_URL` - Your production URL
 
 ## Admin Access
 
-To create an admin user, update the user role in MongoDB:
+Create admin user via MongoDB:
 
 ```bash
-mongosh
+mongosh "your_mongodb_uri"
 use lost-and-found-portal
 db.users.updateOne(
-  { email: "your-email@example.com" },
+  { email: "admin@example.com" },
   { $set: { role: "admin" } }
 )
 ```
-
-Access admin dashboard at `/admin`
 
 ## Scripts
 
