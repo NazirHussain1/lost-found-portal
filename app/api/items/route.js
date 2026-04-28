@@ -44,7 +44,7 @@ async function getHandler(req) {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         filter.user = decoded.id;
       } catch (err) {
-        console.error("Invalid token in MyItems request");
+        // Invalid token
       }
     }
 
@@ -81,7 +81,6 @@ async function getHandler(req) {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("Get items error:", error);
     return createErrorResponse([
       { field: 'server', message: 'Internal server error' }
     ], 500);
@@ -143,7 +142,6 @@ async function postHandler(req) {
       201
     );
   } catch (error) {
-    console.error("Error creating item:", error);
     return createErrorResponse([
       { field: 'server', message: 'Internal server error' }
     ], 500);

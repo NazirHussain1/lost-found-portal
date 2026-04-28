@@ -63,7 +63,6 @@ async function deleteHandler(req, context) {
       'Item deleted successfully'
     );
   } catch (error) {
-    console.error('Delete item error:', error);
     return createErrorResponse([
       { field: 'server', message: 'Internal server error' }
     ], 500);
@@ -148,7 +147,6 @@ async function putHandler(req, context) {
       'Item updated successfully'
     );
   } catch (error) {
-    console.error('Update item error:', error);
     return createErrorResponse([
       { field: 'server', message: 'Internal server error' }
     ], 500);

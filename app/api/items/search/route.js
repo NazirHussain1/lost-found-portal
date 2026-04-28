@@ -196,7 +196,6 @@ async function searchHandler(req) {
     }, 'Search completed successfully');
 
   } catch (error) {
-    console.error('Search error:', error);
     return createErrorResponse([
       { field: 'server', message: 'Search failed. Please try again.' }
     ], 500);
