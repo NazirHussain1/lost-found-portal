@@ -78,7 +78,6 @@ async function getHandler(req) {
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error("Admin get items error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

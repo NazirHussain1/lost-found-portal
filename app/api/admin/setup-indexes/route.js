@@ -52,7 +52,6 @@ async function setupIndexesHandler(req) {
       'Indexes setup successfully'
     );
   } catch (error) {
-    console.error('Setup indexes error:', error);
     return createErrorResponse([
       { field: 'server', message: 'Internal server error' }
     ], 500);

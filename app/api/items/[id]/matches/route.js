@@ -151,7 +151,6 @@ async function getMatchesHandler(req, context) {
     }, `Found ${formattedMatches.length} potential matches`);
 
   } catch (error) {
-    console.error('Find matches error:', error);
     return createErrorResponse([
       { field: 'server', message: 'Failed to find matches' }
     ], 500);
