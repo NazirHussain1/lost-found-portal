@@ -1,11 +1,6 @@
 import nodemailer from 'nodemailer';
 
-/**
- * Create email transporter
- * Configure with your email service credentials
- */
 function createTransporter() {
-  // For Gmail
   if (process.env.EMAIL_SERVICE === 'gmail') {
     return nodemailer.createTransport({
       service: 'gmail',
@@ -20,7 +15,7 @@ function createTransporter() {
   return nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: parseInt(process.env.EMAIL_PORT || '587'),
-    secure: process.env.EMAIL_SECURE === 'true', // true for 465, false for other ports
+    secure: process.env.EMAIL_SECURE === 'true',
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASSWORD,
@@ -28,13 +23,6 @@ function createTransporter() {
   });
 }
 
-/**
- * Send verification email
- * @param {string} email - Recipient email address
- * @param {string} name - Recipient name
- * @param {string} token - Verification token
- * @returns {Promise<Object>} - Email send result
- */
 export async function sendVerificationEmail(email, name, token) {
   try {
     const transporter = createTransporter();
@@ -214,10 +202,8 @@ export async function sendVerificationEmail(email, name, token) {
       html: htmlContent,
     });
 
-    console.log('Verification email sent:', info.messageId);
     return { success: true, messageId: info.messageId };
   } catch (error) {
-    console.error('Error sending verification email:', error);
     throw new Error('Failed to send verification email');
   }
 }
@@ -327,11 +313,8 @@ export async function sendWelcomeEmail(email, name) {
       html: htmlContent,
     });
 
-    console.log('Welcome email sent:', info.messageId);
     return { success: true, messageId: info.messageId };
   } catch (error) {
-    console.error('Error sending welcome email:', error);
-    // Don't throw error for welcome email - it's not critical
     return { success: false, error: error.message };
   }
 }
@@ -390,7 +373,6 @@ export async function sendPasswordResetEmail(email, name, token) {
 
     return { success: true, messageId: info.messageId };
   } catch (error) {
-    console.error('Error sending password reset email:', error);
     throw new Error('Failed to send password reset email');
   }
 }
@@ -403,10 +385,8 @@ export async function testEmailConfig() {
   try {
     const transporter = createTransporter();
     await transporter.verify();
-    console.log('Email configuration is valid');
     return true;
   } catch (error) {
-    console.error('Email configuration error:', error);
     return false;
   }
 }

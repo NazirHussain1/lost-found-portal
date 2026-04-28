@@ -63,7 +63,6 @@ async function resendVerificationHandler(req) {
       'Verification email sent successfully. Please check your inbox.'
     );
   } catch (error) {
-    console.error('Resend verification error:', error);
     return createErrorResponse([
       { field: 'server', message: 'Failed to send verification email' }
     ], 500);

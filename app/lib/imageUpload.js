@@ -180,7 +180,6 @@ export async function uploadImage(file, options = {}) {
     };
 
   } catch (error) {
-    console.error('Upload error:', error);
     throw error;
   }
 }
@@ -200,7 +199,6 @@ export async function getUploadConfig() {
 
     return data.data;
   } catch (error) {
-    console.error('Get config error:', error);
     throw error;
   }
 }

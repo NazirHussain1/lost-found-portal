@@ -29,12 +29,8 @@ async function loginHandler(req) {
       ], 401);
     }
 
-    // Check if email is verified
-    if (!user.isVerified) {
-      return createErrorResponse([
-        { field: 'email', message: 'Please verify your email before logging in. Check your inbox for the verification link.' }
-      ], 403);
-    }
+    // Check if email is verified (warning only, allow login)
+    const isVerified = user.isVerified;
 
     // Verify password
     const isMatch = await bcrypt.compare(password, user.password);
@@ -53,12 +49,13 @@ async function loginHandler(req) {
 
     const res = NextResponse.json({
       success: true,
-      message: "Logged in successfully",
+      message: isVerified ? "Logged in successfully" : "Logged in successfully. Please verify your email.",
       data: {
         userId: user._id,
         email: user.email,
         name: user.name,
-        role: user.role
+        role: user.role,
+        isVerified: isVerified
       }
     });
 
@@ -71,7 +68,6 @@ async function loginHandler(req) {
 
     return res;
   } catch (error) {
-    console.error('Login error:', error);
     return createErrorResponse([
       { field: 'server', message: 'Internal server error' }
     ], 500);

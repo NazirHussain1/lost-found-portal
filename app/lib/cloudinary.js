@@ -158,7 +158,6 @@ export async function uploadOptimizedImage(imageData, options = {}) {
       },
     };
   } catch (error) {
-    console.error('Cloudinary upload error:', error);
     throw error;
   }
 }
@@ -176,7 +175,6 @@ export async function deleteImage(publicId) {
       result,
     };
   } catch (error) {
-    console.error('Cloudinary delete error:', error);
     throw error;
   }
 }

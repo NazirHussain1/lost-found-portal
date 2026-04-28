@@ -59,16 +59,11 @@ async function signupHandler(req) {
       verificationTokenExpiry: new Date(Date.now() + 60 * 60 * 1000), // 1 hour from now
     });
 
-    // Send verification email
+    // Send verification email (non-blocking)
     try {
       await sendVerificationEmail(email, name, verificationToken);
     } catch (emailError) {
-      console.error('Failed to send verification email:', emailError);
-      // Delete user if email fails to send
-      await User.findByIdAndDelete(user._id);
-      return createErrorResponse([
-        { field: 'email', message: 'Failed to send verification email. Please try again.' }
-      ], 500);
+      // Email service unavailable, continue with signup
     }
 
     return createSuccessResponse(
@@ -77,13 +72,12 @@ async function signupHandler(req) {
         email: user.email,
         name: user.name,
         isVerified: false,
-        message: 'Please check your email to verify your account'
+        message: 'Account created successfully. Please check your email to verify your account.'
       },
-      'User registered successfully. Please verify your email to login.',
+      'User registered successfully',
       201
     );
   } catch (error) {
-    console.error('Signup error:', error);
     return createErrorResponse([
       { field: 'server', message: 'Internal server error' }
     ], 500);

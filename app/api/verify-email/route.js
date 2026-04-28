@@ -71,8 +71,8 @@ async function verifyEmailHandler(req) {
     await user.save();
 
     // Send welcome email (non-blocking)
-    sendWelcomeEmail(user.email, user.name).catch(err => {
-      console.error('Failed to send welcome email:', err);
+    sendWelcomeEmail(user.email, user.name).catch(() => {
+      // Email service unavailable
     });
 
     return createSuccessResponse(
@@ -84,7 +84,6 @@ async function verifyEmailHandler(req) {
       'Email verified successfully! You can now login.'
     );
   } catch (error) {
-    console.error('Email verification error:', error);
     return createErrorResponse([
       { field: 'server', message: 'Internal server error' }
     ], 500);

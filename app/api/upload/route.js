@@ -23,7 +23,6 @@ async function uploadHandler(req) {
     }, 'Image uploaded successfully');
 
   } catch (error) {
-    console.error('Upload error:', error);
     
     // Handle specific error messages
     if (error.message.includes('exceeds maximum')) {
@@ -56,7 +55,6 @@ async function getConfigHandler(req) {
     }, 'Upload configuration retrieved');
 
   } catch (error) {
-    console.error('Get config error:', error);
     return createErrorResponse([
       { field: 'server', message: 'Failed to get upload configuration' }
     ], 500);
