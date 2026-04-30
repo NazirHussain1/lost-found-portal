@@ -41,23 +41,26 @@ async function signupHandler(req) {
     // Hash password
     const hashed = await bcrypt.hash(password, 10);
 
-    // Generate verification token (expires in 1 hour)
-    const verificationToken = jwt.sign(
-      { email, timestamp: Date.now() },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-
-    // Create user with verification fields
+    // Create user first (without token)
     const user = await User.create({
       name,
       email,
       phone,
       password: hashed,
       isVerified: false,
-      verificationToken,
-      verificationTokenExpiry: new Date(Date.now() + 60 * 60 * 1000), // 1 hour from now
     });
+
+    // Generate verification token with userId (expires in 1 hour)
+    const verificationToken = jwt.sign(
+      { userId: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    // Update user with verification token
+    user.verificationToken = verificationToken;
+    user.verificationTokenExpiry = new Date(Date.now() + 60 * 60 * 1000);
+    await user.save();
 
     // Send verification email (non-blocking)
     try {
