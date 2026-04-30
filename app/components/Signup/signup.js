@@ -151,29 +151,37 @@ export default function ProfessionalRegister() {
           phone,
           password,
         }),
-
       });
 
       const data = await res.json();
 
-      if (res.ok) {
+      if (data.success) {
         toast.update(toastId, {
-          render: "Registration successful! Redirecting...",
+          render: data.message || "Registration successful! Redirecting to login...",
           type: "success",
           isLoading: false,
-          autoClose: 1500,
+          autoClose: 2000,
         });
 
         setTimeout(() => {
           router.push("/loginPage");
-        }, 1500);
+        }, 2000);
       } else {
+        const errorMessage = data.errors?.[0]?.message || data.message || "Registration failed. Please try again.";
         toast.update(toastId, {
-          render: data.error || data.message || "Registration failed. Please try again.",
+          render: errorMessage,
           type: "error",
           isLoading: false,
           autoClose: 3000,
         });
+
+        if (data.errors) {
+          const newErrors = {};
+          data.errors.forEach(err => {
+            newErrors[err.field] = err.message;
+          });
+          setErrors(newErrors);
+        }
       }
     } catch (error) {
       toast.update(toastId, {
