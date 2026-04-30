@@ -90,15 +90,26 @@ export default function ProfessionalLogin() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ email, password, rememberMe }),
-     
-
     });
 
-    if (res.ok) {
-      router.push("/browse");
+    const data = await res.json();
+
+    if (data.success) {
+      toast.success(data.message || "Login successful!");
+      setTimeout(() => {
+        router.push("/");
+      }, 1000);
     } else {
-      const data = await res.json();
-      toast.error(data.message || "Login Failed. Please check your credentials.");
+      const errorMessage = data.errors?.[0]?.message || data.message || "Login failed. Please check your credentials.";
+      toast.error(errorMessage);
+      
+      if (data.errors) {
+        const newErrors = {};
+        data.errors.forEach(err => {
+          newErrors[err.field] = err.message;
+        });
+        setErrors(newErrors);
+      }
     }
   } catch (error) {
     toast.error("Network error. Please try again.");
@@ -389,6 +400,12 @@ export default function ProfessionalLogin() {
                       "Sign In"
                     )}
                   </button>
+
+                  <div className="text-center mb-3">
+                    <a href="/forgot-password" className="text-decoration-none" style={{ color: '#667eea', fontSize: '0.9rem' }}>
+                      Forgot Password?
+                    </a>
+                  </div>
 
                   </fieldset>
                 </form>
