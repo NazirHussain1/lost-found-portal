@@ -13,7 +13,8 @@ import {
   FaUserPlus,
   FaSignOutAlt,
   FaHome,
-  FaBars
+  FaBars,
+  FaUserShield
 } from 'react-icons/fa';
 
 export default function Navbar() {
@@ -153,6 +154,17 @@ export default function Navbar() {
                         My Items
                       </Link>
                     </li>
+                    {user.role === 'admin' && (
+                      <>
+                        <li><hr className="dropdown-divider" /></li>
+                        <li>
+                          <Link href="/admin" className="dropdown-item text-primary">
+                            <FaUserShield className="me-2" />
+                            Admin Panel
+                          </Link>
+                        </li>
+                      </>
+                    )}
                     <li><hr className="dropdown-divider" /></li>
                     <li>
                       <button onClick={handleLogout} className="dropdown-item text-danger">
