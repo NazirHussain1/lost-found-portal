@@ -18,9 +18,22 @@ export async function connectDB() {
   }
 
   if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGODB_URI).then((mongoose) => mongoose);
+    const opts = {
+      bufferCommands: false,
+      maxPoolSize: 10,
+      minPoolSize: 2,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    };
+    
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => mongoose);
   }
 
-  cached.conn = await cached.promise;
-  return cached.conn;
+  try {
+    cached.conn = await cached.promise;
+    return cached.conn;
+  } catch (e) {
+    cached.promise = null;
+    throw e;
+  }
 }

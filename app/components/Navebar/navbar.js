@@ -32,8 +32,10 @@ export default function Navbar() {
     try {
       await fetch("/api/logout", { method: "POST" });
       setUser(null);
+      window.location.href = "/";
     } catch (error) {
       setUser(null);
+      window.location.href = "/";
     }
   };
 
@@ -54,6 +56,16 @@ export default function Navbar() {
     };
     fetchUser();
   }, []);
+
+  // Initialize Bootstrap dropdowns
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.bootstrap) {
+      const dropdownElementList = document.querySelectorAll('.dropdown-toggle');
+      dropdownElementList.forEach((dropdownToggleEl) => {
+        new window.bootstrap.Dropdown(dropdownToggleEl);
+      });
+    }
+  }, [user]);
 
   return (
     <>
@@ -194,12 +206,6 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
-
-      {/* Add Bootstrap JS for dropdowns */}
-      <script 
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        async
-      />
 
       {/* Spacer */}
       <div style={{ height: '76px' }} />
