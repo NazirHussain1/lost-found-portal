@@ -1,4 +1,4 @@
-import { ZodError } from 'zod';
+import { z } from 'zod';
 
 /**
  * Validates data against a Zod schema
@@ -14,19 +14,44 @@ export function validateData(schema, data) {
       data: validatedData,
     };
   } catch (error) {
-    if (error instanceof ZodError) {
-      const errors = error.errors.map((err) => ({
-        field: err.path.join('.'),
-        message: err.message,
-      }));
+    console.error('Validation error:', error);
+    
+    // Check if it's a Zod error (works for both v3 and v4)
+    if (error && error.name === 'ZodError' && error.issues) {
+      // Zod v4 uses 'issues' instead of 'errors'
+      const errors = Array.isArray(error.issues) 
+        ? error.issues.map((err) => ({
+            field: Array.isArray(err.path) ? err.path.join('.') : 'unknown',
+            message: err.message || 'Validation error',
+          }))
+        : [{ field: 'unknown', message: 'Validation failed' }];
+      
       return {
         success: false,
         errors,
       };
     }
+    
+    // Fallback for Zod v3 (uses 'errors' property)
+    if (error && error.errors && Array.isArray(error.errors)) {
+      const errors = error.errors.map((err) => ({
+        field: Array.isArray(err.path) ? err.path.join('.') : 'unknown',
+        message: err.message || 'Validation error',
+      }));
+      
+      return {
+        success: false,
+        errors,
+      };
+    }
+    
+    // Handle non-Zod errors
     return {
       success: false,
-      errors: [{ field: 'unknown', message: 'Validation failed' }],
+      errors: [{ 
+        field: 'unknown', 
+        message: error.message || 'Validation failed' 
+      }],
     };
   }
 }

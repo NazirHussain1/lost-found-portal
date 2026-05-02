@@ -12,7 +12,16 @@ async function signupHandler(req) {
   try {
     await connectDB();
 
-    const body = await req.json();
+    // Parse request body with error handling
+    let body;
+    try {
+      body = await req.json();
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError);
+      return createErrorResponse([
+        { field: 'body', message: 'Invalid JSON in request body' }
+      ], 400);
+    }
 
     // Validate input data
     const validation = validateData(signupSchema, body);
@@ -66,6 +75,7 @@ async function signupHandler(req) {
     try {
       await sendVerificationEmail(email, name, verificationToken);
     } catch (emailError) {
+      console.error('Email sending failed:', emailError.message);
       // Email service unavailable, continue with signup
     }
 
@@ -81,6 +91,7 @@ async function signupHandler(req) {
       201
     );
   } catch (error) {
+    console.error('Signup error:', error);
     return createErrorResponse([
       { field: 'server', message: 'Internal server error' }
     ], 500);

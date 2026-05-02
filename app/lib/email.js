@@ -13,6 +13,14 @@ function getTransporter() {
     return transporter;
   }
 
+  // Check if email credentials are configured
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD || 
+      process.env.EMAIL_USER === 'your-email@gmail.com' ||
+      process.env.EMAIL_USER === 'your-actual-email@gmail.com') {
+    console.warn('⚠️  Email credentials not configured. Email functionality will be disabled.');
+    return null;
+  }
+
   if (process.env.EMAIL_SERVICE === 'gmail') {
     transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
@@ -71,6 +79,16 @@ async function sendEmail({ to, subject, html, text }) {
 
   try {
     const transporter = getTransporter();
+    
+    // If transporter is null (credentials not configured), skip email
+    if (!transporter) {
+      console.warn('⚠️  Email not sent - credentials not configured');
+      return {
+        success: false,
+        error: 'Email service not configured',
+        code: 'EMAIL_NOT_CONFIGURED',
+      };
+    }
 
     const mailOptions = {
       from: `"GAMICA Lost & Found" <${process.env.EMAIL_USER}>`,
@@ -88,6 +106,7 @@ async function sendEmail({ to, subject, html, text }) {
       response: info.response,
     };
   } catch (error) {
+    console.error('Email sending error:', error.message);
     return {
       success: false,
       error: error.message,
